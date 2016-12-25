@@ -1,0 +1,12 @@
+{
+  "python":{
+    "dir":"D:\iflow_app\python"
+  },
+  "test":{
+    "dir":"D:\iflow_app\test"
+  },
+  "wx":{
+    "name":"wxproj",
+    "dir":"D:\iflow_app\wxproj"
+  }
+}

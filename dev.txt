@@ -1,0 +1,101 @@
+夸迭代分支名称不可和任何特性分支名称冲突
+特性分支的完整格式：vmember:feature/1612s1/order-manager
+修复分支的完整格式：vmember:hotfix/order-delivery
+标签：feature后面的-t会覆盖之前同名的分支，hotfix后面的-t会追加新标签
+
+命令提示符的显示：git用户名@迭代号/项目,如linvanda@1612s1/vmember,换行，$空格
+
+别名：
+     sp sprint
+     ft feature
+     c  create
+     t  test
+     p  publish
+     s  show
+     d  delete
+
+
+
+切换到某个迭代：
+     sprint 1612s1
+     sprint 12s1
+     sp 12s1
+     如果检测到所在的月份和迭代版本号差距超过一个月，则程序启动时会给予警告和建议切换的迭代号
+
+进入项目：
+     cd vmember
+
+
+特性分支：feature、ft
+     创建：
+          feature c order-manager -m '订单管理'
+          feature c /1612s2/order-manager -m '订单管理'
+          feature c /order-manager -m '订单管理'
+
+     发布到测试：
+          feature t order-manager
+
+     发布到生产:
+          feature p -t
+          feature p vmember,member-center -t
+          feature p vmember:/weigao
+
+     撤销发布：
+          feature p -r vmember:order-manager -s 1612s2
+          feature p -r order-manager
+          feature t -r order-manager
+
+     删除分支：
+          feature d order-manager
+
+
+修复分支：hotfix、fix
+     创建:
+          fix c vmember:order-delivery -m '订单物流bug'
+          fix c vmember:order-delivery/kfxt-2278
+     其他同特性分支
+
+打标签：
+     feature tag
+     feature tag vmember
+     fix tag
+     fix tag vmember
+
+
+显示分支：
+     feature show
+     feature show -i
+     feature s
+     feature s vmember
+     fix show
+     fix show -i
+     fix show -i vmember
+
+
+分支转换：
+     h2f order-delivery
+     h2f order-delivery -n
+     h2f order-delivery -s 12s1
+
+     h2h order-delivery
+     h2h order-delivery -n
+     h2h order-delivery -s 12s2
+
+     f2f order-manager
+     f2f order-manager -n
+     f2f order-manager -s 01s1
+
+     f2h order-manager
+     f2h order-manager -n
+     f2h order-manager -s 01s1
+     
+
+分支重命名（作为对分支转换的辅助使用）
+     rename old-branch new-branch 需要都是全名
+
+原生git操作：
+     git ...
+
+其他：
+     所有的操作都有日志记录
+     重要操作需要给予提示并要使用者确认

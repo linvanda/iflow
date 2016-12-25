@@ -1,0 +1,15 @@
+{
+  "name":"iflow",
+  "version":"0.1",
+  "author":"zhangsl",
+  "desc":"明源云会员版本控制工具，基于git制作。输入help或h查看帮助",
+  "branch":{
+    "product":"master",
+    "test":"sp-dev",
+    "feature_prefix":"feature",
+    "split":"/"
+  },
+  "command":{
+
+  }
+}
