@@ -4,9 +4,14 @@ from command import Command
 
 
 class Feature(Command):
-    def __init__(self, args):
-        Command.__init__(self, args)
-        self.name = 'feature'
-
+    """
+    特性分支指令类
+    """
     def execute(self):
-        print 'execute here'
+        if not len(self.args):
+            raise Exception(u'无效参数')
+
+        if not Command.real_cmd(self.args[0]):
+            self.args.insert(0, 'c')
+
+

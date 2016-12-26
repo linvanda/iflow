@@ -2,11 +2,52 @@
   "name":"iflow",
   "version":"0.1",
   "author":"zhangsl",
-  "desc":"版本控制工具，基于git制作。输入help或h查看帮助",
+  "desc":"版本控制与发布工具，基于git制作。输入help或h查看帮助",
   "branch":{
     "product":"master",
     "test":"sp-dev",
     "feature_prefix":"feature",
+    "hotfix_prefix":"hotfix",
     "split":"/"
+  },
+  "sprint_format":"[0-9]{4}s[12]",
+  //所有的指令都要在此处设置（默认别名是它自己），未设置的则不视为指令
+  "cmd":{
+    "sprint":"sprint",
+    "feature":"feature",
+    "hotfix":"hotfix",
+    "create":"create",
+    "test":"test",
+    "publish":"publish",
+    "show":"show",
+    "delete":"delete",
+    "branch":"branch",
+    "cd":"cd",
+    "git":"git",
+    "help":"help",
+    "h":"help",
+    "sp":"sprint",
+    "ft":"feature",
+    "fix":"hotfix",
+    "c":"create",
+    "t":"test",
+    "p":"publish",
+    "s":"show",
+    "d":"delete",
+    "br":"branch"
+  },
+  "cmd_cls":{
+    "feature":"Feature",
+    "hotfix":"Hotfix",
+    "help":"Help",
+    "cd":"Extra",
+    "git":"Extra",
+    "sprint":"Extra",
+    "branch":"Extra",
+    "h2f":"Extra",
+    "h2h":"Extra",
+    "f2h":"Extra",
+    "f2f":"Extra",
+    "rename":"Extra"
   }
 }

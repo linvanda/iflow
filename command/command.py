@@ -1,16 +1,25 @@
 # coding:utf-8
 
 import abc
+import iconfig
 
 
 class Command(object):
-    def __init__(self, args):
+    """
+    指令基类
+    """
+    def __init__(self, cmd, args):
+        self.cmd = cmd
         self.args = args
-        self.name = ''
 
     @abc.abstractmethod
     def execute(self):
-        pass
+        raise Exception(u"指令尚未实现")
+
+    @staticmethod
+    def real_cmd(cmd):
+        alias = iconfig.read_config('system', 'cmd')
+        return alias[cmd] if alias.has_key(cmd) else None
 
     def __str__(self):
-        return self.name + ' ' + ' '.join(self.args)
+        return self.cmd + ' ' + ' '.join(self.args)

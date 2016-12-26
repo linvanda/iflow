@@ -2,18 +2,20 @@
 # 入口
 
 import subprocess
-import sys
+import signal
+import os
 import iconfig
 import ihelper
 import command
 from iprint import *
-import time
-import signal
+import iglobal
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 if __name__ == '__main__':
+    iglobal.BASE_DIR = os.getcwd()
+
     cfg = iconfig.read_config('system')
     proj_cfg = iconfig.read_config('project')
 
@@ -24,34 +26,50 @@ if __name__ == '__main__':
     blue(cfg['desc'], True)
     blue(u'=========================***=========================', True)
 
+    # 必须项检测
+    checked_ok = False
     try:
-        ihelper.init_check()
+        ihelper.required_check()
+        checked_ok = True
     except Exception, e:
-        ihelper.error_exit(unicode(str(e), 'utf-8'))
-
-    # 检查是否设置了迭代号，如果没有设置，或者迭代号过期了，则提示设置
-    try:
-        ihelper.check_sprint()
-    except Exception, e:
-        warn(unicode(str(e), 'utf-8'))
+        ihelper.warn(unicode(str(e), 'utf-8'))
 
     # 中断处理
     def ctr_c_handler(*args):
-        ihelper.goodbye()
+        print
 
     signal.signal(signal.SIGINT, ctr_c_handler)
 
     while True:
+        ihelper.headline()
         try:
-            cmd = raw_input('').strip().lower()
+            args = raw_input('$ ').strip().lower()
 
-            if cmd == 'exit':
+            if args == 'exit':
                 ihelper.goodbye()
 
-            cmd = cmd.split(' ')
-            print cmd
+            args = [ele for ele in args.split(' ') if ele.strip()]
+
+            if args:
+                main_cmd = command.Command.real_cmd(args.pop(0))
+                if cfg['cmd_cls'].has_key(main_cmd):
+                    # 执行具体的指令
+                    try:
+                        eval('command.' + cfg['cmd_cls'][main_cmd])(main_cmd, args).execute()
+                    except Exception, e:
+                        error(unicode(str(e), 'utf-8'))
+                else:
+                    white(u'无效的指令', True)
+
+            # 每次命令执行后都检查一下必须项是否正确
+            if not checked_ok:
+                try:
+                    ihelper.required_check()
+                    checked_ok = True
+                except Exception, e:
+                    ihelper.warn(unicode(str(e), 'utf-8'))
         except Exception, e:
-            ihelper.goodbye(str(e))
+            continue
 
 
 

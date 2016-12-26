@@ -2,7 +2,7 @@
 
 from command import Command
 from feature import Feature
-from hotfix import HotFix
+from hotfix import Hotfix
 from help import Help
 from extra import Extra
 

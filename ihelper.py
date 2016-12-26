@@ -1,11 +1,13 @@
 # coding:utf-8
 # 该模块提供一些助手方法
 
+import subprocess
 import time
-import datetime
 import os
-import re
 import iconfig
+import isprint
+import iglobal
+import igit
 from iprint import *
 
 
@@ -21,61 +23,70 @@ def error_exit(msg):
     sys.exit(1)
 
 
-def check_sprint_format(sprint):
-    return re.compile('[0-9]{4}s[12]').match(sprint)
-
-
-def format_sprint(sprint):
-    if len(sprint) == 4:
-        sprint = time.strftime('%Y')[2:] + sprint
-    return sprint
-
-
-def get_date_from_sprint(sprint):
-    sprint = format_sprint(sprint)
-
-    year = sprint[:2]
-    month = sprint[2:4]
-
-    return '20' + year + '-' + month + '-01'
-
-
-def init_check():
+def required_check():
     """
-    入口初始化检查
+    必须进行的检查
     """
     # 检查project.json有没有配置以及路径是否正确
-    proj_cfg = iconfig.read_config('project')
+    proj_cfg = iconfig.read_config('project', use_cache=False)
     if not proj_cfg:
-        raise Exception(u'请配置项目信息(dist/config/project.json文件，具体格式参见readme.md文件)')
+        raise Exception(u'请配置项目信息(config/project.json文件，具体格式参见readme.md文件)')
 
+    curr_dir = os.getcwd()
     for proj_name, info in proj_cfg.items():
         if not info['dir'] or not os.path.exists(info['dir']) or not os.path.isdir(info['dir']):
             raise Exception(u'项目' + proj_name + u'的目录配置不正确')
+        # 检测目录是否有效的git仓库
+        os.chdir(info['dir'])
+        proccess = subprocess.Popen('git branch', stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
+        err = proccess.stderr.read()
+        if err and err.find('Not a git repository') != -1:
+            raise Exception(u'目录' + info['dir'] + '不是有效的git仓库')
+
+    os.chdir(curr_dir)
+
+    # 版本号检测
+    return isprint.check_sprint()
+
+
+def write_runtime(key, val):
+    """
+    写入运行时信息
+    """
+    if not key and not val:
+        return True
+
+    info = iconfig.read_config(iglobal.BASE_DIR + '/runtime')
+    info[key] = val
+    iconfig.write_config(iglobal.BASE_DIR + '/runtime', info)
 
     return True
 
 
-def check_sprint():
-    try:
-        runtime = iconfig.read_config('runtime')
-    except IOError:
-        iconfig.write_config('runtime', {})
-        runtime = iconfig.read_config('runtime')
+def read_runtime(key = None):
+    """
+    读取运行时信息
+    """
+    info = iconfig.read_config(iglobal.BASE_DIR + '/runtime', use_cache=False)
 
-    if not runtime.has_key('sprint'):
-        raise Exception(u'尚未设置迭代版本号，请使用sp指令设置正确的迭代版本号')
+    if key:
+        return info[key] if info.has_key(key) else None
     else:
-        sp_date = get_date_from_sprint(runtime['sprint']).split('-')
-        now = time.strftime('%Y-%m-' + '01').split('-')
-        d1 = datetime.datetime(int(sp_date[0]), int(sp_date[1]), int(sp_date[2]))
-        d2 = datetime.datetime(int(now[0]), int(now[1]), int(now[2]))
-        diff = abs((d1 - d2).days)
-
-        if diff >= 60:
-            raise Exception(u'迭代版本号(' + runtime['sprint'] + ')过旧，请使用sp指令重新设置正确的迭代版本号')
-
-    return True
+        return info
 
 
+def headline():
+    """
+    页眉：linvanda@1612s1/vmember
+    """
+    username = igit.get_config('user.name') or 'nobody'
+    sprint = read_runtime('sprint') or 'none'
+    project = read_runtime('project') or 'global'
+    real_path = os.getcwd() if project == 'global' else iconfig.read_config('project', project)['dir']
+    branch = igit.get_current_branch() if project != 'global' else None
+
+    pink(username), sky_blue( '@'), green(sprint), sky_blue('/'), yellow(project + '(' + real_path + ')')
+    if branch:
+        sky_blue(':' + branch)
+    print 
 

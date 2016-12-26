@@ -13,6 +13,8 @@ FOREGROUND_GREEN = 0x0a
 FOREGROUND_RED = 0x0c
 FOREGROUND_YELLOW = 0x0e
 FOREGROUND_WHITE = 0x0f
+FOREGROUND_PINK = 0x0d
+FOREGROUND_SKYBLUE = 0x0b
 
 std_out_handle = ctypes.windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
 
@@ -40,12 +42,20 @@ def blue(mess, new_line = False):
     write(mess, FOREGROUND_BLUE, new_line)
 
 
+def sky_blue(mess, new_line = False):
+    write(mess, FOREGROUND_SKYBLUE, new_line)
+
+
 def green(mess,  new_line = False):
     write(mess, FOREGROUND_GREEN, new_line)
 
 
 def red(mess, new_line = False):
     write(mess, FOREGROUND_RED, new_line)
+
+
+def pink(mess, new_line = False):
+    write(mess, FOREGROUND_PINK, new_line)
 
 
 def yellow(mess, new_line = False):
