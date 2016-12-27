@@ -8,6 +8,7 @@ import iconfig
 import isprint
 import iglobal
 import igit
+import exception
 from iprint import *
 
 
@@ -89,4 +90,25 @@ def headline():
     if branch:
         sky_blue(':' + branch)
     print 
+
+
+def execute(cmd, print_out=True):
+    p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
+    err = p.stderr.read()
+    if err:
+        # 将错误抛出由外界处理
+        print '---error'
+        raise exception.FlowException(err)
+
+    if print_out:
+        print p.stdout.read()
+
+    return p
+
+
+def log(msg, type='cmd'):
+    file_name = iglobal.BASE_DIR + '/log/' + type + '-' + time.strftime('%Y%m') +  '.log'
+    f = open(file_name, 'a')
+    f.writelines(msg)
+    f.close()
 

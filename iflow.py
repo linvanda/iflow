@@ -70,21 +70,3 @@ if __name__ == '__main__':
                     ihelper.warn(unicode(str(e), 'utf-8'))
         except Exception, e:
             continue
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-p = subprocess.Popen('git var', stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
-
-raw_input()

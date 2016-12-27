@@ -2,6 +2,7 @@
 
 import abc
 import iconfig
+import ihelper
 
 
 class Command(object):
@@ -11,6 +12,7 @@ class Command(object):
     def __init__(self, cmd, args):
         self.cmd = cmd
         self.args = args
+        ihelper.log(cmd + ' ' + ' '.join(self.args))
 
     @abc.abstractmethod
     def execute(self):

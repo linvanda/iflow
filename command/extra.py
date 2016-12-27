@@ -46,5 +46,26 @@ class Extra(Command):
         ihelper.write_runtime('project', proj_name)
         os.chdir(proj['dir'])
 
+    def rename(self):
+        """
+        分支重命名
+        """
+        if len(self.args) < 2:
+            raise exception.FlowException('指令格式错误')
+
+        old = self.args[0]
+        new = self.args[1]
+
+        # 重命名本地分支
+        ihelper.execute('git branch -m ' + old + ' ' + new)
+        # 删除远程分支
+        ihelper.execute('git push --delete origin ' + old)
+        # 上传新分支
+        ihelper.execute('git push origin ' + new + ':' + new)
+
+    def git(self):
+        ihelper.execute('git ' + (' '.join(self.args) if self.args else ''))
+
+
 
 
