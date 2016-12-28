@@ -1,5 +1,5 @@
 # coding:utf-8
 
 
-class FlowException(BaseException):
+class FlowException(Exception):
     pass

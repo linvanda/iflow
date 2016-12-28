@@ -7,11 +7,13 @@ import datetime
 import iconfig
 import ihelper
 
-def check_sprint_format(sprint):
+
+def check_sprint_format(sprint, loose=False):
     """
     迭代号格式检验
+    :param Bool loose:
     """
-    return re.compile(iconfig.read_config('system')['sprint_format']).match(sprint)
+    return re.compile(iconfig.read_config('system')['sprint_format' if not loose else "sprint_format_loose"]).match(sprint)
 
 
 def format_sprint(sprint):

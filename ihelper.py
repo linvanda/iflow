@@ -14,7 +14,7 @@ from iprint import *
 
 def goodbye(*args):
     print args[0] if args and args[0] else "good bye!"
-    time.sleep(1)
+    # time.sleep(1)
     sys.exit(0)
 
 
@@ -50,6 +50,18 @@ def required_check():
     return isprint.check_sprint()
 
 
+def init():
+    """
+    初始化
+    """
+    # 进入项目目录
+    proj = read_runtime('project')
+    if proj:
+        pinfo = iconfig.read_config('project', proj)
+        if pinfo.has_key('dir'):
+            os.chdir(pinfo['dir'])
+
+
 def write_runtime(key, val):
     """
     写入运行时信息
@@ -78,7 +90,7 @@ def read_runtime(key = None):
 
 def headline():
     """
-    页眉：linvanda@1612s1/vmember
+    页眉：linvanda@1612s1/vmember/master
     """
     username = igit.get_config('user.name') or 'nobody'
     sprint = read_runtime('sprint') or 'none'
@@ -88,27 +100,35 @@ def headline():
 
     pink(username), sky_blue( '@'), green(sprint), sky_blue('/'), yellow(project + '(' + real_path + ')')
     if branch:
-        sky_blue(':' + branch)
+        sky_blue('/' + branch)
     print 
 
 
-def execute(cmd, print_out=True):
-    p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
-    err = p.stderr.read()
-    if err:
-        # 将错误抛出由外界处理
-        print '---error'
-        raise exception.FlowException(err)
+def execute(cmd, print_out=True, raise_err=False):
+    # 不关心异常且需要输出时，直接调用os.system
+    if print_out and not raise_err:
+        return os.system(cmd)
+    else:
+        p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
+        err = p.stderr.read()
+        out = p.stdout.read()
 
-    if print_out:
-        print p.stdout.read()
+        if err:
+            if raise_err:
+                # 将错误抛出由外界处理
+                raise exception.FlowException(err)
+            else:
+                out = err
 
-    return p
+        if print_out:
+            print out
+
+        return p
 
 
 def log(msg, type='cmd'):
     file_name = iglobal.BASE_DIR + '/log/' + type + '-' + time.strftime('%Y%m') +  '.log'
     f = open(file_name, 'a')
-    f.writelines(msg)
+    f.write(msg + "\n")
     f.close()
 

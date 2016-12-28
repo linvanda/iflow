@@ -34,6 +34,9 @@ if __name__ == '__main__':
     except Exception, e:
         ihelper.warn(unicode(str(e), 'utf-8'))
 
+    # 初始化
+    ihelper.init()
+
     # 中断处理
     def ctr_c_handler(*args):
         print

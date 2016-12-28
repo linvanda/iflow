@@ -1,11 +1,15 @@
 # coding:utf-8
 
 import os
+import ConfigParser
+import re
 import isprint
 import ihelper
 import iconfig
 import exception
+import iglobal
 from command import Command
+import iprint
 
 
 class Extra(Command):
@@ -14,8 +18,8 @@ class Extra(Command):
             eval('self.' + self.cmd)()
         except exception.FlowException, e:
             raise Exception(unicode(str(e), 'utf-8'))
-        except Exception:
-            raise Exception(u'无效的指令')
+        except Exception, e:
+            raise Exception(e.message)
 
     def sprint(self):
         """
@@ -57,14 +61,47 @@ class Extra(Command):
         new = self.args[1]
 
         # 重命名本地分支
-        ihelper.execute('git branch -m ' + old + ' ' + new)
-        # 删除远程分支
+        ihelper.execute('git branch -m ' + old + ' ' + new, raise_err=True)
+        # 删除远程分支(如果有的话)
         ihelper.execute('git push --delete origin ' + old)
-        # 上传新分支
-        ihelper.execute('git push origin ' + new + ':' + new)
+        # 上传新分支到远程
+        ihelper.execute('git push -u origin ' + new + ':' + new)
 
     def git(self):
-        ihelper.execute('git ' + (' '.join(self.args) if self.args else ''))
+        os.system('git ' + (' '.join(self.args) if self.args else ''))
+
+    def pwd(self):
+        print os.getcwd()
+
+    def version(self):
+        cfg = iconfig.read_config('system')
+        print cfg['name'] + ' ' + cfg['version']
+
+    def help(self):
+        print self.real_branch(self.args[0], self.args[1])
+        return
+
+
+        cmd = self.args[0] if self.args else None
+        cmd = cmd and Command.real_cmd(cmd)
+
+        cf = ConfigParser.ConfigParser()
+        cf.read(iglobal.BASE_DIR + '/config/help.conf')
+
+        for sec in cf.sections():
+            if sec and (not cmd or cmd == sec):
+                iprint.yellow(unicode(cf.get(sec, 'title'), 'utf-8'), True)
+                print unicode(cf.get(sec, 'content'), 'utf-8')
+                print
+
+    def alias(self):
+        cfg = iconfig.read_config('system', 'cmd')
+        arr = []
+        for key, val in cfg.items():
+            if key != val:
+                print "%3s%12s"%(key, val)
+
+
 
 
 
