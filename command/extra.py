@@ -50,26 +50,6 @@ class Extra(Command):
         ihelper.write_runtime('project', proj_name)
         os.chdir(proj['dir'])
 
-    def rename(self):
-        """
-        分支重命名
-        """
-        if len(self.args) < 2:
-            raise exception.FlowException('指令格式错误')
-
-        old = self.args[0]
-        new = self.args[1]
-
-        # 重命名本地分支
-        ihelper.execute('git branch -m ' + old + ' ' + new, raise_err=True)
-        # 删除远程分支(如果有的话)
-        ihelper.execute('git push --delete origin ' + old)
-        # 上传新分支到远程
-        ihelper.execute('git push -u origin ' + new + ':' + new)
-
-    def git(self):
-        os.system('git ' + (' '.join(self.args) if self.args else ''))
-
     def pwd(self):
         print os.getcwd()
 
@@ -78,10 +58,6 @@ class Extra(Command):
         print cfg['name'] + ' ' + cfg['version']
 
     def help(self):
-        print self.real_branch(self.args[0], self.args[1])
-        return
-
-
         cmd = self.args[0] if self.args else None
         cmd = cmd and Command.real_cmd(cmd)
 
@@ -95,7 +71,7 @@ class Extra(Command):
                 print
 
     def alias(self):
-        cfg = iconfig.read_config('system', 'cmd')
+        cfg = iconfig.read_config('system', 'alias')
         arr = []
         for key, val in cfg.items():
             if key != val:

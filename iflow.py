@@ -1,9 +1,9 @@
 # coding:utf-8
 # 入口
 
-import subprocess
 import signal
 import os
+import sys
 import iconfig
 import ihelper
 import command
@@ -12,6 +12,8 @@ import iglobal
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
+__FROM_ENCODING = 'gb2312'
 
 if __name__ == '__main__':
     iglobal.BASE_DIR = os.getcwd()
@@ -46,7 +48,8 @@ if __name__ == '__main__':
     while True:
         ihelper.headline()
         try:
-            args = raw_input('$ ').strip().lower()
+            # windows命令行读取的是gb2312的
+            args = raw_input('$ ').strip().lower().decode(__FROM_ENCODING).encode('utf-8')
 
             if args == 'exit':
                 ihelper.goodbye()
@@ -54,15 +57,12 @@ if __name__ == '__main__':
             args = [ele for ele in args.split(' ') if ele.strip()]
 
             if args:
-                main_cmd = command.Command.real_cmd(args.pop(0))
-                if cfg['cmd_cls'].has_key(main_cmd):
-                    # 执行具体的指令
-                    try:
-                        eval('command.' + cfg['cmd_cls'][main_cmd])(main_cmd, args).execute()
-                    except Exception, e:
-                        error(unicode(str(e), 'utf-8'))
-                else:
-                    white(u'无效的指令', True)
+                # 执行具体的指令
+                try:
+                    main_cmd = command.Command.real_cmd(args.pop(0))
+                    eval('command.' + cfg['cmd_cls'][main_cmd])(main_cmd, args).execute()
+                except Exception, e:
+                    error(unicode(str(e), 'utf-8'))
 
             # 每次命令执行后都检查一下必须项是否正确
             if not checked_ok:
@@ -72,4 +72,4 @@ if __name__ == '__main__':
                 except Exception, e:
                     ihelper.warn(unicode(str(e), 'utf-8'))
         except Exception, e:
-            continue
+            print e

@@ -100,7 +100,7 @@ def headline():
 
     pink(username), sky_blue( '@'), green(sprint), sky_blue('/'), yellow(project + '(' + real_path + ')')
     if branch:
-        sky_blue('/' + branch)
+        sky_blue('[ ' + branch + ' ]')
     print 
 
 
