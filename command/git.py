@@ -76,9 +76,6 @@ class Git(CVS):
         ihelper.execute('git commit -m "' + igit.comment(comment, curr_branch.split('/')[0]).decode('utf-8').encode(iglobal.FROM_ENCODING) + '"')
 
         if push:
-            # 先拉远程分支(如果报错则需要手工处理)
-            ihelper.execute('git pull --rebase origin ' + curr_branch + ':' + curr_branch, raise_err=True)
-            # push
-            ihelper.execute('git push origin ' + curr_branch + ':' + curr_branch, raise_err=True)
+            igit.push(curr_branch)
 
         ok(u'提交' + (u'并推送到远程仓库' if push else '') + u'成功!')

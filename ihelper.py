@@ -94,14 +94,15 @@ def headline():
     """
     页眉：linvanda@1612s1/vmember/master
     """
-    username = igit.get_config('user.name') or 'nobody'
+    # username = igit.get_config('user.name') or 'nobody'
     project = iglobal.PROJECT
     real_path = os.getcwd() if project == 'global' else iconfig.read_config('project', project)['dir']
     branch = igit.current_branch() if project != 'global' else None
 
-    pink(username), sky_blue( '@'), green(iglobal.SPRINT), sky_blue('/'), yellow(project + '(' + real_path + ')')
+    green(iglobal.SPRINT), sky_blue('/'), yellow(project + '(' + real_path + ')')
     if branch:
-        sky_blue('[ ' + branch + ' ]')
+        status = igit.workspace_status()
+        sky_blue('[ ' + branch + ('(' + status[1] + ')' if status else '') + ' ]')
     print 
 
 

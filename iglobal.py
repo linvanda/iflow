@@ -13,9 +13,11 @@ SPRINT = 'none'
 Git状态
 """
 # 干净
-GIT_WORKSPACE_CLEAN = 1
+GIT_CLEAN = (1, 'clean')
 # 合并或pull冲突
-GIT_WORKSPACE_CONFLICT = 2
+GIT_CONFLICT = (2, 'conflict')
 # 有待提交内容
-GIT_UNCOMMITED = 3
+GIT_UNCOMMITED = (4, 'uncommited')
+# 尚有未staged的内容
+GIT_UNSTAGED = (8, 'unstaged')
 

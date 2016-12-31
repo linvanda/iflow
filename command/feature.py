@@ -62,7 +62,7 @@ class Feature(CVS):
         # 切换到生产分支
         p_branch = igit.product_branch()
         ihelper.execute('git checkout ' + p_branch)
-        ihelper.execute('git pull --rebase origin ' + p_branch + ':' + p_branch)
+        ihelper.execute('git pull --rebase', raise_err=True)
 
         # 创建新分支
         ihelper.execute('git checkout -b ' + branch)
@@ -71,6 +71,55 @@ class Feature(CVS):
         ihelper.execute('git push -u origin ' + branch + ':' + branch)
 
         ok(u'创建成功!已进入分支：' + branch)
+
+    def test(self):
+        """
+        发布到测试分支，只允许单个分支发布
+        :return:
+        """
+        if len(self.args) > 1:
+            raise exception.FlowException(u'指令格式错误，请输入h ft查看使用说明')
+
+        # 当前工作空间是否干净
+        if not igit.workspace_is_clean():
+            raise exception.FlowException(u'工作区中尚有未提交的内容')
+
+        if not self.args:
+            branch = igit.current_branch()
+        else:
+            branch = self.args.pop(0)
+
+        branch = igit.real_branch(branch)
+
+        if branch != igit.current_branch():
+            # 切换分支
+            ihelper.execute('git checkout ' + branch)
+
+            # 当前工作空间是否干净
+            if not igit.workspace_is_clean():
+                raise exception.FlowException(u'工作区中尚有未提交的内容')
+
+        # 推到远程仓库
+        igit.push(branch)
+
+        # 切换到test分支
+        test_branch = igit.test_branch()
+        ihelper.execute('git checkout ' + test_branch)
+
+        # 当前工作空间是否干净
+        if not igit.workspace_is_clean():
+            raise exception.FlowException(u'工作区中尚有未提交的内容')
+
+        # 合并
+        igit.merge(branch)
+
+        ok(u'合并到' + test_branch + u'成功!已进入分支：' + test_branch)
+
+
+
+
+
+
 
 
 

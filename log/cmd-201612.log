@@ -106,3 +106,17 @@ commit 测试22
 git log
 commit 测试2244
 git log
+commit 测试224445
+commit 测试224445 -p
+git pull --rebase origin feature/1701s1/songlintest9:feature/1701s1/songlintest9
+git pull --rebase origin feature/1701s1/songlintest9 feature/1701s1/songlintest9
+git pull --rebase
+commit 测试2244455 -p
+git status
+commit 测试2244456 -p
+git status
+git checkout master
+git status
+git clean -f
+git status
+git ls-files

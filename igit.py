@@ -77,7 +77,7 @@ def workspace_is_clean():
     """
     检查当前分支的工作区(包括暂存区)是否是清洁的
     """
-    return workspace_status() == iglobal.GIT_WORKSPACE_CLEAN
+    return workspace_status() == iglobal.GIT_CLEAN
 
 
 def real_branch( branch, prefix):
@@ -88,7 +88,7 @@ def real_branch( branch, prefix):
     :return: str
     """
     if not branch:
-        return None
+        raise Exception(u'参数错误')
 
     if branch.find(':') != -1:
         branch = branch.split(':')[1]
@@ -146,6 +146,25 @@ def product_branch():
         return 'master'
 
 
+def test_branch():
+    """
+    获取项目的测试分支
+    :return:
+    """
+    project = iglobal.PROJECT
+
+    if project != 'global':
+        proj_cfg = iconfig.read_config('project', project)
+        if proj_cfg.has_key('branch') and list(proj_cfg['branch']).has_key('test'):
+            return proj_cfg['branch']['test']
+
+    config = iconfig.read_config('system', 'branch')
+    if config.has_key('test'):
+        return config['test']
+    else:
+        return 'sp-dev'
+
+
 def comment(msg, btype=None):
     return '<' + btype + '>' + msg if btype else msg
 
@@ -162,4 +181,38 @@ def workspace_status():
         return iglobal.GIT_WORKSPACE_CONFLICT
     elif out.find('Changes to be committed') != -1:
         return iglobal.GIT_UNCOMMITED
+    elif out.find('Changes not staged for commit'):
+        return iglobal.GIT_UNSTAGED
+
+
+def push(branch):
+    """
+    将当前分支推到远程仓库
+    :param branch:
+    :return:
+    """
+    if not branch:
+        return
+
+    # 先拉远程分支(如果报错则需要手工处理)
+    ihelper.execute('git pull --rebase', raise_err=True)
+    # push
+    ihelper.execute('git push origin ' + branch + ':' + branch)
+
+
+def merge(branch, push=True):
+    """
+    将branch合并到当前分支
+    :param push:
+    :param branch:
+    :return:
+    """
+    # 从远程仓库拉最新代码
+    ihelper.execute('git pull --rebase', raise_err=True)
+
+    # 合并
+    ihelper.execute('git merge --no-ff ' + branch, raise_err=True)
+
+    # 推送到远程仓库
+    ihelper.execute('git push')
 
