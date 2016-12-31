@@ -101,31 +101,36 @@ def headline():
 
     green(iglobal.SPRINT), sky_blue('/'), yellow(project + '(' + real_path + ')')
     if branch:
-        status = igit.workspace_status()
-        sky_blue('[ ' + branch + ('(' + status[1] + ')' if status else '') + ' ]')
+        status = igit.workspace_status(True)
+        sky_blue('[ ' + branch + ('(' + status + ')' if status else '') + ' ]')
     print 
 
 
-def execute(cmd, print_out=True, raise_err=False):
-    # 不关心异常且需要输出时，直接调用os.system
-    if print_out and not raise_err:
+def execute(cmd, print_out=True, raise_err=False, return_result=False):
+    # 不关心异常且需要输出且不需要返回时，直接调用os.system
+    if print_out and not raise_err and not return_result:
         return os.system(cmd)
     else:
         p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
         err = p.stderr.read()
         out = p.stdout.read()
 
+        # 测试
+        # print 'err----------:', err, '======='
+        # print 'out-----------:', out, '==========='
+        # print '-----------------------------------------------'
+
         if err:
             if raise_err:
                 # 将错误抛出由外界处理
                 raise exception.FlowException(err)
             else:
-                out = err
+                out = err + out
 
         if print_out:
             print out
 
-        return p
+        return out
 
 
 def log(msg, type='cmd'):

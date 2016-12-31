@@ -33,6 +33,7 @@
           feature c /order-manager -m '订单管理'
 
      发布到测试：
+          ft t 发布当前分支到test分支
           feature t order-manager
 
      发布到生产:
@@ -47,6 +48,12 @@
 
      删除分支：
           feature d order-manager
+
+     切换到分支：
+        ft checkout order-manager
+        ft ck order-manager
+        ft ck --no-pull order-manager   切换分支后不从远端拉取（省时）
+        ft ck --np order-manager    切换分支后不从远端拉取（省时）
 
 
 修复分支：hotfix、fix
@@ -95,6 +102,11 @@
 
 原生git操作：
      git ...
+
+
+commit 提交说明
+commit -p 提交说明  提交并推送
+rename oldbranch newbranch
 
 其他：
      所有的操作都有日志记录

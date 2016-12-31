@@ -23,13 +23,17 @@ class Git(CVS):
 
     def rename(self):
         """
-        分支重命名
+        分支重命名。old和new需要时绝对分支名
         """
         if len(self.args) < 2:
-            raise exception.FlowException('指令格式错误')
+            raise exception.FlowException('指令格式错误，请输入help查看使用说明')
 
         old = self.args[0]
         new = self.args[1]
+
+        # 名称重复性检测
+        if new in igit.local_branches() or new in igit.remote_branches():
+            raise exception.FlowException(u'该分支名称已经存在')
 
         # 重命名本地分支
         ihelper.execute('git branch -m ' + old + ' ' + new, raise_err=True)

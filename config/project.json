@@ -14,6 +14,10 @@
     }
   },
   "membercenter":{
-    "dir":"C:\Users\linvanda\Desktop\gittest\membercenter"
+    "dir":"C:\Users\linvanda\Desktop\gittest\membercenter",
+    "branch":{
+      "product":"test-master",
+      "test":"test-dev"
+    }
   }
 }

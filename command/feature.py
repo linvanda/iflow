@@ -18,7 +18,7 @@ class Feature(CVS):
     def __init__(self, cmd, args, log=True):
         CVS.__init__(self, cmd, args, log)
         # 二级指令
-        self.sub_cmd_list = ('create', 'test', 'publish', 'tag', 'show', 'delete')
+        self.sub_cmd_list = ('create', 'test', 'product', 'tag', 'show', 'delete',"checkout")
 
     def execute(self):
         if not len(self.args):
@@ -30,6 +30,38 @@ class Feature(CVS):
 
         # 调用相应的二级指令处理方法
         eval('self.' + sub_cmd)()
+
+    def checkout(self):
+        """
+        切换到某个特性分支并拉取最新代码（如果工作空间是干净的）
+        :return:
+        """
+        if not self.args:
+            raise exception.FlowException(u'指令格式错误，请输入h ft查看使用说明')
+
+        # 检查当前分支下工作区状态
+        if not igit.workspace_is_clean():
+            raise exception.FlowException(u'工作区中尚有未提交的内容，请先用commit提交或用git stash保存到Git栈中')
+
+        branch = None
+        no_pull = False
+
+        while self.args:
+            c = self.args.pop(0)
+            if c == '--np' or c == '--no-pull':
+                no_pull = True
+            else:
+                branch = igit.real_branch(c, self.cmd)
+
+        __error = False
+        if branch != igit.current_branch():
+            out = ihelper.execute('git checkout ' + branch, return_result=True)
+            # git的checkout指令输出在stderr中
+            if out.find('Switched to branch') == -1:
+                __error = True
+
+        if not no_pull and not __error and igit.workspace_is_clean():
+            ihelper.execute('git pull --rebase')
 
     def create(self):
         """
@@ -50,12 +82,12 @@ class Feature(CVS):
         branch = igit.real_branch(branch, self.cmd)
 
         # 分支名称重复性检查
-        if branch in igit.local_branches() or branch in igit.remote_branches(False):
+        if branch in igit.local_branches() or branch in igit.remote_branches():
             raise exception.FlowException(u'该分支名称已经存在')
 
         # 检查当前分支下工作区状态
         if not igit.workspace_is_clean():
-            raise exception.FlowException(u'工作区中尚有未提交的内容，请先用git commit提交或用git stash保存到Git栈中，或丢弃掉')
+            raise exception.FlowException(u'工作区中尚有未提交的内容，请先用git commit提交或用git stash保存到Git栈中')
 
         white(u'正在创建分支'),sky_blue(branch), white('...', True)
 
@@ -70,7 +102,10 @@ class Feature(CVS):
         # 推送到远程
         ihelper.execute('git push -u origin ' + branch + ':' + branch)
 
-        ok(u'创建成功!已进入分支：' + branch)
+        if igit.workspace_is_clean():
+            ok(u'创建成功!已进入分支：' + branch)
+        else:
+            raise exception.FlowException(u'创建分支失败')
 
     def test(self):
         """
@@ -89,7 +124,7 @@ class Feature(CVS):
         else:
             branch = self.args.pop(0)
 
-        branch = igit.real_branch(branch)
+        branch = igit.real_branch(branch, self.cmd)
 
         if branch != igit.current_branch():
             # 切换分支
@@ -113,7 +148,14 @@ class Feature(CVS):
         # 合并
         igit.merge(branch)
 
-        ok(u'合并到' + test_branch + u'成功!已进入分支：' + test_branch)
+        # 正常执行后，工作空间应该是干净的
+        if not igit.workspace_is_clean():
+            raise exception.FlowException(u'合并失败,请用git status查看工作空间详情')
+
+        # 切换到原来的分支
+        ihelper.execute('git checkout ' + branch)
+
+        ok(u'合并到' + test_branch + u'成功!')
 
 
 

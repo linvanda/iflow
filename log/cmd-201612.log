@@ -120,3 +120,119 @@ git status
 git clean -f
 git status
 git ls-files
+git status
+feature c songlintest10
+git branch
+git branch -r
+git checkout master
+git checkout .
+git checkout master
+git checkout test-dev
+git checkout -b test-dev
+git push -u origin test-dev:test-dev
+git branch
+feature 
+feature c songlintest11
+feature 
+feature 
+feature 
+feature 
+feature 
+feature 
+feature 
+git branch
+git branch -r
+git branch -d dev-test4
+git push --delete origin dev-test4
+git checkout master
+git checkout -b test-master
+git push -u origin test-master:test-master
+git branch
+git branch -r
+git status
+git branch
+feature ck test-dev
+feature ck test-dev
+feature ck test-dev
+feature ck songlin-test1
+feature ck songlin-test2
+feature ck songlin-test2
+feature ck songlin-test3
+feature ck songlin-test3
+feature ck songlin-test2
+feature ck songlin-test3
+feature ck songlin-test3
+feature ck songlin-test2
+feature ck songlin-test3
+feature ck songlin-test2
+feature ck songlin-test2
+feature ck songlin-test3
+feature ck songlin-test2
+feature ck songlin-test3
+feature ck songlin-test2
+feature ck songlin-test6
+git status
+feature t
+commit 测试
+git log
+git status
+feature 
+feature 
+feature ck songlin-test3
+feature ck songlin-test3
+feature t
+feature t
+git log
+feature ck songlin-test2
+feature ck songlin-test2
+commit 改名
+git log
+feature t
+git status
+git log
+feature ck songlin-test2
+feature t
+commit 写入内容
+git log
+feature t
+git checkout test-dev
+commit 测试冲突
+git log
+feature ck songlin-test2
+commit 测试冲突-test2
+git log
+feature t
+git status
+git status
+git merge --abort
+git status
+git branch
+git branch
+feature ck songlin-test2
+feature t
+git merge --abort
+feature t songlin-test2
+git merge --abort
+feature t songlin-test2
+git status
+git status -s
+git merge --abort
+feature t songlin-test2
+git merge --abort
+feature ck songlin-test2
+git checkout test-dev
+feature ck --no-pull songlin-test2
+commit 
+commit 测试pull冲突
+git log
+git status
+commit 测试pull冲突 -p
+commit 测试冲突2
+git checkout test-dev
+feature ck songlin-test2 --nf
+feature ck songlin-test2 --nf
+feature ck songlin-test2 --nf
+feature ck songlin-test2 --nf
+feature ck songlin-test2 --nf
+feature ck songlin-test2 --np
+git status

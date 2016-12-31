@@ -9,6 +9,7 @@ import ihelper
 import command
 from iprint import *
 import iglobal
+import igit
 
 reload(sys)
 sys.setdefaultencoding('utf-8')

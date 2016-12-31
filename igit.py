@@ -6,6 +6,7 @@ import iconfig
 import isprint
 import ihelper
 import iglobal
+import exception
 
 
 def get_config(key=None):
@@ -41,12 +42,12 @@ def remote_branches(refresh=True):
     """
     # 先拉一下最新的远程分支
     if refresh:
-        os.popen('git stash')
-        os.popen('git pull --rebase')
-        os.popen('git stash pop')
+        ihelper.execute('git stash', print_out=False)
+        ihelper.execute('git pull --rebase', print_out=False)
+        ihelper.execute('git stash pop', print_out=False)
 
     return map(lambda x:str(x).replace('origin/HEAD -> ', '').replace('origin/', '').strip(),
-               os.popen('git branch -r').read().splitlines())
+               ihelper.execute('git branch -r', print_out=False, return_result=True).splitlines())
 
 
 def dir_is_repository(path=None):
@@ -63,9 +64,8 @@ def dir_is_repository(path=None):
     os.chdir(path)
     result = True
 
-    process = subprocess.Popen('git branch', stderr=subprocess.PIPE,stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
-    err = process.stderr.read()
-    if err and err.find('Not a git repository') != -1:
+    out = ihelper.execute('git branch', print_out=False, return_result=True)
+    if out.find('Not a git repository') != -1:
         result = False
 
     os.chdir(curr_dir)
@@ -77,7 +77,7 @@ def workspace_is_clean():
     """
     检查当前分支的工作区(包括暂存区)是否是清洁的
     """
-    return workspace_status() == iglobal.GIT_CLEAN
+    return workspace_status() & iglobal.GIT_CLEAN
 
 
 def real_branch( branch, prefix):
@@ -136,7 +136,7 @@ def product_branch():
 
     if project != 'global':
         proj_cfg = iconfig.read_config('project', project)
-        if proj_cfg.has_key('branch') and list(proj_cfg['branch']).has_key('product'):
+        if proj_cfg.has_key('branch') and dict(proj_cfg['branch']).has_key('product'):
             return proj_cfg['branch']['product']
 
     config = iconfig.read_config('system', 'branch')
@@ -155,7 +155,7 @@ def test_branch():
 
     if project != 'global':
         proj_cfg = iconfig.read_config('project', project)
-        if proj_cfg.has_key('branch') and list(proj_cfg['branch']).has_key('test'):
+        if proj_cfg.has_key('branch') and dict(proj_cfg['branch']).has_key('test'):
             return proj_cfg['branch']['test']
 
     config = iconfig.read_config('system', 'branch')
@@ -169,21 +169,46 @@ def comment(msg, btype=None):
     return '<' + btype + '>' + msg if btype else msg
 
 
-def workspace_status():
+def workspace_status(text=False):
     """
     工作空间状态
+    :param text:
+    :return:
     :return:
     """
-    out = os.popen('git status').read()
-    if out.find('working directory clean') != -1:
-        return iglobal.GIT_WORKSPACE_CLEAN
-    elif out.find('Unmerged paths') != -1:
-        return iglobal.GIT_WORKSPACE_CONFLICT
-    elif out.find('Changes to be committed') != -1:
-        return iglobal.GIT_UNCOMMITED
-    elif out.find('Changes not staged for commit'):
-        return iglobal.GIT_UNSTAGED
+    __status = 0
 
+    out = os.popen('git status').read()
+
+    if out.find('working directory clean') != -1:
+        __status |= iglobal.GIT_CLEAN
+    if out.find('Unmerged paths') != -1:
+        __status |= iglobal.GIT_CONFLICT
+    if out.find('Changes to be committed') != -1:
+        __status |= iglobal.GIT_UNCOMMITED
+    if out.find('Changes not staged for commit') != -1:
+        __status |= iglobal.GIT_UNSTAGED
+    if out.find('branch is ahead of') != -1:
+        __status |= iglobal.GIT_AHEAD
+    if out.find('branch is behind of') != -1:
+        __status |= iglobal.GIT_BEHIND
+
+    if not text:
+        return __status
+    else:
+        return __status_code_to_text(__status)
+
+
+def __status_code_to_text(code):
+    if not code:
+        return None
+
+    text = []
+    for c, t in iglobal.GIT_STATUS_MAP.items():
+        if code & c:
+            text.append(t)
+
+    return '|'.join(text)
 
 def push(branch):
     """
@@ -210,8 +235,11 @@ def merge(branch, push=True):
     # 从远程仓库拉最新代码
     ihelper.execute('git pull --rebase', raise_err=True)
 
-    # 合并
-    ihelper.execute('git merge --no-ff ' + branch, raise_err=True)
+    # 合并(git合并冲突信息在stdout中)
+    ihelper.execute('git merge --no-ff ' + branch)
+    if workspace_status() & iglobal.GIT_CONFLICT:
+        ihelper.execute('git status -s')
+        raise exception.FlowException(u'合并失败：发生冲突。请手工解决冲突后用git add . && git commit && git push手工提交')
 
     # 推送到远程仓库
     ihelper.execute('git push')

@@ -1,0 +1,14 @@
+git status
+git push
+git status
+commit 测试cherry的冲突
+git push
+git log
+git checkout test-dev
+commit 测试cherry冲突test-dev
+git push
+git cherry-pick 0f2cf206de7ce31c87e68ff844825349ebb19267
+git status
+git merge --abort
+git cherry-pick --abort
+git status

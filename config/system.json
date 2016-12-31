@@ -19,11 +19,12 @@
     "fix":"hotfix",
     "c":"create",
     "t":"test",
-    "p":"publish",
+    "p":"product",
     "s":"show",
     "d":"delete",
     "br":"branch",
-    "cmt":"commit"
+    "cmt":"commit",
+    "ck":"checkout"
   },
   "cmd_cls":{
     "feature":"Feature",

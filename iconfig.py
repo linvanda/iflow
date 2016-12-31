@@ -41,7 +41,7 @@ def read_config(path, key=None, use_cache=True):
 
             if not str:
                 str = '{}'
-            str = re.compile('//[^"]*$', re.M).sub('', str)
+            str = re.compile('//.*$', re.M).sub('', str)
             config = __CONFIG[path] = json.loads(str)
 
     if key:

@@ -13,11 +13,24 @@ SPRINT = 'none'
 Git状态
 """
 # 干净
-GIT_CLEAN = (1, 'clean')
+GIT_CLEAN = 1
 # 合并或pull冲突
-GIT_CONFLICT = (2, 'conflict')
-# 有待提交内容
-GIT_UNCOMMITED = (4, 'uncommited')
+GIT_CONFLICT = 2
 # 尚有未staged的内容
-GIT_UNSTAGED = (8, 'unstaged')
+GIT_UNSTAGED = 4
+# 有待提交内容
+GIT_UNCOMMITED = 8
+# ahead
+GIT_AHEAD = 16
+# behind
+GIT_BEHIND = 32
+
+GIT_STATUS_MAP = {
+    1:'clean',
+    2:'conflict',
+    4:'unstaged',
+    8:'uncommited',
+    16:'ahead',
+    32:'behind'
+}
 
