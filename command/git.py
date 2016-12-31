@@ -1,12 +1,15 @@
 # coding:utf-8
 
 import os
-from command import Command
+from CVS import CVS
 import exception
 import ihelper
+import igit
+from iprint import *
+import iglobal
 
 
-class Git(Command):
+class Git(CVS):
     """
     git相关指令
     """
@@ -39,4 +42,43 @@ class Git(Command):
         """
         git原生指令
         """
-        os.system('git ' + (' '.join(self.args) if self.args else ''))
+        ihelper.execute('git ' + (' '.join(self.args) if self.args else ''))
+
+    def commit(self):
+        """
+        提交
+        ft commit -p 去掉类型限制
+        ft commit 去掉类型限制
+        :return:
+        """
+        comment = None
+        push = False
+
+        if not self.args or len(self.args) > 2:
+            raise exception.FlowException(u'指令格式错误，请输入h ft查看使用说明')
+
+        while self.args:
+            c = self.args.pop(0)
+            if c == '-p':
+                push = True
+            else:
+                comment = c
+
+        if not comment:
+            raise exception.FlowException(u'请填写提交说明')
+
+        # 进入暂存区
+        ihelper.execute('git add .')
+
+        curr_branch = igit.current_branch()
+
+        # 提交
+        ihelper.execute('git commit -m "' + igit.comment(comment, curr_branch.split('/')[0]).decode('utf-8').encode(iglobal.FROM_ENCODING) + '"')
+
+        if push:
+            # 先拉远程分支(如果报错则需要手工处理)
+            ihelper.execute('git pull --rebase origin ' + curr_branch + ':' + curr_branch, raise_err=True)
+            # push
+            ihelper.execute('git push origin ' + curr_branch + ':' + curr_branch, raise_err=True)
+
+        ok(u'提交' + (u'并推送到远程仓库' if push else '') + u'成功!')

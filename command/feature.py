@@ -1,17 +1,22 @@
 # coding:utf-8
 
 import sys
-from command import Command
+import os
+from CVS import CVS
 import exception
 import extra
+import igit
+import ihelper
+import iglobal
+from iprint import *
 
 
-class Feature(Command):
+class Feature(CVS):
     """
     特性分支指令类
     """
-    def __init__(self, cmd, args):
-        Command.__init__(self, cmd, args)
+    def __init__(self, cmd, args, log=True):
+        CVS.__init__(self, cmd, args, log)
         # 二级指令
         self.sub_cmd_list = ('create', 'test', 'publish', 'tag', 'show', 'delete')
 
@@ -19,7 +24,7 @@ class Feature(Command):
         if not len(self.args):
             return extra.Extra('help', [self.cmd], log=False).execute()
 
-        sub_cmd = Command.real_cmd(self.args.pop(0), valid=False)
+        sub_cmd = self.real_cmd(self.args.pop(0), valid=False)
         if sub_cmd not in self.sub_cmd_list:
             raise exception.FlowException(u'指令格式错误，请输入h ft查看使用说明')
 
@@ -34,19 +39,45 @@ class Feature(Command):
         if not self.args:
             raise exception.FlowException(u'指令格式错误，请输入h ft查看使用说明')
 
-        # 目前固定是三个参数
-        if len(self.args) != 3:
+        if len(self.args) > 1:
             raise exception.FlowException(u'指令格式错误，请输入h ft查看使用说明')
 
-        branch = comment = None
-        while self.args:
-            arg = self.args.pop(0)
-            if arg == '-m':
-                comment = unicode(self.args.pop(0), 'utf-8')
-            else:
-                branch = arg
+        branch = self.args.pop(0)
 
-        print comment
+        if not branch:
+            raise exception.FlowException(u'请输入分支名称')
+
+        branch = igit.real_branch(branch, self.cmd)
+
+        # 分支名称重复性检查
+        if branch in igit.local_branches() or branch in igit.remote_branches(False):
+            raise exception.FlowException(u'该分支名称已经存在')
+
+        # 检查当前分支下工作区状态
+        if not igit.workspace_is_clean():
+            raise exception.FlowException(u'工作区中尚有未提交的内容，请先用git commit提交或用git stash保存到Git栈中，或丢弃掉')
+
+        white(u'正在创建分支'),sky_blue(branch), white('...', True)
+
+        # 切换到生产分支
+        p_branch = igit.product_branch()
+        ihelper.execute('git checkout ' + p_branch)
+        ihelper.execute('git pull --rebase origin ' + p_branch + ':' + p_branch)
+
+        # 创建新分支
+        ihelper.execute('git checkout -b ' + branch)
+
+        # 推送到远程
+        ihelper.execute('git push -u origin ' + branch + ':' + branch)
+
+        ok(u'创建成功!已进入分支：' + branch)
+
+
+
+
+
+
+
 
 
 

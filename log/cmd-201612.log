@@ -4,3 +4,105 @@ feature c order -m 订单
 feature c order -m 订单
 feature c order -m ¶©µ¥
 feature c order -m 订单
+help 
+feature c order -m 订单
+feature c order -m 订单
+git branch
+feature c order -m 订单
+feature c order -m 订单
+feature c order -m 订单
+feature c order -m 订单
+feature c order -m 订单
+feature c order -m 订单
+feature c order/man -m 订单
+feature c order/or -m 订单
+feature c songlin-test1
+help ft
+feature c songlin-test1
+feature c songlin-test1 -m 测试分支
+git branch -vv
+git log
+feature c songlin-test2
+feature c songlin-test2 -m 测试分支2
+git log
+feature c songlin-test2 -m 测试分支2
+feature c songlin-test3 -m 测试分支2
+git log
+git commit -m 'test'
+git log
+git branch
+feature c songlin-test3 -m 测试分支2
+feature c songlin-test3 -m 测试分支2
+feature c songlin-test3
+feature c /songlintest4
+feature c /songlintest4
+feature c /songlintest5
+feature c /songlintest6
+feature c /songlintest7
+feature c /songlintest7
+git branch
+git status
+feature c songlintest8
+git status
+git checkout .
+git stauts
+git status
+git branch -vv
+git branch -d feature/songlintest6
+feature c songlintest6
+feature c songlintest6
+git branch
+git branch -r
+git checkout -b feature/songlintest8
+git push origin feature/songlintest8:feature/songlintest7
+git status
+git add . && git commit -m 'test'
+git status
+git push origin feature/songlintest8:feature/songlintest7
+feature c /songlintest7
+feature c /songlintest9
+git status
+git status
+git stauts
+git status
+feature cmt 测试
+feature cmt 测试
+feature cmt 测试
+feature commit df
+feature commit df
+feature commit df
+feature commit df
+git status
+feature commit df
+feature commit 地方
+feature commit 地方
+feature commit 地方
+feature cmt 测试
+git log
+feature cmt 测试
+feature cmt 测试
+git log
+feature cmt 测试
+git log
+feature cmt 测试提交
+git log
+feature cmt 测试提交 -p
+feature c songlintest9
+git branch -vv
+git branch -r
+feature cmt 测试提交2
+feature cmt 测试提交2 -p
+git status
+git push origin feature/1701s1/songlintest9:feature/1701s1/songlintest9
+git status
+git status
+git status
+commit 测试 -p
+commit 测试2
+git log
+git status
+git branch -vv
+commit 测试22
+git log
+commit 测试2244
+git log

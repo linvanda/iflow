@@ -13,8 +13,6 @@ import iglobal
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-__FROM_ENCODING = 'gb2312'
-
 if __name__ == '__main__':
     iglobal.BASE_DIR = os.getcwd()
 
@@ -46,10 +44,11 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, ctr_c_handler)
 
     while True:
+        print
         ihelper.headline()
         try:
             # windows命令行读取的是gb2312的
-            args = raw_input('$ ').strip().lower().decode(__FROM_ENCODING).encode('utf-8')
+            args = raw_input('$ ').strip().lower().decode(iglobal.FROM_ENCODING).encode('utf-8')
 
             if args == 'exit':
                 ihelper.goodbye()

@@ -29,6 +29,7 @@ class Extra(Command):
         if not sprint:
             raise exception.FlowException(u'版本号格式错误')
 
+        iglobal.SPRINT = sprint
         ihelper.write_runtime('sprint', sprint)
 
     def cd(self):
@@ -47,13 +48,16 @@ class Extra(Command):
         if not os.path.isdir(proj['dir']):
             raise exception.FlowException(u'该项目git根目录配置不正确，请进入config/project.json中正确配置')
 
+        iglobal.PROJECT = proj_name
         ihelper.write_runtime('project', proj_name)
         os.chdir(proj['dir'])
 
-    def pwd(self):
+    @staticmethod
+    def pwd():
         print os.getcwd()
 
-    def version(self):
+    @staticmethod
+    def version():
         cfg = iconfig.read_config('system')
         print cfg['name'] + ' ' + cfg['version']
 
@@ -70,7 +74,8 @@ class Extra(Command):
                 print unicode(cf.get(sec, 'content'), 'utf-8')
                 print
 
-    def alias(self):
+    @staticmethod
+    def alias():
         cfg = iconfig.read_config('system', 'alias')
         arr = []
         for key, val in cfg.items():

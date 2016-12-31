@@ -22,7 +22,8 @@
     "p":"publish",
     "s":"show",
     "d":"delete",
-    "br":"branch"
+    "br":"branch",
+    "cmt":"commit"
   },
   "cmd_cls":{
     "feature":"Feature",
@@ -39,6 +40,7 @@
     "f2f":"Extra",
     "pwd":"Extra",
     "version":"Extra",
-    "alias":"Extra"
+    "alias":"Extra",
+    "commit":"Git"
   }
 }

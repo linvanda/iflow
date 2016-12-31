@@ -33,18 +33,16 @@ def required_check():
     if not proj_cfg:
         raise Exception(u'请配置项目信息(config/project.json文件，具体格式参见readme.md文件)')
 
-    curr_dir = os.getcwd()
     for proj_name, info in proj_cfg.items():
+        if proj_name == 'global':
+            raise Exception(u'项目名称不能叫global，请使用别的名称')
+
         if not info['dir'] or not os.path.exists(info['dir']) or not os.path.isdir(info['dir']):
             raise Exception(u'项目' + proj_name + u'的目录配置不正确')
-        # 检测目录是否有效的git仓库
-        os.chdir(info['dir'])
-        proccess = subprocess.Popen('git branch', stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
-        err = proccess.stderr.read()
-        if err and err.find('Not a git repository') != -1:
-            raise Exception(u'目录' + info['dir'] + '不是有效的git仓库')
 
-    os.chdir(curr_dir)
+        # 检测目录是否有效的git仓库
+        if not igit.dir_is_repository(info['dir']):
+            raise Exception(u'目录' + info['dir'] + u'不是有效的git仓库')
 
     # 版本号检测
     return isprint.check_sprint()
@@ -56,10 +54,14 @@ def init():
     """
     # 进入项目目录
     proj = read_runtime('project')
+    iglobal.PROJECT = proj
+
     if proj:
         pinfo = iconfig.read_config('project', proj)
         if pinfo.has_key('dir'):
             os.chdir(pinfo['dir'])
+
+    iglobal.SPRINT = read_runtime('sprint') or 'none'
 
 
 def write_runtime(key, val):
@@ -76,7 +78,7 @@ def write_runtime(key, val):
     return True
 
 
-def read_runtime(key = None):
+def read_runtime(key=None):
     """
     读取运行时信息
     """
@@ -93,12 +95,11 @@ def headline():
     页眉：linvanda@1612s1/vmember/master
     """
     username = igit.get_config('user.name') or 'nobody'
-    sprint = read_runtime('sprint') or 'none'
-    project = read_runtime('project') or 'global'
+    project = iglobal.PROJECT
     real_path = os.getcwd() if project == 'global' else iconfig.read_config('project', project)['dir']
-    branch = igit.get_current_branch() if project != 'global' else None
+    branch = igit.current_branch() if project != 'global' else None
 
-    pink(username), sky_blue( '@'), green(sprint), sky_blue('/'), yellow(project + '(' + real_path + ')')
+    pink(username), sky_blue( '@'), green(iglobal.SPRINT), sky_blue('/'), yellow(project + '(' + real_path + ')')
     if branch:
         sky_blue('[ ' + branch + ' ]')
     print 

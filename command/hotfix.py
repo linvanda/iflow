@@ -1,7 +1,7 @@
 # coding:utf-8
 
-from command import Command
+from CVS import CVS
 
 
-class Hotfix(Command):
+class Hotfix(CVS):
     pass

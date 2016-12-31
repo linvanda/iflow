@@ -1,6 +1,7 @@
 # coding:utf-8
 
-from command import Command
+from CVS import CVS
 
-class Transform(Command):
+
+class Transform(CVS):
     pass
