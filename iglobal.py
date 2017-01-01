@@ -24,6 +24,8 @@ GIT_UNCOMMITED = 8
 GIT_AHEAD = 16
 # behind
 GIT_BEHIND = 32
+# rebasing
+GIT_REBASING = 64
 
 GIT_STATUS_MAP = {
     1:'clean',
@@ -31,6 +33,7 @@ GIT_STATUS_MAP = {
     4:'unstaged',
     8:'uncommited',
     16:'ahead',
-    32:'behind'
+    32:'behind',
+    64:'rebasing'
 }
 

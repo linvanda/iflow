@@ -28,9 +28,10 @@
 
 特性分支：feature、ft
      创建：
-          feature c order-manager -m '订单管理'
-          feature c /1612s2/order-manager -m '订单管理'
-          feature c /order-manager -m '订单管理'
+          feature c order-manager
+          feature c /1612s2/order-manager
+          feature c /order-manager
+          ft c -y order-manager 如果远程有同名分支，则自动从远程创建
 
      发布到测试：
           ft t 发布当前分支到test分支
@@ -40,11 +41,6 @@
           feature p -t
           feature p vmember,member-center -t
           feature p vmember:/weigao
-
-     撤销发布：
-          feature p -r vmember:order-manager -s 1612s2
-          feature p -r order-manager
-          feature t -r order-manager
 
      删除分支：
           feature d order-manager

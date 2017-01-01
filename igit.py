@@ -7,6 +7,7 @@ import isprint
 import ihelper
 import iglobal
 import exception
+from iprint import *
 
 
 def get_config(key=None):
@@ -43,7 +44,7 @@ def remote_branches(refresh=True):
     # 先拉一下最新的远程分支
     if refresh:
         ihelper.execute('git stash', print_out=False)
-        ihelper.execute('git pull --rebase', print_out=False)
+        pull()
         ihelper.execute('git stash pop', print_out=False)
 
     return map(lambda x:str(x).replace('origin/HEAD -> ', '').replace('origin/', '').strip(),
@@ -192,6 +193,8 @@ def workspace_status(text=False):
         __status |= iglobal.GIT_AHEAD
     if out.find('branch is behind of') != -1:
         __status |= iglobal.GIT_BEHIND
+    if out.find('rebase in progress') != -1:
+        __status |= iglobal.GIT_REBASING
 
     if not text:
         return __status
@@ -210,6 +213,7 @@ def __status_code_to_text(code):
 
     return '|'.join(text)
 
+
 def push(branch):
     """
     将当前分支推到远程仓库
@@ -220,9 +224,21 @@ def push(branch):
         return
 
     # 先拉远程分支(如果报错则需要手工处理)
-    ihelper.execute('git pull --rebase', raise_err=True)
+    pull()
     # push
     ihelper.execute('git push origin ' + branch + ':' + branch)
+
+
+def pull():
+    """
+    拉取当前分支
+    :return:
+    """
+    info(u'拉取远程分支')
+    ihelper.execute('git pull --rebase')
+    status = workspace_status()
+    if status & iglobal.GIT_CONFLICT and status & iglobal.GIT_REBASING:
+        raise exception.FlowException(u'拉取远程分支出错：冲突。请手工解决冲突后执行git add . && git rebase --continue，然后再重新执行命令')
 
 
 def merge(branch, push=True):
@@ -233,13 +249,13 @@ def merge(branch, push=True):
     :return:
     """
     # 从远程仓库拉最新代码
-    ihelper.execute('git pull --rebase', raise_err=True)
+    pull()
 
     # 合并(git合并冲突信息在stdout中)
     ihelper.execute('git merge --no-ff ' + branch)
     if workspace_status() & iglobal.GIT_CONFLICT:
         ihelper.execute('git status -s')
-        raise exception.FlowException(u'合并失败：发生冲突。请手工解决冲突后用git add . && git commit && git push手工提交')
+        raise exception.FlowException(u'合并失败：发生冲突。请手工解决冲突后执行git add . && git commit，然后重新执行命令')
 
     # 推送到远程仓库
     ihelper.execute('git push')

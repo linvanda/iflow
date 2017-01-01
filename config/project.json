@@ -19,5 +19,12 @@
       "product":"test-master",
       "test":"test-dev"
     }
+  },
+  "membercenter2":{
+    "dir":"C:\Users\linvanda\Desktop\gittest\membercenter2",
+    "branch":{
+      "product":"test-master",
+      "test":"test-dev"
+    }
   }
 }

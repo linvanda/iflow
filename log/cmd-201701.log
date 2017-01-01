@@ -12,3 +12,82 @@ git status
 git merge --abort
 git cherry-pick --abort
 git status
+feature ck songlin-test2
+cd membercenter2
+cd membercenter2
+git branch
+git branch -vv
+git branch -d feature/1701s1/songlin-test2
+git checkout test-master
+git branch -d feature/1701s1/songlin-test2
+git branch
+git branch -r
+feature c songlin-test2
+git branch -vv
+feature c songlin-test2
+git checkout test-master
+git branch -d feature/1701s1/songlin-test2
+git branchgit branch
+git branch
+git branch -vv
+git branch -r
+feature c songlin-test2
+git branch
+git branch
+feature c songlin-test2
+git branch
+feature c songlin-test2
+feature c songlin-test2
+feature c songlin-test2
+feature c songlin-test2
+git checkout test-master
+git branch -d feature/1701s1/songlin-test2
+git branch
+feature c -y songlin-test2
+feature c -y songlin-test2
+feature t
+git status
+git merge --abort
+git branch -vv
+cd membercenter
+commit 测试pull冲突
+git push
+cd membercenter2
+feature ck songlin-test2
+git log
+cd membercenter
+commit 测试pull冲突2
+git push
+cd membercenter2
+commit 测试pull冲突membercenter2
+feature ck songlin-test2
+git log
+git status
+git rebase --abort
+git pull
+git merge --abort
+git pull --rebase
+git status
+git branch
+git rebase --abort
+feature ck songlin-test2
+git status
+git rebase --continue
+git add .
+git rebase --continue
+git stash
+git stash
+git stash pop
+git reset --hard
+feature d
+feature d songlin-test2
+feature d songlin-test2
+feature d songlin-test2
+feature d songlin-test2
+feature d songlin-test2
+feature d songlin-test2
+git checout test-master
+git checkout test-master
+feature d songlin-test2
+git branch
+git branch -r

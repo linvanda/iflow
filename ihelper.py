@@ -67,6 +67,8 @@ def init():
 def write_runtime(key, val):
     """
     写入运行时信息
+    :param val:
+    :param key:
     """
     if not key and not val:
         return True
@@ -138,4 +140,30 @@ def log(msg, type='cmd'):
     f = open(file_name, 'a')
     f.write(msg + "\n")
     f.close()
+
+
+def confirm(ask_msg,default='y', tick=3):
+    if not ask_msg:
+        return 'cancel'
+
+    n = 0
+    choice = ['y', 'n', 'c']
+    map = {'yes':'y', 'no':'n', 'cancel':'c'}
+    result = 'c'
+    while n < 3:
+        n += 1
+        c = raw_input('%s(yes|no|cancel)[%s]: ' % (ask_msg.decode('utf-8').encode(iglobal.FROM_ENCODING), default)).strip().lower()
+        if not c:
+            result = default
+            break
+
+        if map.has_key(c):
+            c = map[c]
+
+        if c in choice:
+            result = c
+            break
+
+    return result
+
 
