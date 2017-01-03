@@ -8,6 +8,8 @@ BASE_DIR = None
 PROJECT = 'global'
 # 当前迭代
 SPRINT = 'none'
+# 静音模式
+SILENCE = False
 
 """
 Git状态
@@ -26,14 +28,23 @@ GIT_AHEAD = 16
 GIT_BEHIND = 32
 # rebasing
 GIT_REBASING = 64
+# cherry-pick
+GIT_CHERRING = 128
+# merging
+GIT_MERGING = 256
+# diverged
+GIT_DIVERGED = 512
 
 GIT_STATUS_MAP = {
-    1:'clean',
-    2:'conflict',
-    4:'unstaged',
-    8:'uncommited',
-    16:'ahead',
-    32:'behind',
-    64:'rebasing'
+    1: 'clean',
+    2: 'conflict',
+    4: 'unstaged',
+    8: 'uncommited',
+    16: 'ahead',
+    32: 'behind',
+    64: 'rebasing',
+    128: 'cherring',
+    256: 'merging',
+    512: 'diverged'
 }
 

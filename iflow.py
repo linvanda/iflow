@@ -27,14 +27,6 @@ if __name__ == '__main__':
     blue(cfg['desc'], True)
     blue(u'=========================***=========================', True)
 
-    # 必须项检测
-    checked_ok = False
-    try:
-        ihelper.required_check()
-        checked_ok = True
-    except Exception, e:
-        ihelper.warn(unicode(str(e), 'utf-8'))
-
     # 初始化
     ihelper.init()
 
@@ -44,11 +36,23 @@ if __name__ == '__main__':
 
     signal.signal(signal.SIGINT, ctr_c_handler)
 
+    checked_ok = False
+
     while True:
         print
         ihelper.headline()
         try:
-            # windows命令行读取的是gb2312的
+            # 必须项是否正确（此处为条件检查，因此种检查比较耗时可能）
+            if not checked_ok:
+                try:
+                    ihelper.required_check()
+                    checked_ok = True
+                except Exception, e:
+                    ihelper.warn(unicode(str(e), 'utf-8'))
+
+            # 检查工作区状态是否健康
+            igit.check_workspace_health()
+
             args = raw_input('$ ').strip().lower().decode(iglobal.FROM_ENCODING).encode('utf-8')
 
             if args == 'exit':
@@ -63,13 +67,5 @@ if __name__ == '__main__':
                     eval('command.' + cfg['cmd_cls'][main_cmd])(main_cmd, args).execute()
                 except Exception, e:
                     error(unicode(str(e), 'utf-8'))
-
-            # 每次命令执行后都检查一下必须项是否正确
-            if not checked_ok:
-                try:
-                    ihelper.required_check()
-                    checked_ok = True
-                except Exception, e:
-                    ihelper.warn(unicode(str(e), 'utf-8'))
         except Exception, e:
             print e

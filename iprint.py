@@ -2,6 +2,7 @@
 # 彩色打印。仅windows下使用
 
 import ctypes, sys
+import iglobal
 
 STD_INPUT_HANDLE = -10
 STD_OUTPUT_HANDLE = -11
@@ -29,7 +30,11 @@ def reset_color():
     set_cmd_text_color(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE)
 
 
-def write(mess, color, new_line = False):
+def write(mess, color, new_line=False):
+    # 静音模式下不打印任何内容
+    if iglobal.SILENCE:
+        return
+
     if new_line:
         mess += "\n"
 

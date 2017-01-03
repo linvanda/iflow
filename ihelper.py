@@ -2,6 +2,7 @@
 # 该模块提供一些助手方法
 
 import subprocess
+import re
 import time
 import os
 import iconfig
@@ -63,8 +64,11 @@ def init():
 
     iglobal.SPRINT = read_runtime('sprint') or 'none'
 
+    # 设置Git参数
+    execute('git config --global push.default simple')
 
-def write_runtime(key, val):
+
+def write_runtime(key, val=None):
     """
     写入运行时信息
     :param val:
@@ -74,7 +78,12 @@ def write_runtime(key, val):
         return True
 
     info = iconfig.read_config(iglobal.BASE_DIR + '/runtime')
-    info[key] = val
+
+    if val:
+        info[key] = val
+    else:
+        info.has_key(key) and info.pop(key)
+
     iconfig.write_config(iglobal.BASE_DIR + '/runtime', info)
 
     return True
@@ -83,6 +92,7 @@ def write_runtime(key, val):
 def read_runtime(key=None):
     """
     读取运行时信息
+    :param key:
     """
     info = iconfig.read_config(iglobal.BASE_DIR + '/runtime', use_cache=False)
 
@@ -101,7 +111,11 @@ def headline():
     real_path = os.getcwd() if project == 'global' else iconfig.read_config('project', project)['dir']
     branch = igit.current_branch() if project != 'global' else None
 
-    green(iglobal.SPRINT), sky_blue('/'), yellow(project + '(' + real_path + ')')
+    if real_path.count('/') > 2:
+        path_arr = real_path.split('/')
+        real_path = '/'.join([path_arr[0], path_arr[1], '...', path_arr[len(path_arr) - 1]])
+
+    green(iglobal.SPRINT), sky_blue('/'), yellow(project + '(' +  real_path + ')')
     if branch:
         status = igit.workspace_status(True)
         sky_blue('[ ' + branch + ('(' + status + ')' if status else '') + ' ]')
@@ -111,16 +125,14 @@ def headline():
 def execute(cmd, print_out=True, raise_err=False, return_result=False):
     # 不关心异常且需要输出且不需要返回时，直接调用os.system
     if print_out and not raise_err and not return_result:
-        return os.system(cmd)
+        if iglobal.SILENCE:
+            return os.popen(cmd)
+        else:
+            return os.system(cmd)
     else:
         p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
         err = p.stderr.read()
         out = p.stdout.read()
-
-        # 测试
-        # print 'err----------:', err, '======='
-        # print 'out-----------:', out, '==========='
-        # print '-----------------------------------------------'
 
         if err:
             if raise_err:
@@ -129,7 +141,7 @@ def execute(cmd, print_out=True, raise_err=False, return_result=False):
             else:
                 out = err + out
 
-        if print_out:
+        if print_out and not iglobal.SILENCE:
             print out
 
         return out
@@ -142,7 +154,7 @@ def log(msg, type='cmd'):
     f.close()
 
 
-def confirm(ask_msg,default='y', tick=3):
+def confirm(ask_msg,default='y', tick=0):
     if not ask_msg:
         return 'cancel'
 
@@ -150,7 +162,7 @@ def confirm(ask_msg,default='y', tick=3):
     choice = ['y', 'n', 'c']
     map = {'yes':'y', 'no':'n', 'cancel':'c'}
     result = 'c'
-    while n < 3:
+    while not tick or n < tick:
         n += 1
         c = raw_input('%s(yes|no|cancel)[%s]: ' % (ask_msg.decode('utf-8').encode(iglobal.FROM_ENCODING), default)).strip().lower()
         if not c:
@@ -165,5 +177,13 @@ def confirm(ask_msg,default='y', tick=3):
             break
 
     return result
+
+
+def projects():
+    """
+    项目名称列表
+    :return:
+    """
+    return dict(iconfig.read_config('project')).keys()
 
 

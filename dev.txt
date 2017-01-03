@@ -32,24 +32,41 @@
           feature c /1612s2/order-manager
           feature c /order-manager
           ft c -y order-manager 如果远程有同名分支，则自动从远程创建
+          ft c --no-push|--np order-manager   创建但不推送到远程
 
      发布到测试：
           ft t 发布当前分支到test分支
           feature t order-manager
 
      发布到生产:
-          feature p -t
-          feature p vmember,member-center -t
-          feature p vmember:/weigao
+          feature p -t 检查所有项目的当前迭代的特性分支并列出。请输入要发布的分支，多个用","隔开。或者输入"ex"以输入排除分支列表，或输入"all"发布上列所有分支
+          feature p vmember,member-center -t 列出vmember和member-center的所有该迭代的特性分支
+          feature p vmember:/weigao,membercenter:order -t 发布vmember的feature/weigao和membercenter的feature/1701s1/order分支
+          feature p --continue  继续被中断的发布流程
+
+            分支陈列：
+                vmember:
+                    [f1] feature/weigao
+                    [f2] feature/1701s1/order
+                 membercenter:
+                    [f3] feature/1701s1/goods-edit
+
+                 ...
+                 输入in f1,f2 将要发布的分支
+                 或者ex f1,f2... 将要排除的分支
+                 all 发布所有分支
+                 cancel取消操作
+
+                 如果有-t参数，则确认合并的分支后需要再确认tag信息，可修改tag名称
 
      删除分支：
           feature d order-manager
+          feature d --no-push|--np order-manager     不删除远程分支
 
      切换到分支：
         ft checkout order-manager
         ft ck order-manager
-        ft ck --no-pull order-manager   切换分支后不从远端拉取（省时）
-        ft ck --np order-manager    切换分支后不从远端拉取（省时）
+        ft ck           fetch远程分支
 
 
 修复分支：hotfix、fix
@@ -59,10 +76,13 @@
      其他同特性分支
 
 打标签：
-     feature tag
-     feature tag vmember
-     fix tag
-     fix tag vmember
+     tag 12s1.00
+     tag vmember:12s1.02
+     tag -m vmember
+     tag -m 打主版本标签
+     tag vmember
+     tag 打修复版标签
+
 
 
 显示分支：
@@ -107,3 +127,7 @@ rename oldbranch newbranch
 其他：
      所有的操作都有日志记录
      重要操作需要给予提示并要使用者确认
+
+
+
+

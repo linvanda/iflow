@@ -91,3 +91,317 @@ git checkout test-master
 feature d songlin-test2
 git branch
 git branch -r
+git config -l
+git config --global push.default
+git config --global push.default=simple
+git config --global push.default simple
+git config --get user.name
+git --version
+feature ck songlin-test1
+git status
+git status -s
+git status -s
+git add .
+git status -s
+git reset
+git status -s
+git add .
+git status -s
+git commit -m 'test'
+git status -s
+git status
+feature c
+feature c d
+feature c d
+feature c d
+feature c /order
+feature c 1712s1/order
+feature c feature/1712s1/order
+feature c order
+feature c order
+feature c feature/1712s1/order
+feature c feature/1712s1/order
+feature c feature/1712s1/order
+feature c feature/1712s1/order
+feature c feature/1712s1/order
+feature c feature/1712s1/order
+feature c feature/1712s1/order
+feature c feature/1712s1/order
+cd membercenter2
+cd membercenter
+git status -s
+git status -s
+commit songlin-test2测试pull
+git push
+cd membercenter2
+git status -s
+git checkout .
+git log
+git reset --hard head
+git reset --hard head^
+git log
+git status
+feature ck songlin-test2
+feature c songlin-test2
+git branch
+git branch -vv
+cd membercenter
+feature c test01
+git merge --abort
+git rebase --abort
+git status
+git reset --hard
+git status
+feature c test01
+git branch
+git reset --hard
+cd membercenter2
+cd membercenter
+commit 测试1
+git push
+cd membercenter2
+git status
+git fetch
+git log
+git status
+git fetch
+git status
+cd membercenter
+git status
+commit -p 测试2
+cd membercenter2
+git status
+git status
+git fetch
+git status
+feature c songlin-test122
+cd membercenter
+git branch -r
+git fetch
+git branch -r
+git fetch
+cd membercenter2
+git status
+commit -p 测试23
+cd membercenter
+git fetch
+git status
+cd membercenter2
+git status
+git push
+cd membercenter2
+git status
+feature ck --np songlin-test2
+git status
+cd membercenter
+commit 迭代
+git push
+cd membercenter2
+git fetch
+git log
+git rebase
+git log
+cd membercenter
+commit 提出的热 -p
+cd membercenter2
+feature ck
+feature ck
+feature ck songlin-test1
+feature ck songlin-test2
+feature ck songlin-test1
+feature ck songlin-test2
+feature ck songlin-test1
+feature ck songlin-test2
+git checkout ddfd
+git rebase
+feature ck songlin-test11
+feature ck songlin-test1
+git push
+cd membercenter
+cd membercenter2
+git fetch
+git status
+feature ck songlin-test2
+cd membercenter
+feature ck songlin-test1
+git rebase
+git rebase
+commit test1
+commit test1 -p
+feature ck songlin-test2
+commit test2 -p
+cd membercenter2
+git status
+feature ck songlin-test1
+git checkout feature/1701s1/songlin-test2
+feature d
+feature d
+feature d
+cd membercenter
+git branch
+git branch
+feature d
+feature d
+feature d
+feature d
+cd test
+feature d
+git branch
+git branch -r
+cd membercenter2
+feature d
+git branch
+git status
+git status
+git add .
+git status
+commit tttt
+git status -s
+git status
+git rebase
+git add .
+git status
+git rebase --continue
+commit 测试cherry
+feature ck songlin-test1
+git rebase
+commit ceshi
+git log
+feature ck songlin-test2
+git cherry-pick 17e97c90ae476f73299912ec6a18839100670f2f
+git cherry-pick 17e97c90ae476f73299912ec6a18839100670f2f
+commit dd
+feature ck songlin-test1
+commit ddfe
+git log
+feature ck songlin-test2
+git cherry-pick 5522ea4a914f24f7a2582a9d25037e03ab15044a
+git status
+git cherry-pick --abort
+feature ck songlin-test1
+git log
+feature ck songlin-test2
+git cherry-pick 5522ea4a914f24f7a2582a9d25037e03ab15044a
+git add .
+git cherry-pick --continue
+commit dfffd
+feature ck songlin-test1
+commit dddf1
+feature ck songlin-test2
+git merge feature/1701s1/songlin-test1
+git status
+git merge --abort
+git merge feature/1701s1/songlin-test1
+git status
+git status
+git add .
+git status
+commit merging
+git status
+commit ccc
+git log
+git commit --amend
+git log
+git ls-files
+git ls-files|grep png
+git cat-file
+git log
+git cat-file 268f889ccf605734c1c75e22a78661f61ad57b9c:1.txt
+git cat-file head:1.txt
+git cat-file 1.txt
+git cat-file -p 1.txt
+git cat-file -p head:1.txt
+git cat-file -p 268f889ccf605734c1c75e22a78661f61ad57b9c:1.txt
+feature ck songlin-test1
+commit tt
+git push
+feature ck songlin-test2
+cd membercenter
+commit ctrd
+git push
+cd membercenter2
+commit 'dfdd
+git fetch
+git status
+git rebase
+git add . && git rebase --continue
+git add . && git rebase --continue
+git status
+git rebase --continue
+git status
+git add .
+git rebase --continue
+git rebase --skip
+git status
+git add .&&git rebase --continue
+git add .&&git rebase --continue
+git add .&&git rebase --continue
+git add .&&git rebase --continue
+git add .&&git rebase --continue
+git add .&&git rebase --continue
+feature d songlin-test1
+feature d songlin-test1 --np
+git branch -r
+git branch
+git branch feature/1701s1/songlin-test3 origin/feature/1701s1/songlin-test3
+git branch -vv
+feature d
+feature ck songlin-test3
+git checkout feature/1701s1/songlin-test3
+git add .
+git checkout feature/1701s1/songlin-test3
+git branch
+git checkout master
+git reset --hard
+git checkout master
+feature d songlin-test2 --np
+feature d songlin-test2 --np
+feature d songlin-test3 --np
+git branch
+feature d songlin-test122 --np
+git branch
+git branch -r
+feature d
+feature checkout
+git branch
+git branch -r
+git branch -vv
+feature c --np songlin-test1001
+git branch -r
+git branch -vv
+feature ck
+git branch -vv
+feature p
+feature p
+feature p membercenter
+git branch
+feature d songlin-test2
+feature d songlin-test3 --np
+feature p membercenter2
+feature d songlin-test3 --np
+git branch
+git branch -r
+feature p membercenter2
+feature p
+feature p
+feature p membercenter2
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1

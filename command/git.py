@@ -71,13 +71,10 @@ class Git(CVS):
         if not comment:
             raise exception.FlowException(u'请填写提交说明')
 
-        # 进入暂存区
-        ihelper.execute('git add .')
-
         curr_branch = igit.current_branch()
 
         # 提交
-        ihelper.execute('git commit -m "' + igit.comment(comment, curr_branch.split('/')[0]).decode('utf-8').encode(iglobal.FROM_ENCODING) + '"')
+        ihelper.execute('git commit -am "' + igit.comment(comment, curr_branch.split('/')[0]).decode('utf-8').encode(iglobal.FROM_ENCODING) + '"')
 
         if push:
             igit.push(curr_branch)
