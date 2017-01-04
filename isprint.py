@@ -24,7 +24,7 @@ def format_sprint(sprint):
 
 def get_sprint(sprint=None):
     if not sprint:
-        year = time.strftime('%Y')[2:4]
+        year = time.strftime('%y')
         month = time.strftime('%m')
         day = time.strftime('%d')
         s = 's1' if int(day) < 15 else 's2'

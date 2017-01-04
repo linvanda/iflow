@@ -405,3 +405,56 @@ feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
 feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
 feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
 feature p membercenter2,membercenter:songlin-test122,membercenter:songlin-test1
+feature p --abort
+feature p
+feature p --continue
+git log
+feature ck songlin1001
+git branch
+feature ck songlin-test1001
+git checkout test-master
+git tag
+feature ck songlin-test111
+git branch
+feature ck songlin-test1001
+git tag
+feature p
+feature p
+git tag
+git tag -a v1612s1 -m ''
+git tag -a v1612s1.00 -m ''
+git tag -a v1612s2.00 -m ''
+git tag -a v1612s2.01 -m ''
+git tag -a v1612s2.11 -m ''
+git tag -a v1612s2.02 -m ''
+git tag -a v1701s1.00 -m ''
+feature p
+feature p
+feature p
+git tag -a v1701s1.03 -m ''
+feature p
+feature p membercenter,membercenter2
+feature p membercenter,membercenter2
+feature p membercenter,membercenter2
+feature p --abort
+feature p membercenter,membercenter2
+feature p --abort
+feature p membercenter,membercenter2
+feature p --abort
+feature p membercenter,membercenter2
+feature p --abort
+feature p membercenter,membercenter2
+feature p membercenter,membercenter2
+feature p --abort
+feature p membercenter,membercenter2
+feature p --abort
+feature p membercenter,membercenter2
+feature p --abort
+feature p membercenter,membercenter2
+feature p --abort
+feature p membercenter,membercenter2
+feature p --abort
+feature p membercenter,membercenter2
+feature p membercenter,membercenter2
+git log
+git tag

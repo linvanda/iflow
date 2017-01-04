@@ -24,21 +24,21 @@ class Feature(CVS):
         if not len(self.args):
             return extra.Extra('help', [self.cmd], log=False).execute()
 
-        sub_cmd = self.real_cmd(self.args.pop(0), valid=False)
+        sub_cmd = self.real_cmd(self.args[0], valid=False)
         if sub_cmd not in self.sub_cmd_list:
             raise exception.FlowException(u'指令格式错误，请输入h ft查看使用说明')
 
         # 调用相应的二级指令处理方法
-        eval('self.' + sub_cmd)()
+        eval('self.' + sub_cmd)(self.args[1:])
 
-    def checkout(self):
+    def checkout(self, args):
         """
         切换到某个特性分支并拉取最新代码（如果工作空间是干净的）
         :return:
         """
         branch = None
-        while self.args:
-            branch = igit.real_branch(self.args.pop(0), self.cmd)
+        while args:
+            branch = igit.real_branch(args.pop(0), self.cmd)
 
         if not branch:
             branch = igit.current_branch()
@@ -61,20 +61,20 @@ class Feature(CVS):
         if status & iglobal.GIT_BEHIND or status & iglobal.GIT_DIVERGED:
             warn(u'远程仓库已有更新，请执行 git rebase 获取最新代码')
 
-    def create(self):
+    def create(self, args):
         """
         创建特性分支。一次只能创建一个，会推到远端，且切换到此分支
         :return:
         """
-        if not self.args:
+        if not args:
             raise exception.FlowException(u'指令格式错误，请输入h ft查看使用说明')
 
         branch = None
         auto_create_from_remote = False
         push_to_remote = True
 
-        while self.args:
-            c = self.args.pop(0)
+        while args:
+            c = args.pop(0)
             if c == '-y':
                 auto_create_from_remote = True
             elif c == '--np' or c == '--no-push':
@@ -133,22 +133,20 @@ class Feature(CVS):
         else:
             raise exception.FlowException(u'创建分支失败')
 
-    def test(self):
+    def test(self, args):
         """
         发布到测试分支，只允许单个分支发布
+        :param args:
         :return:
         """
-        if len(self.args) > 1:
-            raise exception.FlowException(u'指令格式错误，请输入h ft查看使用说明')
-
         # 当前工作空间是否干净
         if not igit.workspace_is_clean():
             raise exception.FlowException(u'工作区中尚有未保存的内容')
 
-        if not self.args:
+        if not args:
             branch = igit.current_branch()
         else:
-            branch = self.args.pop(0)
+            branch = args.pop(0)
 
         branch = igit.real_branch(branch, self.cmd)
 
@@ -188,21 +186,24 @@ class Feature(CVS):
 
         ok(u'合并到' + test_branch + u'成功!')
 
-    def delete(self):
+    def delete(self, args):
         """
         删除分支
         :return:
         """
-        if not self.args:
+        if not args:
             raise exception.FlowException(u'指令格式错误，请输入h ft查看使用说明')
 
         branch = None
         delete_remote = True
+        auto_delete = False
 
-        while self.args:
-            c = self.args.pop(0)
+        while args:
+            c = args.pop(0)
             if c == '--np' or c == '--no-push':
                 delete_remote = False
+            elif c == '-y':
+                auto_delete = True
             else:
                 branch = igit.real_branch(c, self.cmd)
 
@@ -221,40 +222,42 @@ class Feature(CVS):
                 ihelper.execute('git push --delete origin %s' % branch)
                 ok(u'删除成功!')
 
-    def product(self):
+    def product(self, args):
         """
         发布到生产分支
         未完成
+        :param args:
         :return:
         """
-        create_tag = False
         continue_p = False
         abort_p = False
-        branches = None
         branch_alias = {}
         tick = 1
 
         branch_str = None
-        while self.args:
-            c = self.args.pop(0)
+        while args:
+            c = args.pop(0)
 
             if c == '--abort':
                 abort_p = True
             elif c == '--continue':
                 continue_p = True
-            elif c == '-t':
-                create_tag = True
             else:
                 branch_str = c
 
         if abort_p:
             # 清除runtime后退出
+            ok(u'取消发布')
             ihelper.write_runtime('publish_branches')
             return
 
         if continue_p:
             # 继续上次的发布
             self.publish_to_master()
+            return
+
+        if ihelper.read_runtime('publish_branches'):
+            error(u'上次发布尚未完成，请执行 ft p --continue 继续，或执行 ft p --abort 结束')
             return
 
         branches = self.__resolve_branches(branch_str)
@@ -279,13 +282,9 @@ class Feature(CVS):
         print
         info(u'1. 输入 "in 分支简称列表(f1,f2...，多个分支用英文逗号隔开)" 告知系统要发布的分支。或者')
         info(u'2. 输入 "ex 分支简称列表" 告知系统要排除的分支。或者')
-        info(u'4. 输入 all 发布以上列出的所有项目分支。或者')
-        info(u'5. 输入 cancel 取消发布')
+        info(u'3. 输入 all 发布以上列出的所有项目分支。或者')
+        info(u'4. 输入 cancel 取消发布')
         print
-
-        in_branches = []
-        ex_branches = []
-        all = False
 
         retr = True
         while retr:
@@ -332,20 +331,24 @@ class Feature(CVS):
             info(u'没有需要发布的分支')
             return
 
-        orig_branches = branches
+        orig_branches = list(branches)
         try:
             the_proj = None
             for index, item in enumerate(branches):
                 proj, branch = tuple(item)
+
                 if iglobal.PROJECT != proj:
-                    extra.Extra('cd', [proj], log=False)
+                    info(u'进入项目%s' % proj)
+                    extra.Extra('cd', [proj], log=False).execute()
 
                 if not igit.workspace_is_clean():
                     raise exception.FlowException(u'项目%s工作空间有未提交的更改，请先提交(或丢弃)后执行 ft p --continue 继续' % proj)
 
                 if the_proj != proj:
+                    info('fetch...')
                     ihelper.execute('git fetch')
 
+                # 切换到将要合并的分支
                 ihelper.execute('git checkout %s' % branch)
 
                 if igit.workspace_status() & iglobal.GIT_BEHIND:
@@ -353,17 +356,53 @@ class Feature(CVS):
                     igit.pull()
 
                 # 切换到master分支
-                if proj != the_proj:
-                    ihelper.execute('git checkout %s' % igit.product_branch())
-                # 合并
-                igit.merge(branch, need_pull=proj != the_proj, need_push= index >= len(branches) - 1 or proj != branches[index + 1][0])
+                ihelper.execute('git checkout %s' % igit.product_branch())
 
+                is_last_branch = index >= len(branches) - 1 or proj != branches[index + 1][0]
+
+                # 合并
+                info(u'合并%s...' % branch)
+                igit.merge(branch, need_pull=proj != the_proj, need_push=is_last_branch)
+                info(u'合并完成：%s' % branch)
+
+                # 完成
+                self.delete([branch, '-y'])
                 orig_branches.remove(item)
+                if proj != the_proj:
+                    the_proj = proj
+
+                # 项目发布完成时提示是否打标签
+                if is_last_branch and ihelper.confirm(u'项目%s发布完成，是否打标签？' % proj) == 'y':
+                    self.__tag()
+
+            ok(u'发布完成！')
         except Exception, e:
-            error(e)
+            error(e.message)
             warn(u'解决后执行 ft p --continue 继续。或执行 ft p --abort 结束')
         finally:
             ihelper.write_runtime('publish_branches', orig_branches)
+
+    def __tag(self):
+        default_tag = igit.tag_name('main')
+        while 1:
+            input_tag = raw_input((u'请输入标签名称%s：(输入cancel取消)' % (u'(默认%s)'%default_tag if default_tag else '')).decode('utf-8').encode(iglobal.FROM_ENCODING)).lower().strip()
+            if not input_tag:
+                if default_tag:
+                    input_tag = default_tag
+                else:
+                    continue
+
+            if input_tag == 'cancel':
+                break
+
+            if not igit.check_tag_format(input_tag):
+                error(u'标签名称不合法')
+                continue
+
+            info(u'打标签...')
+            ihelper.execute('git tag -a %s -m %s' % (input_tag, input_tag))
+            ihelper.execute('git push origin %s' % input_tag)
+            break
 
     @staticmethod
     def __choose_branch_dialog(branch_alias):

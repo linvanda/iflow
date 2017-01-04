@@ -15,31 +15,33 @@ import iprint
 class Extra(Command):
     def execute(self):
         try:
-            eval('self.' + self.cmd)()
+            eval('self.' + self.cmd)(list(self.args))
         except exception.FlowException, e:
             raise Exception(unicode(str(e), 'utf-8'))
         except Exception, e:
             raise Exception(e.message)
 
-    def sprint(self):
+    def sprint(self, args):
         """
         切换到某个迭代
+        :param args:
         """
-        sprint = isprint.get_sprint(None if not self.args else self.args[0])
+        sprint = isprint.get_sprint(None if not args else args[0])
         if not sprint:
             raise exception.FlowException(u'版本号格式错误')
 
         iglobal.SPRINT = sprint
         ihelper.write_runtime('sprint', sprint)
 
-    def cd(self):
+    def cd(self, args):
         """
         进入项目目录
+        :param args:
         """
-        if not self.args:
+        if not args:
             raise exception.FlowException(u'指令格式不正确，请键入help查看该指令使用方式')
 
-        proj_name = self.args[0]
+        proj_name = args[0]
         proj = iconfig.read_config('project', proj_name)
 
         if not proj or not proj.has_key('dir'):
@@ -53,16 +55,17 @@ class Extra(Command):
         os.chdir(proj['dir'])
 
     @staticmethod
-    def pwd():
+    def pwd(args=None):
         print os.getcwd()
 
     @staticmethod
-    def version():
+    def version(args=None):
         cfg = iconfig.read_config('system')
         print cfg['name'] + ' ' + cfg['version']
 
-    def help(self):
-        cmd = self.args[0] if self.args else None
+    @staticmethod
+    def help(args):
+        cmd = args[0] if args else None
         cmd = cmd and Command.real_cmd(cmd)
 
         cf = ConfigParser.ConfigParser()
@@ -75,7 +78,7 @@ class Extra(Command):
                 print
 
     @staticmethod
-    def alias():
+    def alias(args=None):
         cfg = iconfig.read_config('system', 'alias')
         arr = []
         for key, val in cfg.items():

@@ -1,6 +1,9 @@
 # coding:utf-8
 
 import os
+import re
+import time
+import datetime
 import subprocess
 import iconfig
 import isprint
@@ -368,6 +371,34 @@ def sync(project, prefix=None, only_this_sprint=True, deep=False):
             command.Extra('cd', [old_project], log=False).execute()
     finally:
         iglobal.SILENCE = False
+
+
+def tag_name(tag_type='main'):
+    if tag_type == 'main':
+        # 主版本标签
+        return 'v%s.00' % iglobal.SPRINT
+    else:
+        # 获取最近的tag
+        year = time.strftime('%y')
+        years = [year, int(year) - 1]
+        partten1 = 'v%s*.*' % years[0]
+        partten2 = 'v%s*.*' % years[1]
+        tag = ihelper.execute('git tag -l "%s" "%s" --sort "version:refname"' % (partten1, partten2), print_out=False, return_result=True).splitlines()
+        tag = tag.pop() if tag else None
+        if tag:
+            tag = tag.split('.')
+            tag = '%s.%02d' % (tag[0], int(tag[1]) + 1)
+
+        return tag
+
+
+def check_tag_format(tag):
+    """
+    暂仅作宽松校验
+    :param tag:
+    :return:
+    """
+    return re.compile('^v.*\..*').match(tag)
 
 
 def check_workspace_health():
