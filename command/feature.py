@@ -150,6 +150,8 @@ class Feature(CVS):
 
         branch = igit.real_branch(branch, self.cmd)
 
+        ihelper.execute('git fetch')
+
         if branch != igit.current_branch():
             # 切换分支
             info(u'切换到分支%s' % branch)
@@ -159,9 +161,7 @@ class Feature(CVS):
             if not igit.workspace_is_clean():
                 raise exception.FlowException(u'工作区中尚有未保存的内容')
 
-        # 推到远程仓库
-        info(u'推送到远程仓库...')
-        igit.push(branch)
+        igit.sync_branch()
 
         # 切换到test分支
         test_branch = igit.test_branch()
@@ -213,7 +213,7 @@ class Feature(CVS):
         if branch == igit.current_branch():
             raise exception.FlowException(u'不能删除当前分支')
 
-        if ihelper.confirm(u'确定删除分支 %s 吗?' % branch, default='n') == 'y':
+        if auto_delete or ihelper.confirm(u'确定删除分支 %s 吗?' % branch, default='n') == 'y':
             info(u'删除本地分支...')
             ihelper.execute('git branch -D %s' % branch, raise_err=True)
             # 删除远程分支

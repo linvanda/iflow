@@ -240,19 +240,30 @@ def __status_code_to_text(code):
     return '|'.join(text)
 
 
-def push(branch):
+def push(branch=None):
     """
     将当前分支推到远程仓库
     :param branch:
     :return:
     """
     if not branch:
+        branch = current_branch()
+
+    status = workspace_status()
+    if not branch or (not status & iglobal.GIT_AHEAD and not status & iglobal.GIT_DIVERGED):
         return
 
     # 先拉远程分支(如果报错则需要手工处理)
     pull()
-    # push
     ihelper.execute('git push origin ' + branch + ':' + branch)
+
+
+def sync_branch():
+    if not workspace_is_clean():
+        return
+
+    pull()
+    push()
 
 
 def pull():
@@ -260,6 +271,10 @@ def pull():
     拉取当前分支
     :return:
     """
+    status = workspace_status()
+    if not status & iglobal.GIT_BEHIND or not status & iglobal.GIT_DIVERGED:
+        return
+
     info(u'拉取远程分支...')
     ihelper.execute('git pull --rebase')
     status = workspace_status()

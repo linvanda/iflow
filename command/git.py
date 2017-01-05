@@ -74,7 +74,8 @@ class Git(CVS):
         curr_branch = igit.current_branch()
 
         # 提交
-        ihelper.execute('git commit -am "' + igit.comment(comment, curr_branch.split('/')[0]).decode('utf-8').encode(iglobal.FROM_ENCODING) + '"')
+        ihelper.execute('git add .')
+        ihelper.execute('git commit -m "' + igit.comment(comment, curr_branch.split('/')[0]).decode('utf-8').encode(iglobal.FROM_ENCODING) + '"')
 
         if push:
             igit.push(curr_branch)

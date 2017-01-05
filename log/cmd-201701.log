@@ -458,3 +458,83 @@ feature p membercenter,membercenter2
 feature p membercenter,membercenter2
 git log
 git tag
+git branch
+feature d songlin-test1001
+feature d songlin-test122
+git branch
+git branch -r
+git branch
+feature d songlin-test3
+feature d songlintest6
+git branch
+feature d songlintest9
+git branch
+git branch -r
+git push --delete origin feature/songlintest4
+git push --delete origin feature/songlintest5
+git push --delete origin feature/songlintest6
+git push --delete origin feature/songlintest7
+git branch -r
+git push --delete origin songlin-test111
+git branch -r
+cd membercenter
+git branch
+sprint 02s1
+feature c test1
+feature c test2
+git branch
+cd membercenter2
+git branch
+feature c test3
+feature c test4
+git branch
+commit test4
+commit test4 -p
+git log
+feature ck test3
+commit test3 -p
+git branch
+cd membercenter
+commit test2
+commit test2 -p
+git branch
+cd test
+git branch
+feature c test5
+cd vmember
+git branch
+git checkout -b test-master
+git checkout -b test-dev
+git push -u origin test-dev
+git checkout test-master
+git push -u origin test-master
+git branch -v
+git branch -r
+feature c test7
+feature c test8
+git branch
+commit -p test8
+git status
+git commit -am 'test8'
+commit -p test8
+feature p
+pwd 
+feature p
+git status
+git add . && git commit -m 'confict test2-test3'
+git status
+git commit -m 'conflict test2-test3'
+git commit -am 'conflict test2-test3'
+git commit -ma 'conflict test2-test3'
+git commit -a -m 'conflict test2-test3'
+git status
+git status -s
+git commit
+git log
+feature p --continue
+git branch
+git status
+git log
+git rebase --abort
+git log
+git log
