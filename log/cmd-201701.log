@@ -538,3 +538,76 @@ git log
 git rebase --abort
 git log
 git log
+feature p --abort
+git branch
+git branch hotfix/test4
+git branch
+h2f test4
+h2f test4
+h2f test4
+git mv hotfix/test4 hotfix/test5
+git branch mv hotfix/test4 hotfix/test5
+git branch -m hotfix/test4 hotfix/test5
+git branch
+h2f test4
+h2f test4
+h2f test4
+h2f test5
+git branch
+git branch
+git branch hotfix/test6
+h2f 
+h2f 
+h2f test5
+h2f test5
+git branch
+h2f test6
+git branch
+f2h test1
+git branch
+f2h test3
+f2h test7
+f2f test1
+f2f test1
+git branch
+f2f test4
+f2f test4
+f2f test4
+sprint 02s2
+git branch
+f2f test4
+f2f test4
+f2f test4
+f2f test4
+f2f test4
+f2f test4
+f2f test4
+f2f test4 -n
+f2f test4 -s 02s1
+f2f test4 -s 02s1
+git branch
+git branch -r\
+git branch -r
+feature 
+feature ddf
+hotfix 
+hotfix 
+hotfix 
+hotfix 
+hotfix 
+git branch
+feature ck test4
+sprint 02s1
+feature ck test4
+hotfix ck test4
+feature c test6
+git branch
+feature c test7
+git branch
+git branch -r
+hotfix c test7
+git branch -r
+feature d test7
+hotfix d test7
+git checkout test-master
+hotfix d test7

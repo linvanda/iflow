@@ -31,14 +31,24 @@ class Git(CVS):
         old = self.args[0]
         new = self.args[1]
 
+        local_branches = igit.local_branches()
+
+        if old not in local_branches:
+            raise exception.FlowException(u'分支名称不存在：%s' % old)
+
+        remote_branches = igit.remote_branches()
+
         # 名称重复性检测
-        if new in igit.local_branches() or new in igit.remote_branches():
-            raise exception.FlowException(u'该分支名称已经存在')
+        if new in local_branches or new in remote_branches:
+            raise exception.FlowException(u'该分支已经存在：%s' % new)
+
+        info(u'重命名分支：%s -> %s...' % (old, new))
 
         # 重命名本地分支
         ihelper.execute('git branch -m ' + old + ' ' + new, raise_err=True)
         # 删除远程分支(如果有的话)
-        ihelper.execute('git push --delete origin ' + old)
+        if old in remote_branches:
+            ihelper.execute('git push --delete origin ' + old)
         # 上传新分支到远程
         ihelper.execute('git push -u origin ' + new + ':' + new)
 

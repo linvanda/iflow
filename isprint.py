@@ -6,6 +6,7 @@ import time
 import datetime
 import iconfig
 import ihelper
+import iglobal
 
 
 def check_sprint_format(sprint, loose=False):
@@ -34,6 +35,24 @@ def get_sprint(sprint=None):
     sprint = format_sprint(sprint)
 
     return None if not check_sprint_format(sprint) else sprint
+
+
+def next_sprint():
+    now_sp = iglobal.SPRINT
+    if not now_sp:
+        return None
+
+    sp_list = [now_sp[:2], now_sp[2:4], now_sp[4:]]
+    if sp_list[2][1] == '1':
+        return '%s%s%s' % (sp_list[0], sp_list[1], 's2')
+
+    if sp_list[1] == '12':
+        sp_list[0] = str(int(sp_list[0]) + 1)
+        sp_list[1] = 1
+    else:
+        sp_list[1] = int(sp_list[1]) + 1
+
+    return '%s%02d%s' % (sp_list[0], int(sp_list[1]), sp_list[2])
 
 
 def get_date_from_sprint(sprint):

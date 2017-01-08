@@ -128,7 +128,7 @@ def real_branch( branch, prefix):
     if original_branch.find('/') == 0:
         return config[prefix + '_prefix'] + original_branch
     else:
-        return config[prefix + '_prefix'] + ('/' + ihelper.read_runtime('sprint') if prefix == 'feature' else '') + '/' + branch[0]
+        return config[prefix + '_prefix'] + ('/' + iglobal.SPRINT if prefix == 'feature' else '') + '/' + branch[0]
 
 
 def simple_branch(branch):

@@ -1,24 +1,21 @@
 # coding:utf-8
-
-import sys
-import os
 from CVS import CVS
-import exception
 import extra
+import exception
 import igit
 import ihelper
-import iglobal
+import iconfig
 from iprint import *
 
 
-class Feature(CVS):
+class Develop(CVS):
     """
-    特性分支指令类
+    test和feature分支指令基类
     """
     def __init__(self, cmd, args, log=True):
         CVS.__init__(self, cmd, args, log)
         # 二级指令
-        self.sub_cmd_list = ('create', 'test', 'product', 'tag', 'show', 'delete',"checkout")
+        self.sub_cmd_list = ('create', 'test', 'product', 'delete',"checkout")
 
     def execute(self):
         if not len(self.args):
@@ -26,14 +23,14 @@ class Feature(CVS):
 
         sub_cmd = self.real_cmd(self.args[0], valid=False)
         if sub_cmd not in self.sub_cmd_list:
-            raise exception.FlowException(u'指令格式错误，请输入h ft查看使用说明')
+            raise exception.FlowException(u'指令格式错误，请输入h %s查看使用说明' % self.cmd)
 
         # 调用相应的二级指令处理方法
         eval('self.' + sub_cmd)(self.args[1:])
 
     def checkout(self, args):
         """
-        切换到某个特性分支并拉取最新代码（如果工作空间是干净的）
+        切换到某个特性/修复分支并拉取最新代码（如果工作空间是干净的）
         :return:
         """
         branch = None
@@ -63,11 +60,11 @@ class Feature(CVS):
 
     def create(self, args):
         """
-        创建特性分支。一次只能创建一个，会推到远端，且切换到此分支
+        创建特性/修复分支。一次只能创建一个，会推到远端，且切换到此分支
         :return:
         """
         if not args:
-            raise exception.FlowException(u'指令格式错误，请输入h ft查看使用说明')
+            raise exception.FlowException(u'指令格式错误，请输入h %s查看使用说明' % self.cmd)
 
         branch = None
         auto_create_from_remote = False
@@ -192,7 +189,7 @@ class Feature(CVS):
         :return:
         """
         if not args:
-            raise exception.FlowException(u'指令格式错误，请输入h ft查看使用说明')
+            raise exception.FlowException(u'指令格式错误，请输入h %s查看使用说明' % self.cmd)
 
         branch = None
         delete_remote = True
@@ -225,8 +222,7 @@ class Feature(CVS):
     def product(self, args):
         """
         发布到生产分支
-        未完成
-        :param args:
+        :param list args:
         :return:
         """
         continue_p = False
@@ -332,9 +328,11 @@ class Feature(CVS):
             return
 
         orig_branches = list(branches)
+        curr_p_branch = None
         try:
             the_proj = None
             for index, item in enumerate(branches):
+                curr_p_branch = item
                 proj, branch = tuple(item)
 
                 if iglobal.PROJECT != proj:
@@ -367,7 +365,7 @@ class Feature(CVS):
 
                 # 完成
                 self.delete([branch, '-y'])
-                orig_branches.remove(item)
+                orig_branches.remove(curr_p_branch)
                 if proj != the_proj:
                     the_proj = proj
 
@@ -378,14 +376,25 @@ class Feature(CVS):
             ok(u'发布完成！')
         except Exception, e:
             error(e.message)
-            warn(u'解决后执行 ft p --continue 继续。或执行 ft p --abort 结束')
+
+            # 如果是在本项目中的最后一个分支合并出现异常，则需要提示push master分支(因为继续执行合并指令时发生冲突的分支不会再处理)
+            idx = branches.index(curr_p_branch)
+            if idx == len(branches) - 1 or curr_p_branch[0] != branches[idx + 1][0]:
+                warn(u'解决冲突后记得执行 git push 推到远程仓库，然后执行 ft p --continue 继续或执行 ft p --abort 结束')
+            else:
+                warn(u'解决冲突后执行 ft p --continue 继续。或执行 ft p --abort 结束')
         finally:
+            # 即使发生冲突也要移除掉，此时需要手工处理合并
+            if curr_p_branch in orig_branches:
+                orig_branches.remove(curr_p_branch)
+
             ihelper.write_runtime('publish_branches', orig_branches)
 
     def __tag(self):
-        default_tag = igit.tag_name('main')
+        default_tag = igit.tag_name('main' if self.cmd == iconfig.read_config('system', 'branch')['feature_prefix'] else 'fix')
         while 1:
-            input_tag = raw_input((u'请输入标签名称%s：(输入cancel取消)' % (u'(默认%s)'%default_tag if default_tag else '')).decode('utf-8').encode(iglobal.FROM_ENCODING)).lower().strip()
+            input_tag = raw_input((u'请输入标签名称%s：(输入cancel取消)' % (u'(默认%s)'%default_tag if default_tag else ''))
+                                  .decode('utf-8').encode(iglobal.FROM_ENCODING)).lower().strip()
             if not input_tag:
                 if default_tag:
                     input_tag = default_tag
@@ -500,26 +509,3 @@ class Feature(CVS):
             branches[key] = list(set(val))
 
         return branches
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

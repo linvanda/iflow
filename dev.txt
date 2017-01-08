@@ -43,6 +43,7 @@
           feature p vmember,member-center -t 列出vmember和member-center的所有该迭代的特性分支
           feature p vmember:/weigao,membercenter:order -t 发布vmember的feature/weigao和membercenter的feature/1701s1/order分支
           feature p --continue  继续被中断的发布流程
+          feature p --abort 结束发布
 
             分支陈列：
                 vmember:
@@ -75,42 +76,19 @@
           fix c vmember:order-delivery/kfxt-2278
      其他同特性分支
 
-打标签：
-     tag 12s1.00
-     tag vmember:12s1.02
-     tag -m vmember
-     tag -m 打主版本标签
-     tag vmember
-     tag 打修复版标签
-
-
-
-显示分支：
-     feature show
-     feature show -i
-     feature s
-     feature s vmember
-     fix show
-     fix show -i
-     fix show -i vmember
-
 
 分支转换：
      h2f order-delivery
-     h2f order-delivery -n
-     h2f order-delivery -s 12s1
-
-     h2h order-delivery
-     h2h order-delivery -n
-     h2h order-delivery -s 12s2
-
-     f2f order-manager
-     f2f order-manager -n
-     f2f order-manager -s 01s1
+     h2f order-delivery -n|--next
+     h2f order-delivery -s|--sprint 12s1
 
      f2h order-manager
-     f2h order-manager -n
-     f2h order-manager -s 01s1
+     f2h order-manager
+     f2h order-manager
+
+     f2f order-manager
+     f2f order-manager -n|--next
+     f2f order-manager -s 01s1
      
 
 分支重命名（作为对分支转换的辅助使用）

@@ -71,7 +71,8 @@ def white(mess, new_line = False):
     write(mess, FOREGROUND_WHITE, new_line)
 
 
-def ok(mess):
+def ok(mess=None):
+    mess = mess or 'ok!'
     green(mess, True)
 
 
