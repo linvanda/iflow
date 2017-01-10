@@ -3,6 +3,7 @@
 import os
 import ConfigParser
 import re
+import time
 import isprint
 import ihelper
 import iconfig
@@ -84,6 +85,101 @@ class Extra(Command):
         for key, val in cfg.items():
             if key != val:
                 print "%3s%12s"%(key, val)
+
+    def sql(self, args=None):
+        """
+        获取项目下面的所有sql
+        :param args:
+        :return:
+        """
+        dirs = []
+        for proj, info in iconfig.read_config('project').items():
+            base_dir = info['dir']
+
+            if 'sql_dir' in info:
+                rel_dir = info['sql_dir']
+            else:
+                rel_dir = iconfig.read_config('system', 'sql_dir')
+
+            dirs.append(ihelper.real_path(str(base_dir).rstrip('/') + '/' + rel_dir))
+
+        sql_file_suffixes = [ele.lstrip('.') for ele in str(iconfig.read_config('system', 'sql_file_suffix')).split('|')]
+
+        files = []
+        for sql_path in dirs:
+            if not sql_path:
+                continue
+
+            if not os.path.exists(sql_path):
+                continue
+
+            # 获取文件夹下所有的sql文件
+            for f in os.listdir(sql_path):
+                f = sql_path + f
+                if not os.path.isfile(f):
+                    continue
+
+                if f.split('.')[-1] in sql_file_suffixes:
+                    files.append(f)
+
+        if not files:
+            iprint.info(u'本次迭代没有sql需要执行')
+            return
+
+        # 排序
+        def __isort(x, y):
+            """
+            :type x: str
+            :type y: str
+            :return:
+            """
+            sp_date = isprint.get_date_from_sprint(iglobal.SPRINT).split('-')
+            year = sp_date[0]
+            month = sp_date[1]
+
+            x = os.path.basename(x)
+            y = os.path.basename(y)
+
+            if month == '12' and x.startswith('01'):
+                x = str(int(year) + 1) + x
+            else:
+                x = year + x
+
+            if month == '12' and y.startswith('01'):
+                y = str(int(year) + 1) + y
+            else:
+                y = year + y
+
+            if x < y:
+                return -1
+
+            return 1 if x > y else 0
+
+        files.sort(__isort)
+
+        print
+        iprint.warn(u'以下sql需要发布：')
+        for f in files:
+            iprint.info('  ' + os.path.basename(f))
+        print
+
+        out_file = iglobal.BASE_DIR + '/runtime/' + iglobal.SPRINT + '.sql'
+        if ihelper.confirm(u'是否导出sql？') == 'y':
+            out_handler = open(out_file, 'w')
+            out_handler.write('set names utf8;\n')
+            for f_name in files:
+                f_handler = open(f_name, 'r')
+                out_handler.write('\n\n-- ----------------------------------- %s -----------------------------------\n' % os.path.basename(f_name))
+                out_handler.write(f_handler.read())
+                f_handler.close()
+            out_handler.close()
+            print
+            iprint.ok(u'已写入到%s中' % out_file)
+        else:
+            return
+
+
+
 
 
 

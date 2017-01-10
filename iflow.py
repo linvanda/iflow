@@ -10,12 +10,14 @@ import command
 from iprint import *
 import iglobal
 import igit
+import icompleter
+
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 if __name__ == '__main__':
-    iglobal.BASE_DIR = os.getcwd()
+    iglobal.BASE_DIR = os.getcwd().replace('\\', '/')
 
     cfg = iconfig.read_config('system')
     proj_cfg = iconfig.read_config('project')

@@ -97,6 +97,10 @@
 原生git操作：
      git ...
 
+sql文件整理：
+    sql 获取该迭代下所有项目的protected/db/$sprint/下的sql文件，按时间排序
+
+
 
 commit 提交说明
 commit -p 提交说明  提交并推送

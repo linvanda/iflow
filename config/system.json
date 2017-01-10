@@ -10,6 +10,8 @@
     "hotfix_prefix":"hotfix",
     "split":"/"
   },
+  "sql_dir":"db/{sprint}/",
+  "sql_file_suffix":".sql",
   "sprint_format":"[0-9]{4}s[12]",
   "sprint_format_loose":"([0-9]{2}|[0-9]{4})s[12]",
   "alias":{
@@ -41,6 +43,7 @@
     "pwd":"Extra",
     "version":"Extra",
     "alias":"Extra",
+    "sql":"Extra",
     "commit":"Git"
   }
 }

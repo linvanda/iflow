@@ -164,7 +164,7 @@ def confirm(ask_msg,default='y', tick=0):
     result = 'c'
     while not tick or n < tick:
         n += 1
-        c = raw_input('%s(yes|no|cancel)[%s]: ' % (ask_msg.decode('utf-8').encode(iglobal.FROM_ENCODING), default)).strip().lower()
+        c = raw_input('%s(Yes|No|Cancel)[%s]: ' % (ask_msg.decode('utf-8').encode(iglobal.FROM_ENCODING), default)).strip().lower()
         if not c:
             result = default
             break
@@ -185,5 +185,16 @@ def projects():
     :return:
     """
     return dict(iconfig.read_config('project')).keys()
+
+
+def real_path(path):
+    """
+    :type path: str
+    """
+    if not path:
+        return None
+
+    return path.replace('{sprint}', iglobal.SPRINT).replace('\\', '/').rstrip('/') + '/'
+
 
 
