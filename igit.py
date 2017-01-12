@@ -36,6 +36,7 @@ def current_branch():
 def local_branches():
     """
     所有的本地分支列表
+    :return list
     """
     return map(lambda x:str(x).lstrip('*').strip(), os.popen('git branch').read().splitlines())
 

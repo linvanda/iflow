@@ -12,9 +12,11 @@ import iglobal
 import igit
 import icompleter
 
-
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
+# tab键自动补全
+icompleter.tab()
 
 if __name__ == '__main__':
     iglobal.BASE_DIR = os.getcwd().replace('\\', '/')
@@ -56,10 +58,6 @@ if __name__ == '__main__':
             igit.check_workspace_health()
 
             args = raw_input('$ ').strip().lower().decode(iglobal.FROM_ENCODING).encode('utf-8')
-
-            if args == 'exit':
-                ihelper.goodbye()
-
             args = [ele for ele in args.split(' ') if ele.strip()]
 
             if args:

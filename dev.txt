@@ -39,9 +39,9 @@
           feature t order-manager
 
      发布到生产:
-          feature p -t 检查所有项目的当前迭代的特性分支并列出。请输入要发布的分支，多个用","隔开。或者输入"ex"以输入排除分支列表，或输入"all"发布上列所有分支
-          feature p vmember,member-center -t 列出vmember和member-center的所有该迭代的特性分支
-          feature p vmember:/weigao,membercenter:order -t 发布vmember的feature/weigao和membercenter的feature/1701s1/order分支
+          feature p 检查所有项目的当前迭代的特性分支并列出。请输入要发布的分支，多个用","隔开。或者输入"ex"以输入排除分支列表，或输入"all"发布上列所有分支
+          feature p vmember member-center 列出vmember和member-center的所有该迭代的特性分支
+          feature p vmember:/weigao membercenter:order 发布vmember的feature/weigao和membercenter的feature/1701s1/order分支
           feature p --continue  继续被中断的发布流程
           feature p --abort 结束发布
 

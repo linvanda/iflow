@@ -22,7 +22,8 @@ class Extra(Command):
         except Exception, e:
             raise Exception(e.message)
 
-    def sprint(self, args):
+    @staticmethod
+    def sprint(args):
         """
         切换到某个迭代
         :param args:
@@ -34,7 +35,8 @@ class Extra(Command):
         iglobal.SPRINT = sprint
         ihelper.write_runtime('sprint', sprint)
 
-    def cd(self, args):
+    @staticmethod
+    def cd(args):
         """
         进入项目目录
         :param args:
@@ -86,7 +88,12 @@ class Extra(Command):
             if key != val:
                 print "%3s%12s"%(key, val)
 
-    def sql(self, args=None):
+    @staticmethod
+    def exit(args=None):
+        ihelper.goodbye()
+
+    @staticmethod
+    def sql(args=None):
         """
         获取项目下面的所有sql
         :param args:

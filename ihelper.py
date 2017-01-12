@@ -2,12 +2,10 @@
 # 该模块提供一些助手方法
 
 import subprocess
-import re
 import time
 import os
 import iconfig
 import isprint
-import iglobal
 import igit
 import exception
 from iprint import *

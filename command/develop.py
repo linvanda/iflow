@@ -12,10 +12,15 @@ class Develop(CVS):
     """
     test和feature分支指令基类
     """
+    sub_cmd_list = ('create', 'test', 'product', 'delete',"checkout")
+    parameters = {
+        'delete': ['--no-push',],
+        'product': ['--continue', '--abort'],
+        'create': ['-y', '--no-push']
+    }
+
     def __init__(self, cmd, args, log=True):
         CVS.__init__(self, cmd, args, log)
-        # 二级指令
-        self.sub_cmd_list = ('create', 'test', 'product', 'delete',"checkout")
 
     def execute(self):
         if not len(self.args):
@@ -230,7 +235,7 @@ class Develop(CVS):
         branch_alias = {}
         tick = 1
 
-        branch_str = None
+        line_branches = []
         while args:
             c = args.pop(0)
 
@@ -239,7 +244,7 @@ class Develop(CVS):
             elif c == '--continue':
                 continue_p = True
             else:
-                branch_str = c
+                line_branches.append(c)
 
         if abort_p:
             # 清除runtime后退出
@@ -256,7 +261,7 @@ class Develop(CVS):
             error(u'上次发布尚未完成，请执行 ft p --continue 继续，或执行 ft p --abort 结束')
             return
 
-        branches = self.__resolve_branches(branch_str)
+        branches = self.__resolve_branches(line_branches)
         for key, val in branches.items():
             if not val:
                 branches.pop(key)
@@ -462,24 +467,23 @@ class Develop(CVS):
 
         return final_branches
 
-    def __resolve_branches(self, branch_str):
+    def __resolve_branches(self, line_branches):
         """
         分支解析
         vmember,member-center
         vmember:/weigao,membercenter:order
         order-manager
-        :param str branch_str:
+        :param list line_branches:
         :return:dict
         """
-        if not branch_str:
+        if not line_branches:
             # 所有项目
-            branch_str = ','.join(map(lambda x:str(x) + ':*', ihelper.projects()))
+            line_branches = map(lambda x:str(x) + ':*', ihelper.projects())
 
-        branch_str.strip().replace('，', ',').replace('：', ':')
-        arr = branch_str.split(',')
+        line_branches = map(lambda x: x.replace('：', ':'), line_branches)
 
         branches = {}
-        for br in arr:
+        for br in line_branches:
             if ':' not in br:
                 # 判断是项目名还是分支名
                 if br in ihelper.projects():

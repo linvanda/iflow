@@ -2,137 +2,227 @@
 """
 自动补全
 """
+import command
+import iconfig
+import igit
+import iglobal
+import ihelper
+import isprint
+import re
 
-import __builtin__
+try:
+    import readline
+except ImportError:
+    import pyreadline as readline
 
 __all__ = ["Completer"]
 
-
 class Completer:
-    def __init__(self, namespace = None):
-        """Create a new completer for the command line.
-
-        Completer([namespace]) -> completer instance.
-
-        If unspecified, the default namespace where completions are performed
-        is __main__ (technically, __main__.__dict__). Namespaces should be
-        given as dictionaries.
-
-        Completer instances should be used as the completion mechanism of
-        readline via the set_completer() call:
-
-        readline.set_completer(Completer(my_namespace).complete)
-        """
-
-        if namespace and not isinstance(namespace, dict):
-            raise TypeError,'namespace must be a dictionary'
-
-        # Don't bind to namespace quite yet, but flag whether the user wants a
-        # specific namespace or to use __main__.__dict__. This will allow us
-        # to bind to __main__.__dict__ at completion time, not now.
-        if namespace is None:
-            self.use_main_ns = 1
-        else:
-            self.use_main_ns = 0
-            self.namespace = namespace
+    def __init__(self):
+        self.matches = []
 
     def complete(self, text, state):
-        """Return the next possible completion for 'text'.
-
-        This is called successively with state == 0, 1, 2, ... until it
-        returns None.  The completion should begin with 'text'.
-
-        """
-        if self.use_main_ns:
-            self.namespace = __dict__
-
         if state == 0:
-            if "." in text:
-                self.matches = self.attr_matches(text)
-            else:
-                self.matches = self.global_matches(text)
+            self.matches = self.match(text)
         try:
-            return self.matches[state]
+            return self.matches[state] if isinstance(self.matches, list) else None
         except IndexError:
             return None
 
-    def _callable_postfix(self, val, word):
-        if hasattr(val, '__call__'):
-            word = word + "("
-        return word
-
-    def global_matches(self, text):
-        """Compute matches when text is a simple name.
-
-        Return a list of all keywords, built-in functions and names currently
-        defined in self.namespace that match.
-
+    def match(self, text):
         """
-        import keyword
-        matches = []
-        n = len(text)
-        for word in keyword.kwlist:
-            if word[:n] == text:
-                matches.append(word)
-        for nspace in [__builtin__.__dict__, self.namespace]:
-            for word, val in nspace.items():
-                if word[:n] == text and word != "__builtins__":
-                    matches.append(self._callable_postfix(val, word))
+        一级指令 二级指令 参数1 参数2 ...
+        :type text: str
+        :return:
+        """
+        line = re.compile('\s+').sub(' ', readline.get_line_buffer())
+        line_words = line.split(' ')
+
+        if len(line_words) == 1:
+            return self.top_cmd(text)
+        else:
+            cls = iconfig.read_config('system', 'cmd_cls')
+            cmd = command.Command.real_cmd(line_words[0], raise_err=False)
+
+            if not cmd:
+                return None
+
+            return eval('self.match_%s' % str(cls[cmd]).lower())(text, line_words)
+
+    def match_git(self, text, line_words):
+        return None
+
+    def match_transform(self, text, line_words):
+        if text.startswith('-'):
+            return self.match_parameter(None, command.Transform.parameters, text)
+        else:
+            branch_cfg = iconfig.read_config('system', 'branch')
+
+            prefix = branch_cfg['feature_prefix'] if line_words[0].startswith('f') else branch_cfg['hotfix_prefix']
+            if prefix == branch_cfg['feature_prefix']:
+                prefix += '/' + iglobal.SPRINT
+            return self.match_branch(prefix, text)
+
+    def match_extra(self,text=None, line_words=None):
+        if len(line_words) == 1:
+            return self.top_cmd(text)
+
+        top_cmd = command.Command.real_cmd(line_words[0], raise_err=False)
+
+        if not top_cmd:
+            return None
+
+        if top_cmd == 'cd':
+            projects = ihelper.projects()
+            if not text:
+                return projects
+            else:
+                return filter(lambda x: x.startswith(text), projects)
+        elif top_cmd == 'help':
+            return [ele for ele in self.top_cmd(text) if ele != 'help']
+        elif top_cmd == 'sprint':
+            return [isprint.next_sprint()]
+        else:
+            return None
+
+    def match_develop(self,text, line_words):
+        if len(line_words) == 1:
+            return self.top_cmd(text)
+        elif len(line_words) == 2:
+            # 二级指令
+            return self.sub_cmd(command.Develop.sub_cmd_list, text)
+        else:
+            # 分支或其他
+            top_cmd = command.Command.real_cmd(line_words[0], raise_err=False)
+            sub_cmd = command.Command.real_cmd(line_words[1], valid=False, raise_err=False)
+
+            if not sub_cmd:
+                return None
+
+            if top_cmd == 'feature':
+                branch_prefix = top_cmd + '/' + iglobal.SPRINT + '/'
+            else:
+                branch_prefix = top_cmd
+
+            if text.startswith('-'):
+                return self.match_parameter(sub_cmd, command.Develop.parameters, text)
+
+            if sub_cmd == 'create':
+                # 创建分支时，不用提示分支名
+                return None
+            elif sub_cmd == 'product':
+                # 此时可能是项目或分支名
+                return self.match_project_branch(branch_prefix, text)
+            else:
+                # 提示分支名
+                return self.match_branch(branch_prefix, text)
+
+    def match_branch(self, prefix, text=None):
+        """
+        匹配当前项目的本地分支
+        :type prefix: str
+        :param text:
+        :return:
+        """
+        branches = igit.local_branches()
+
+        r_branches = []
+        if not text:
+            r_branches = list(branches)
+        else:
+            for branch in branches:
+                if branch.startswith(text) or branch.split('/')[-1].startswith(text):
+                    r_branches.append(branch)
+
+        matches = filter(lambda x: x.startswith(prefix), r_branches)
+
+        if not matches:
+            # 放宽匹配
+            pre = prefix.split('/')
+            if len(pre) > 1:
+                matches = filter(lambda x: x.startswith(pre[0]), r_branches)
+
         return matches
 
-    def attr_matches(self, text):
-        """Compute matches when text contains a dot.
+    def match_project_branch(self, prefix, text=None):
+        projects = map(lambda x: x + ':', ihelper.projects())
+        if not text:
+            return projects
+        elif ':' not in text:
+            return filter(lambda x: x.startswith(text), projects)
+        else:
+            t = text.split(':')
+            old_proj = iglobal.PROJECT
 
-        Assuming the text is of the form NAME.NAME....[NAME], and is
-        evaluable in self.namespace, it will be evaluated and its attributes
-        (as revealed by dir()) are used as possible completions.  (For class
-        instances, class members are also considered.)
+            if old_proj != t[0]:
+                command.Extra('cd', [t[0]], log=False).execute()
 
-        WARNING: this can still invoke arbitrary C code, if an object
-        with a __getattr__ hook is evaluated.
+            branches = self.match_branch(prefix, t[1])
 
+            if old_proj != iglobal.PROJECT:
+                command.Extra('cd', [old_proj], log=False).execute()
+
+            return map(lambda x: t[0] + ':' + x, branches)
+
+    def match_parameter(self, sub_cmd, param_dict, text):
+        if not param_dict or (isinstance(param_dict, dict) and sub_cmd not in param_dict) or not text:
+            return None
+
+        return map(lambda y: y + ' ', filter(lambda x: x.startswith(text), param_dict[sub_cmd] if isinstance(param_dict, dict) else param_dict))
+
+    def top_cmd(self, word=None):
         """
-        import re
-        m = re.match(r"(\w+(\.\w+)*)\.(\w*)", text)
-        if not m:
-            return []
-        expr, attr = m.group(1, 3)
-        try:
-            thisobject = eval(expr, self.namespace)
-        except Exception:
-            return []
+        根据word获取匹配的一级指令列表
+        :param word:
+        :return:
+        """
+        top_list = command.Command.top_cmd_list()
 
-        # get the content of the object, except __builtins__
-        words = set(dir(thisobject))
-        words.discard("__builtins__")
+        if not word:
+            return top_list.keys()
 
-        if hasattr(thisobject, '__class__'):
-            words.add('__class__')
-            words.update(get_class_members(thisobject.__class__))
+        match = []
+        for k, v in top_list.items():
+            if str(k).startswith(word):
+                match.append(k)
+            else:
+                for kw in v:
+                    if str(kw).startswith(word):
+                        match.append(kw)
+                        has = 1
+                        break
+
+        match = [ele + ' ' for ele in match]
+        match.sort()
+
+        return match
+
+    def sub_cmd(self, sub_list, word=None):
+        """
+        二级指令
+        :type sub_list: list
+        :type word: str
+        :return:
+        """
+        if not word:
+            return list(sub_list)
+
+        alias = iconfig.read_config('system', 'alias')
         matches = []
-        n = len(attr)
-        for word in words:
-            if word[:n] == attr:
-                try:
-                    val = getattr(thisobject, word)
-                except Exception:
-                    continue  # Exclude properties that are not set
-                word = self._callable_postfix(val, "%s.%s" % (expr, word))
-                matches.append(word)
+        for sub in sub_list:
+            if sub.startswith(word):
+                matches.append(sub)
+            else:
+                for al, c in alias.items():
+                    if c == sub and str(al).startswith(word):
+                        matches.append(al)
+
+        matches = map(lambda x: x + ' ', matches)
         matches.sort()
+
         return matches
 
-def get_class_members(klass):
-    ret = dir(klass)
-    if hasattr(klass,'__bases__'):
-        for base in klass.__bases__:
-            ret = ret + get_class_members(base)
-    return ret
+def tab():
+    readline.set_completer(Completer().complete)
+    readline.parse_and_bind('tab: complete')
 
-try:
-  import readline
-except ImportError:
-  import pyreadline as readline
-
-readline.set_completer(Completer().complete)
-readline.parse_and_bind('tab: complete')

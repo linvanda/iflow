@@ -24,7 +24,6 @@
     "p":"product",
     "s":"show",
     "d":"delete",
-    "br":"branch",
     "cmt":"commit",
     "ck":"checkout"
   },
@@ -36,14 +35,14 @@
     "help":"Extra",
     "cd":"Extra",
     "sprint":"Extra",
-    "branch":"Extra",
-    "h2f":"Transform",
-    "f2h":"Transform",
-    "f2f":"Transform",
     "pwd":"Extra",
     "version":"Extra",
     "alias":"Extra",
     "sql":"Extra",
+    "exit":"Extra",
+    "h2f":"Transform",
+    "f2h":"Transform",
+    "f2f":"Transform",
     "commit":"Git"
   }
 }

@@ -17,6 +17,8 @@ class Transform(CVS):
     -n|--next：下个迭代
     -s|--sprint：指定迭代名称
     """
+    parameters = ['--next', '--sprint']
+
     def execute(self):
         try:
             eval('self.' + self.cmd)(list(self.args))
