@@ -11,11 +11,9 @@ class Command(object):
     """
     sub_cmd_list = None
 
-    def __init__(self, cmd, args, log=True):
+    def __init__(self, cmd, args):
         self.cmd = cmd
         self.args = args
-
-        log and ihelper.log(cmd + ' ' + ' '.join(self.args))
 
     @abc.abstractmethod
     def execute(self):

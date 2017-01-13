@@ -47,7 +47,7 @@ class Transform(CVS):
             raise exception.FlowException(u'分支不存在：%s' % old_branch)
 
         if ihelper.confirm(u'确定将修复分支%s转为特性分支%s吗？' % (old_branch, new_branch)) == 'y':
-            git.Git('rename', [old_branch, new_branch], log=False).execute()
+            git.Git('rename', [old_branch, new_branch]).execute()
             ok()
         else:
             ok(u'取消操作')
@@ -74,7 +74,7 @@ class Transform(CVS):
             raise exception.FlowException(u'分支不存在：%s' % old_branch)
 
         if ihelper.confirm(u'确定将特性分支%s转为修复分支%s吗？' % (old_branch, new_branch)) == 'y':
-            git.Git('rename', [old_branch, new_branch], log=False).execute()
+            git.Git('rename', [old_branch, new_branch]).execute()
             ok()
         else:
             ok(u'取消操作')
@@ -102,7 +102,7 @@ class Transform(CVS):
             raise exception.FlowException(u'分支不存在：%s' % old_branch)
 
         if ihelper.confirm(u'确定将特性分支%s转为特性分支%s吗？' % (old_branch, new_branch)) == 'y':
-            git.Git('rename', [old_branch, new_branch], log=False).execute()
+            git.Git('rename', [old_branch, new_branch]).execute()
             ok()
         else:
             ok(u'取消操作')

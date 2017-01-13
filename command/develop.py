@@ -19,12 +19,12 @@ class Develop(CVS):
         'create': ['-y', '--no-push']
     }
 
-    def __init__(self, cmd, args, log=True):
-        CVS.__init__(self, cmd, args, log)
+    def __init__(self, cmd, args):
+        CVS.__init__(self, cmd, args)
 
     def execute(self):
         if not len(self.args):
-            return extra.Extra('help', [self.cmd], log=False).execute()
+            return extra.Extra('help', [self.cmd]).execute()
 
         sub_cmd = self.real_cmd(self.args[0], valid=False)
         if sub_cmd not in self.sub_cmd_list:
@@ -342,7 +342,7 @@ class Develop(CVS):
 
                 if iglobal.PROJECT != proj:
                     info(u'进入项目%s' % proj)
-                    extra.Extra('cd', [proj], log=False).execute()
+                    extra.Extra('cd', [proj]).execute()
 
                 if not igit.workspace_is_clean():
                     raise exception.FlowException(u'项目%s工作空间有未提交的更改，请先提交(或丢弃)后执行 ft p --continue 继续' % proj)

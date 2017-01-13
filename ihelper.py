@@ -159,13 +159,6 @@ def execute(cmd, print_out=True, raise_err=False, return_result=False):
         return out
 
 
-def log(msg, type='cmd'):
-    file_name = iglobal.BASE_DIR + '/log/' + type + '-' + time.strftime('%Y%m') +  '.log'
-    f = open(file_name, 'a')
-    f.write(msg + "\n")
-    f.close()
-
-
 def confirm(ask_msg,default='y', tick=0):
     if not ask_msg:
         return 'cancel'

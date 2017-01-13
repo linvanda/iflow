@@ -15,11 +15,11 @@ import icompleter
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-# tab键自动补全
-icompleter.tab()
-
 if __name__ == '__main__':
     iglobal.BASE_DIR = os.getcwd().replace('\\', '/')
+
+    # tab键自动补全
+    icompleter.tab()
 
     cfg = iconfig.read_config('system')
 

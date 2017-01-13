@@ -9,6 +9,7 @@ import iglobal
 import ihelper
 import isprint
 import re
+import atexit
 
 try:
     import readline
@@ -20,7 +21,17 @@ __all__ = ["Completer"]
 class Completer:
     def __init__(self):
         self.matches = []
+        __histfile = iglobal.BASE_DIR + '/' + 'log/auto-comp-history.log'
+
         readline.rl.allow_ctrl_c = False
+        readline.rl.prompt_color = 2
+        readline.rl.set_history_length(500)
+        try:
+            readline.read_history_file(__histfile)
+        except IOError:
+            pass
+
+        atexit.register(readline.write_history_file, __histfile)
 
     def complete(self, text, state):
         if state == 0:
@@ -171,12 +182,12 @@ class Completer:
             old_proj = iglobal.PROJECT
 
             if old_proj != t[0]:
-                command.Extra('cd', [t[0]], log=False).execute()
+                command.Extra('cd', [t[0]]).execute()
 
             branches = self.match_branch(prefix, t[1])
 
             if old_proj != iglobal.PROJECT:
-                command.Extra('cd', [old_proj], log=False).execute()
+                command.Extra('cd', [old_proj]).execute()
 
             return map(lambda x: t[0] + ':' + x, branches)
 
@@ -239,6 +250,7 @@ class Completer:
         return matches
 
 def tab():
+    global __histfile
     readline.set_completer(Completer().complete)
     readline.parse_and_bind('tab: complete')
 

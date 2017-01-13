@@ -71,14 +71,27 @@ class Extra(Command):
         cmd = args[0] if args else None
         cmd = cmd and Command.real_cmd(cmd)
 
-        cf = ConfigParser.ConfigParser()
-        cf.read(iglobal.BASE_DIR + '/config/help.conf')
+        import readme
 
-        for sec in cf.sections():
-            if sec and (not cmd or cmd == sec):
-                iprint.yellow(unicode(cf.get(sec, 'title'), 'utf-8'), True)
-                print unicode(cf.get(sec, 'content'), 'utf-8')
-                print
+        helps = readme.help
+        if cmd:
+            the_one = helps[cmd] if cmd in helps else None
+            if not the_one:
+                return
+            if isinstance(the_one, str) and the_one in helps:
+                the_one = helps[the_one]
+
+            if isinstance(the_one, dict):
+                helps = {cmd: the_one}
+
+        for key, info in helps.items():
+            if isinstance(info, str):
+                continue
+            iprint.yellow(info['title'], True)
+            if 'desc' in info:
+                iprint.sky_blue(info['desc'], True)
+            iprint.info(info['content'])
+            print
 
     @staticmethod
     def alias(args=None):

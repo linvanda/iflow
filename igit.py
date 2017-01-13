@@ -323,7 +323,7 @@ def project_branches(prefix=None, project=None, only_this_sprint=True):
 
     # 进入该项目目录
     if project != iglobal.PROJECT:
-        command.Extra('cd', [project], log=False).execute()
+        command.Extra('cd', [project]).execute()
 
     if prefix and only_this_sprint:
         prefix = '%s/%s' % (prefix.rstrip('/'), iglobal.SPRINT)
@@ -335,7 +335,7 @@ def project_branches(prefix=None, project=None, only_this_sprint=True):
 
     # 切换回原来的项目
     if iglobal.PROJECT != old_project:
-        command.Extra('cd', [old_project], log=False).execute()
+        command.Extra('cd', [old_project]).execute()
 
     return branches
 
@@ -356,7 +356,7 @@ def sync(project, prefix=None, only_this_sprint=True, deep=False):
     try:
         # 进入该项目目录
         if project != iglobal.PROJECT:
-            command.Extra('cd', [project], log=False).execute()
+            command.Extra('cd', [project]).execute()
 
         if prefix and only_this_sprint:
             prefix = '%s/%s' % (prefix.rstrip('/'), iglobal.SPRINT)
@@ -386,7 +386,7 @@ def sync(project, prefix=None, only_this_sprint=True, deep=False):
             raise Exception(u'暂未实现')
 
         if old_project != iglobal.PROJECT:
-            command.Extra('cd', [old_project], log=False).execute()
+            command.Extra('cd', [old_project]).execute()
     finally:
         iglobal.SILENCE = False
 
