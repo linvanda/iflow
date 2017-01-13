@@ -20,6 +20,7 @@ __all__ = ["Completer"]
 class Completer:
     def __init__(self):
         self.matches = []
+        readline.rl.allow_ctrl_c = False
 
     def complete(self, text, state):
         if state == 0:
@@ -50,6 +51,21 @@ class Completer:
             return eval('self.match_%s' % str(cls[cmd]).lower())(text, line_words)
 
     def match_git(self, text, line_words):
+        top_cmd = command.Command.real_cmd(line_words[0], raise_err=False)
+
+        if top_cmd == 'commit' and text.startswith('-'):
+            return self.match_parameter(top_cmd, command.Git.parameters, text)
+        elif top_cmd == 'rename':
+            return self.match_branch(None, text)
+        elif top_cmd == 'git':
+            # git原生指令，此处只补全到二级指令
+            if not text:
+                return None
+            elif len(line_words) > 2:
+                return self.match_branch(None, text)
+            else:
+                return [ele + ' ' for ele in igit.sub_cmd_list() if ele.startswith(text)]
+
         return None
 
     def match_transform(self, text, line_words):
@@ -120,7 +136,7 @@ class Completer:
     def match_branch(self, prefix, text=None):
         """
         匹配当前项目的本地分支
-        :type prefix: str
+        :type prefix: str|None
         :param text:
         :return:
         """
@@ -134,9 +150,9 @@ class Completer:
                 if branch.startswith(text) or branch.split('/')[-1].startswith(text):
                     r_branches.append(branch)
 
-        matches = filter(lambda x: x.startswith(prefix), r_branches)
+        matches = filter(lambda x: x.startswith(prefix), r_branches) if prefix else r_branches
 
-        if not matches:
+        if not matches and prefix:
             # 放宽匹配
             pre = prefix.split('/')
             if len(pre) > 1:

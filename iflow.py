@@ -22,7 +22,6 @@ if __name__ == '__main__':
     iglobal.BASE_DIR = os.getcwd().replace('\\', '/')
 
     cfg = iconfig.read_config('system')
-    proj_cfg = iconfig.read_config('project')
 
     blue(u'=========================***=========================', True)
     blue(cfg['name'], True)
@@ -34,16 +33,9 @@ if __name__ == '__main__':
     # 初始化
     ihelper.init()
 
-    # 中断处理
-    def ctr_c_handler(*args):
-        print
-
-    signal.signal(signal.SIGINT, ctr_c_handler)
-
     checked_ok = False
 
     while True:
-        print
         ihelper.headline()
         try:
             # 必须项是否正确（此处为条件检查，因此种检查比较耗时可能）
@@ -67,5 +59,7 @@ if __name__ == '__main__':
                     eval('command.' + cfg['cmd_cls'][main_cmd])(main_cmd, args).execute()
                 except Exception, e:
                     error(unicode(str(e), 'utf-8'))
+        except KeyboardInterrupt:
+            print
         except Exception, e:
             print e

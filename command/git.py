@@ -13,6 +13,10 @@ class Git(CVS):
     """
     git相关指令
     """
+    parameters = {
+        'commit': ['-p']
+    }
+
     def execute(self):
         try:
             eval('self.' + self.cmd)()
@@ -61,8 +65,6 @@ class Git(CVS):
     def commit(self):
         """
         提交
-        ft commit -p 去掉类型限制
-        ft commit 去掉类型限制
         :return:
         """
         comment = None

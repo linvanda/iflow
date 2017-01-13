@@ -104,7 +104,7 @@ def headline():
     """
     页眉：linvanda@1612s1/vmember/master
     """
-    # username = igit.get_config('user.name') or 'nobody'
+    print
     project = iglobal.PROJECT
     real_path = os.getcwd() if project == 'global' else iconfig.read_config('project', project)['dir']
     branch = igit.current_branch() if project != 'global' else None
@@ -117,14 +117,26 @@ def headline():
     if branch:
         status = igit.workspace_status(True)
         sky_blue('[ ' + branch + ('(' + status + ')' if status else '') + ' ]')
-    print 
+    print
+    sys.stdout.flush()
+
+
+def popen(cmd):
+    return execute(cmd, print_out=False, return_result=True)
+
+
+def system(cmd):
+    execute(cmd)
 
 
 def execute(cmd, print_out=True, raise_err=False, return_result=False):
     # 不关心异常且需要输出且不需要返回时，直接调用os.system
     if print_out and not raise_err and not return_result:
         if iglobal.SILENCE:
-            return os.popen(cmd)
+            p = os.popen(cmd)
+            out = p.read()
+            p.close()
+            return out
         else:
             return os.system(cmd)
     else:
@@ -141,6 +153,8 @@ def execute(cmd, print_out=True, raise_err=False, return_result=False):
 
         if print_out and not iglobal.SILENCE:
             print out
+
+        del p
 
         return out
 

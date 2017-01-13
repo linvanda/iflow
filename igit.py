@@ -13,6 +13,8 @@ import exception
 from iprint import *
 import command
 
+__sub_cmd_list = None
+
 
 def get_config(key=None):
     """
@@ -20,7 +22,7 @@ def get_config(key=None):
     :param key:
     :return:
     """
-    config = dict(map(lambda x:x.split('='), os.popen('git config -l').read().splitlines()))
+    config = dict(map(lambda x:x.split('='), ihelper.popen('git config -l').splitlines()))
     return config[key] if key and config.has_key(key) else config
 
 
@@ -29,7 +31,7 @@ def current_branch():
     获取当前分支
     :return:
     """
-    branch = filter(lambda x:x.find('*') != -1, os.popen('git branch').read().splitlines())
+    branch = filter(lambda x:x.find('*') != -1, ihelper.popen('git branch').splitlines())
     return branch[0].replace('*', '').strip() if branch else None
 
 
@@ -38,7 +40,7 @@ def local_branches():
     所有的本地分支列表
     :return list
     """
-    return map(lambda x:str(x).lstrip('*').strip(), os.popen('git branch').read().splitlines())
+    return map(lambda x:str(x).lstrip('*').strip(), ihelper.popen('git branch').splitlines())
 
 
 def remote_branches(refresh=True):
@@ -68,7 +70,7 @@ def dir_is_repository(path=None):
     os.chdir(path)
     result = True
 
-    out = ihelper.execute('git branch', print_out=False, return_result=True)
+    out = ihelper.popen('git branch')
     if out.find('Not a git repository') != -1:
         result = False
 
@@ -198,7 +200,7 @@ def workspace_status(text=False):
     """
     __status = 0
 
-    out = os.popen('git status').read()
+    out = ihelper.popen('git status')
 
     if 'working directory clean' in out:
         __status |= iglobal.GIT_CLEAN
@@ -406,6 +408,37 @@ def tag_name(tag_type='main'):
             tag = '%s.%02d' % (tag[0], int(tag[1]) + 1)
 
         return tag
+
+
+def sub_cmd_list():
+    """
+    获取git二级指令列表
+    :return: list
+    """
+    global __sub_cmd_list
+
+    if __sub_cmd_list:
+        return __sub_cmd_list
+
+    git_help = ihelper.popen('git help -a').splitlines()
+    lst = []
+    flag = False
+    for line in git_help:
+        if not line:
+            continue
+
+        if not flag and line.startswith('available git commands'):
+            flag = True
+            continue
+        elif flag and line.startswith('git commands available from elsewhere'):
+            break
+
+        if flag:
+            lst += filter(lambda x:x, line.split(' '))
+
+    __sub_cmd_list = lst
+
+    return lst
 
 
 def check_tag_format(tag):
