@@ -1,12 +1,16 @@
 {
-  "python":{
-    "dir":"D:\iflow_app\python"
+  "membercenter2":{
+    "dir":"C:\Users\linvanda\Desktop\gittest\membercenter2",
+    "branch":{
+      "product":"test-master",
+      "test":"test-dev"
+    }
   },
-  "test":{
-    "dir":"D:\iflow_app\test"
-  },
-  "wx":{
-    "name":"wxproj",
-    "dir":"D:\iflow_app\wxproj"
+  "vmember":{
+    "dir":"C:\Users\linvanda\Desktop\gittest\vmember",
+    "branch":{
+      "product":"test-master",
+      "test":"test-dev"
+    }
   }
 }

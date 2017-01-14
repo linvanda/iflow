@@ -21,7 +21,7 @@ __all__ = ["Completer"]
 class Completer:
     def __init__(self):
         self.matches = []
-        __histfile = iglobal.BASE_DIR + '/' + 'log/auto-comp-history.log'
+        __histfile = iglobal.BASE_DIR + '/' + 'log/cmd.log'
 
         readline.rl.allow_ctrl_c = False
         readline.rl.prompt_color = 2
