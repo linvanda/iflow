@@ -341,8 +341,7 @@ def project_branches(prefix=None, project=None, only_this_sprint=True):
 def sync(project, prefix=None, only_this_sprint=True, deep=False):
     """
     同步本地和远程分支
-    (未完成)
-    :param bool deep: 是否深层合并，只有深层合并才会同步本地和远程都存在的分支，否则只是创建本地没有的分支和推远程没有的分支
+    :param bool deep: 是否深层合并，只有深层合并才会同步本地和远程都存在的分支（暂未实现），否则只是创建本地没有的分支和推远程没有的分支
     :param project:
     :param prefix:
     :param only_this_sprint:

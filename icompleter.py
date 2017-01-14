@@ -25,7 +25,10 @@ class Completer:
 
         readline.rl.allow_ctrl_c = False
         readline.rl.prompt_color = 2
-        readline.rl.set_history_length(500)
+        readline.rl.set_history_length(100)
+        readline.rl.console.title('iflow')
+        readline.rl.command_color = 7
+
         try:
             readline.read_history_file(__histfile)
         except IOError:

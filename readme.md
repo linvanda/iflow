@@ -24,7 +24,7 @@
 6. 如有疑问，键入help查看帮如
 
 ## 注意：
-    不要修改config下的system.json文件，如果确实需要修改其中某些配置，则创建custom.json，按照system.json的格式编写你需要覆盖的内容（深度覆盖）
+> 不要修改config下的system.json文件，如果确实需要修改其中某些配置，则创建custom.json，按照system.json的格式编写你需要覆盖的内容（深度覆盖）
 
 ## 常用指令：
 #####（一级、二级指令可使用别名，命令行输入alias查看别名信息）
@@ -47,4 +47,4 @@
 
 ####更多指令使用说明请命令行输入help查看，另外如输入help feature可查看feature指令的使用说明
 
-####欢迎使用和提bug!
+欢迎使用和提bug!

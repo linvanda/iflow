@@ -26,23 +26,18 @@ def read_config(path, key=None, use_cache=True):
     if not path:
         return {}
 
+    custom_path = __real_path('custom') if path == 'system' else None
     path = __real_path(path)
 
-    config = {}
     if use_cache and __CONFIG.has_key(path):
         config =  __CONFIG[path]
     else:
-        if not os.path.exists(path):
-            return {}
-        else:
-            cfg_f = open(path, 'r')
-            str = cfg_f.read().replace('\\', '/').replace('\'', '"').strip()
-            cfg_f.close()
+        config = __load_json(path)
+        custom_config = __load_json(custom_path)
 
-            if not str:
-                str = '{}'
-            str = re.compile('//.*$', re.M).sub('', str)
-            config = __CONFIG[path] = json.loads(str)
+        config = __merge(config, custom_config)
+
+        __CONFIG[path] = config
 
     if key:
         return config[key] if config.has_key(key) else None
@@ -68,3 +63,34 @@ def write_config(path, json_str):
     __CONFIG[path] =  json.loads(json_str)
 
     return True
+
+
+def __load_json(path):
+    if not path or not os.path.exists(path):
+        return {}
+
+    cfg_f = open(path, 'r')
+    str = cfg_f.read().replace('\\', '/').replace('\'', '"').strip()
+    cfg_f.close()
+
+    if not str:
+        str = '{}'
+    str = re.compile('//.*$', re.M).sub('', str)
+
+    try:
+        return json.loads(str)
+    except Exception:
+        raise Exception('json file load error,pls check your json file')
+
+
+def __merge(dict1, dict2):
+    if not dict2:
+        return dict1
+
+    for key, val in dict2.items():
+        if key not in dict1 or not isinstance(val, dict):
+            dict1[key] = val
+        else:
+            dict1[key] = __merge(dict1[key], dict2[key])
+
+    return dict1
