@@ -7,9 +7,9 @@
     "product":"master",
     "test":"sp-dev",
     "feature_prefix":"feature",
-    "hotfix_prefix":"hotfix",
-    "split":"/"
+    "hotfix_prefix":"hotfix"
   },
+  //sql文件路径，相对于项目根目录
   "sql_dir":"db/{sprint}/",
   "sql_file_suffix":".sql",
   "sprint_format":"[0-9]{4}s[12]",
@@ -44,5 +44,22 @@
     "f2h":"Transform",
     "f2f":"Transform",
     "commit":"Git"
+  },
+  "git_match_text":{
+    "not_repository": "Not a git repository",
+    "clean": "working directory clean",
+    "merge_conflict": "Unmerged paths",
+    "uncommited": "Changes to be committed",
+    "unstaged": "Changes not staged for commit",
+    "untracked": "untracked files present",
+    "ahead": "branch is ahead of",
+    "behind": "Your branch is behind",
+    "rebasing": "rebase in progress",
+    "cherring": "You are currently cherry-picking commit",
+    "merging": "You have unmerged paths",
+    "fixed_merging": "All conflicts fixed but you are still merging",
+    "diverged": "have diverged",
+    "sub_cmd_start": "available git commands",
+    "sub_cmd_end": "git commands available from elsewhere"
   }
 }

@@ -71,7 +71,7 @@ def dir_is_repository(path=None):
     result = True
 
     out = ihelper.popen('git branch')
-    if out.find('Not a git repository') != -1:
+    if match(out, 'not_repository', True):
         result = False
 
     os.chdir(curr_dir)
@@ -202,27 +202,25 @@ def workspace_status(text=False):
 
     out = ihelper.popen('git status')
 
-    if 'working directory clean' in out:
+    if match(out, 'clean'):
         __status |= iglobal.GIT_CLEAN
-    if 'Unmerged paths' in out:
+    if match(out, 'merge_conflict'):
         __status |= iglobal.GIT_CONFLICT
-    if 'Changes to be committed' in out:
+    if match(out, 'uncommited'):
         __status |= iglobal.GIT_UNCOMMITED
-    if 'Changes not staged for commit' in out or 'untracked files present' in out:
+    if match(out, 'unstaged') or match(out, 'untracked'):
         __status |= iglobal.GIT_UNSTAGED
-    if 'branch is ahead of' in out:
+    if match(out, 'ahead'):
         __status |= iglobal.GIT_AHEAD
-    if 'Your branch is behind' in out:
+    if match(out, 'behind'):
         __status |= iglobal.GIT_BEHIND
-    if 'rebase in progress' in out:
+    if match(out, 'rebasing'):
         __status |= iglobal.GIT_REBASING
-    if 'You are currently cherry-picking commit' in out:
+    if match(out, 'cherring'):
         __status |= iglobal.GIT_CHERRING
-    if 'You have unmerged paths' in out:
+    if match(out, 'merging') or match(out, 'fixed_merging'):
         __status |= iglobal.GIT_MERGING
-    if 'All conflicts fixed but you are still merging' in out:
-        __status |= iglobal.GIT_MERGING
-    if 'have diverged' in out:
+    if match(out, 'diverged'):
         __status |= iglobal.GIT_DIVERGED
 
     if not text:
@@ -427,10 +425,10 @@ def sub_cmd_list():
         if not line:
             continue
 
-        if not flag and line.startswith('available git commands'):
+        if not flag and match(line, 'sub_cmd_start', True):
             flag = True
             continue
-        elif flag and line.startswith('git commands available from elsewhere'):
+        elif flag and match(line, 'sub_cmd_end', True):
             break
 
         if flag:
@@ -448,6 +446,23 @@ def check_tag_format(tag):
     :return:
     """
     return re.compile('^v.*\..*').match(tag)
+
+
+def match(text, match_text, startswitch=False):
+    """
+    git文本匹配
+    :param bool startswitch:
+    :param str text:
+    :param str match_text:
+    :return:bool
+    """
+    match_dict = iconfig.read_config('system', 'git_match_text')
+    if not match_dict or match_text not in match_dict:
+        return False
+
+    txt = match_dict[match_text]
+
+    return text.startswith(txt) if startswitch else text.find(txt) != -1
 
 
 def check_workspace_health():

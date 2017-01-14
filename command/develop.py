@@ -244,6 +244,8 @@ class Develop(CVS):
             elif c == '--continue':
                 continue_p = True
             else:
+                if c.endswith(':'):
+                    c += '*'
                 line_branches.append(c)
 
         if abort_p:
