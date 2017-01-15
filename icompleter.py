@@ -14,7 +14,11 @@ import atexit
 try:
     import readline
 except ImportError:
-    import pyreadline as readline
+    try:
+        import pyreadline as readline
+    except Exception, e:
+        print e
+        raw_input()
 
 __all__ = ["Completer"]
 
@@ -72,7 +76,6 @@ class Completer:
         elif top_cmd == 'rename':
             return self.match_branch(None, text)
         elif top_cmd == 'git':
-            # git原生指令，此处只补全到二级指令
             if not text:
                 return None
             elif len(line_words) > 2:

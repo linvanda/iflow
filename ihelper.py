@@ -2,7 +2,6 @@
 # 该模块提供一些助手方法
 
 import subprocess
-import time
 import os
 import iconfig
 import isprint
@@ -53,7 +52,7 @@ def init():
     """
     # 进入项目目录
     proj = read_runtime('project')
-    iglobal.PROJECT = proj
+    iglobal.PROJECT = proj or 'global'
 
     if proj:
         pinfo = iconfig.read_config('project', proj)
@@ -102,11 +101,11 @@ def read_runtime(key=None):
 
 def headline():
     """
-    页眉：linvanda@1612s1/vmember/master
+    页眉
     """
     print
     project = iglobal.PROJECT
-    real_path = os.getcwd() if project == 'global' else iconfig.read_config('project', project)['dir']
+    real_path = os.getcwd() if project == 'global' or not project else iconfig.read_config('project', project)['dir']
     branch = igit.current_branch() if project != 'global' else None
 
     if real_path.count('/') > 2:

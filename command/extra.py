@@ -1,9 +1,6 @@
 # coding:utf-8
 
 import os
-import ConfigParser
-import re
-import time
 import isprint
 import ihelper
 import iconfig

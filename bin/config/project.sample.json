@@ -1,0 +1,23 @@
+//项目配置文件
+{
+  "membercenter2":{
+    //项目仓库根目录
+    "dir":"C:\Users\linvanda\Desktop\gittest\membercenter2",
+    //分支配置
+    "branch":{
+      //生产分支名
+      "product":"test-master",
+      //测试分支名
+      "test":"test-dev",
+      //sql文件所在路径，相对于项目根目录
+      "sql_dir":"db/{sprint}/"
+    }
+  },
+  "vmember":{
+    "dir":"C:\Users\linvanda\Desktop\gittest\vmember",
+    "branch":{
+      "product":"test-master",
+      "test":"test-dev"
+    }
+  }
+}

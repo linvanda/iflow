@@ -8,7 +8,7 @@ import isprint
 import igit
 import iconfig
 import iglobal
-from iprint import info, ok
+from iprint import ok
 
 
 class Transform(CVS):

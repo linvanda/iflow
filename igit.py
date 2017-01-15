@@ -3,12 +3,9 @@
 import os
 import re
 import time
-import datetime
-import subprocess
 import iconfig
 import isprint
 import ihelper
-import iglobal
 import exception
 from iprint import *
 import command

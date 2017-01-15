@@ -1,6 +1,5 @@
 # coding:utf-8
 
-import os
 from CVS import CVS
 import exception
 import ihelper

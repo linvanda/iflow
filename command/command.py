@@ -2,7 +2,6 @@
 
 import abc
 import iconfig
-import ihelper
 
 
 class Command(object):

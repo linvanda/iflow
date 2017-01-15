@@ -1,9 +1,7 @@
 # coding:utf-8
 # 入口
 
-import signal
 import os
-import sys
 import iconfig
 import ihelper
 import command
@@ -36,8 +34,8 @@ if __name__ == '__main__':
     checked_ok = False
 
     while True:
-        ihelper.headline()
         try:
+            ihelper.headline()
             # 必须项是否正确（此处为条件检查，因此种检查比较耗时可能）
             if not checked_ok:
                 try:
@@ -47,7 +45,8 @@ if __name__ == '__main__':
                     ihelper.warn(unicode(str(e), 'utf-8'))
 
             # 检查工作区状态是否健康
-            igit.check_workspace_health()
+            if iglobal.PROJECT != 'global' and igit.dir_is_repository():
+                igit.check_workspace_health()
 
             args = raw_input('$ ').strip().lower().decode(iglobal.FROM_ENCODING).encode('utf-8')
             args = [ele for ele in args.split(' ') if ele.strip()]

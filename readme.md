@@ -2,7 +2,7 @@
 ========================================
 
 ##环境：
-* **开发语言**：python27(需安装py2exe,pyreadline模块)
+* **开发语言**：python27
 * **操作系统**：win10
 * **Git版本**：2.7.2.windows.1
 
@@ -46,5 +46,10 @@
 * ...
 
 ####更多指令使用说明请命令行输入help查看，另外如输入help feature可查看feature指令的使用说明
+
+## 源码开发：
+> windows上基于源码开发的话需安装pyreadline,pyinstall,pywin32,pefile模块，并将python目录下的scripts目录加入到系统环境变量，开发完成后用一下命令打包成可执行文件：
+（先进入到项目根目录）
+pyinstaller iflow.py --distpath=./bin -i iflow.ico -F
 
 欢迎使用和提bug!
