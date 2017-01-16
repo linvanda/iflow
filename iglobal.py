@@ -10,6 +10,8 @@ PROJECT = 'global'
 SPRINT = 'none'
 # 静音模式
 SILENCE = False
+# 是否开启tab提示
+READLINE = True
 
 """
 Git状态

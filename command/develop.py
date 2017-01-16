@@ -14,7 +14,7 @@ class Develop(CVS):
     """
     sub_cmd_list = ('create', 'test', 'product', 'delete',"checkout")
     parameters = {
-        'delete': ['--no-push',],
+        'delete': ['--no-push', '-y'],
         'product': ['--continue', '--abort'],
         'create': ['-y', '--no-push']
     }
@@ -283,7 +283,7 @@ class Develop(CVS):
                 tick += 1
 
         print
-        info(u'1. 输入 "in 分支简称列表(f1,f2...，多个分支用英文逗号隔开)" 告知系统要发布的分支。或者')
+        info(u'1. 输入 "in 分支简称列表(f1 f2...，多个分支用空格隔开)" 告知系统要发布的分支。或者')
         info(u'2. 输入 "ex 分支简称列表" 告知系统要排除的分支。或者')
         info(u'3. 输入 all 发布以上列出的所有项目分支。或者')
         info(u'4. 输入 cancel 取消发布')
@@ -383,17 +383,17 @@ class Develop(CVS):
             ok(u'发布完成！')
         except Exception, e:
             error(e.message)
-
+            warn(u'合并%s的分支%s时出现冲突' % (proj, curr_p_branch[1]))
             # 如果是在本项目中的最后一个分支合并出现异常，则需要提示push master分支(因为继续执行合并指令时发生冲突的分支不会再处理)
             idx = branches.index(curr_p_branch)
-            if idx == len(branches) - 1 or curr_p_branch[0] != branches[idx + 1][0]:
-                warn(u'解决冲突后记得执行 git push 推到远程仓库，然后执行 ft p --continue 继续或执行 ft p --abort 结束')
-            else:
-                warn(u'解决冲突后执行 ft p --continue 继续。或执行 ft p --abort 结束')
+            # if idx == len(branches) - 1 or curr_p_branch[0] != branches[idx + 1][0]:
+            #     warn(u'解决冲突后记得执行 git push 推到远程仓库，然后执行 ft p --continue 继续或执行 ft p --abort 结束')
+            # else:
+            warn(u'解决冲突后执行 ft p --continue 继续。或执行 ft p --abort 结束')
         finally:
             # 即使发生冲突也要移除掉，此时需要手工处理合并
-            if curr_p_branch in orig_branches:
-                orig_branches.remove(curr_p_branch)
+            # if curr_p_branch in orig_branches:
+            #     orig_branches.remove(curr_p_branch)
 
             ihelper.write_runtime('publish_branches', orig_branches)
 
@@ -425,6 +425,8 @@ class Develop(CVS):
         all = False
         in_branches = ex_branches = []
 
+        ihelper.disable_readline()
+
         while True:
             word = raw_input('$ 请选择: '.decode('utf-8')
                              .encode(iglobal.FROM_ENCODING))\
@@ -437,11 +439,12 @@ class Develop(CVS):
                 continue
 
             if word == 'cancel':
+                ihelper.enable_readline()
                 return 'cancel'
             elif word.startswith('in '):
-                in_branches = [ele.strip() for ele in word.lstrip('in ').split(',')]
+                in_branches = [ele.strip() for ele in word.lstrip('in ').split(' ')]
             elif word.startswith('ex '):
-                ex_branches = [ele.strip() for ele in word.lstrip('ex ').split(',')]
+                ex_branches = [ele.strip() for ele in word.lstrip('ex ').split(' ')]
             elif word == 'all':
                 all = True
 
@@ -450,6 +453,8 @@ class Develop(CVS):
                 continue
 
             break
+
+        ihelper.enable_readline()
 
         # in_branches和ex_branches只用一个
         final_branches = []
@@ -485,6 +490,7 @@ class Develop(CVS):
         line_branches = map(lambda x: x.replace('：', ':'), line_branches)
 
         branches = {}
+        only_this_sprint = True if self.cmd == iconfig.read_config('system', 'branch')['feature_prefix'] else False
         for br in line_branches:
             if ':' not in br:
                 # 判断是项目名还是分支名
@@ -501,7 +507,7 @@ class Develop(CVS):
                 # 同步该项目下的本地和远程分支
                 igit.sync(proj, self.cmd)
                 # 获取该项目下的所有相关分支
-                branch = igit.project_branches(self.cmd, proj)
+                branch = igit.project_branches(self.cmd, proj, only_this_sprint)
             else:
                 branch = [igit.real_branch(branch, self.cmd)]
 

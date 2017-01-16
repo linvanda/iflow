@@ -14,17 +14,17 @@ import atexit
 try:
     import readline
 except ImportError:
-    try:
-        import pyreadline as readline
-    except Exception, e:
-        print e
-        raw_input()
+    import pyreadline as readline
 
 __all__ = ["Completer"]
+
+__histfile = None
 
 class Completer:
     def __init__(self):
         self.matches = []
+        global __histfile
+
         __histfile = iglobal.BASE_DIR + '/' + 'log/cmd.log'
 
         readline.rl.allow_ctrl_c = False
@@ -41,6 +41,9 @@ class Completer:
         atexit.register(readline.write_history_file, __histfile)
 
     def complete(self, text, state):
+        if not iglobal.READLINE:
+            return None
+
         if state == 0:
             self.matches = self.match(text)
         try:
@@ -256,7 +259,6 @@ class Completer:
         return matches
 
 def tab():
-    global __histfile
     readline.set_completer(Completer().complete)
     readline.parse_and_bind('tab: complete')
 

@@ -79,7 +79,7 @@ def check_sprint():
         d2 = datetime.datetime(int(now[0]), int(now[1]), int(now[2]))
         diff = abs((d1 - d2).days)
 
-        if diff >= 60:
-            raise Exception(u'迭代版本号(' + sprint + u')过旧，请使用sp指令重新设置正确的迭代版本号')
+        if diff >= 90:
+            raise Exception(u'迭代版本号(' + sprint + u')和当前日期不符，请使用sp指令重新设置正确的迭代版本号')
 
     return True

@@ -8,11 +8,13 @@ import isprint
 import igit
 import exception
 from iprint import *
-
+try:
+    import readline
+except ImportError:
+    import pyreadline as readline
 
 def goodbye(*args):
     print args[0] if args and args[0] else "good bye!"
-    # time.sleep(1)
     sys.exit(0)
 
 
@@ -20,6 +22,14 @@ def error_exit(msg):
     error(msg)
     raw_input()
     sys.exit(1)
+
+
+def disable_readline():
+    iglobal.READLINE = False
+
+
+def enable_readline():
+    iglobal.READLINE = True
 
 
 def required_check():
@@ -162,6 +172,8 @@ def confirm(ask_msg,default='y', tick=0):
     if not ask_msg:
         return 'cancel'
 
+    disable_readline()
+
     n = 0
     choice = ['y', 'n', 'c']
     map = {'yes':'y', 'no':'n', 'cancel':'c'}
@@ -179,6 +191,8 @@ def confirm(ask_msg,default='y', tick=0):
         if c in choice:
             result = c
             break
+
+    enable_readline()
 
     return result
 

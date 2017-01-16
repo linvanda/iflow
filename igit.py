@@ -111,7 +111,9 @@ def real_branch( branch, prefix):
         return '/'.join(branch)
 
     if len(branch) == 2:
-        if isprint.check_sprint_format(branch[0], True):
+        if branch[0] == 'hotfix':
+            return '/'.join(branch)
+        elif isprint.check_sprint_format(branch[0], True):
             # 迭代号开始的,此时prefix只能是feature
             if prefix != config['feature_prefix']:
                 raise Exception(u'分支格式不合法')

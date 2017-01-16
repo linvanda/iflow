@@ -38,7 +38,7 @@ class Transform(CVS):
             raise exception.FlowException(u'未指定分支名称')
 
         old_branch = igit.real_branch(b_info['branch'], iconfig.read_config('system', 'branch')['hotfix_prefix'])
-        new_branch = igit.real_branch('%s/%s' % (b_info['sprint'], b_info['branch']), iconfig.read_config('system', 'branch')['feature_prefix'])
+        new_branch = igit.real_branch('%s/%s' % (b_info['sprint'], b_info['branch'].split('/')[-1]), iconfig.read_config('system', 'branch')['feature_prefix'])
 
         if not old_branch or not new_branch:
             raise exception.FlowException(u'分支名称不合法')
@@ -65,7 +65,7 @@ class Transform(CVS):
             raise exception.FlowException(u'未指定分支名称')
 
         old_branch = igit.real_branch(branch, iconfig.read_config('system', 'branch')['feature_prefix'])
-        new_branch = igit.real_branch(branch, iconfig.read_config('system', 'branch')['hotfix_prefix'])
+        new_branch = igit.real_branch(branch.split('/')[-1], iconfig.read_config('system', 'branch')['hotfix_prefix'])
 
         if not old_branch or not new_branch:
             raise exception.FlowException(u'分支名称不合法')
@@ -93,7 +93,7 @@ class Transform(CVS):
             raise exception.FlowException(u'未指定分支名称')
 
         old_branch = igit.real_branch(b_info['branch'], iconfig.read_config('system', 'branch')['feature_prefix'])
-        new_branch = igit.real_branch('%s/%s' % (b_info['sprint'], b_info['branch']), iconfig.read_config('system', 'branch')['feature_prefix'])
+        new_branch = igit.real_branch('%s/%s' % (b_info['sprint'], b_info['branch'].split('/')[-1]), iconfig.read_config('system', 'branch')['feature_prefix'])
 
         if not old_branch or not new_branch:
             raise exception.FlowException(u'分支名称不合法')
