@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6c40c159-8683-44c8-ad66-050ca73fc3fb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/command/develop.py" afterPath="$PROJECT_DIR$/command/develop.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/command/transform.py" afterPath="$PROJECT_DIR$/command/transform.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/icompleter.py" afterPath="$PROJECT_DIR$/icompleter.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/igit.py" afterPath="$PROJECT_DIR$/igit.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iglobal.py" afterPath="$PROJECT_DIR$/iglobal.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ihelper.py" afterPath="$PROJECT_DIR$/ihelper.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/isprint.py" afterPath="$PROJECT_DIR$/isprint.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/log/cmd.log" afterPath="$PROJECT_DIR$/log/cmd.log" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/runtime.json" afterPath="$PROJECT_DIR$/runtime.json" />
-    </list>
+    <list default="true" id="6c40c159-8683-44c8-ad66-050ca73fc3fb" name="Default" comment="" />
     <ignored path="iflow.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,10 +21,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="icompleter.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="icompleter.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/icompleter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.1185567">
+            <state vertical-scroll-proportion="0.0">
               <caret line="243" column="33" selection-start-line="243" selection-start-column="33" selection-end-line="243" selection-end-column="33" />
               <folding>
                 <element signature="e#28#42#0" expanded="true" />
@@ -59,6 +48,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="readme.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/readme.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.8041237">
+              <caret line="56" column="10" selection-start-line="56" selection-start-column="10" selection-end-line="56" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -101,16 +100,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-4.75">
               <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="igit.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/igit.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="307" column="4" selection-start-line="307" selection-start-column="4" selection-end-line="307" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -439,7 +428,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18973215" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -786,14 +775,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/readme.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="6" selection-start-line="27" selection-start-column="6" selection-end-line="27" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/isprint.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -900,11 +881,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/icompleter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1185567">
+        <state vertical-scroll-proportion="0.0">
           <caret line="243" column="33" selection-start-line="243" selection-start-column="33" selection-end-line="243" selection-end-column="33" />
           <folding>
             <element signature="e#28#42#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/readme.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8041237">
+          <caret line="56" column="10" selection-start-line="56" selection-start-column="10" selection-end-line="56" selection-end-column="10" />
+          <folding />
         </state>
       </provider>
     </entry>

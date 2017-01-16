@@ -1,5 +1,11 @@
 exit
 feature
 exit
-ft create 
+ft create
+exit
+fix p
+f1
+in f1
+git merge --abort
+ft p --abort 
 exit 
