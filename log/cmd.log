@@ -10,4 +10,14 @@ ft
 help
 exit
 fdf
+exit
+ft ck
+cd 1701s1
+sp 01s1
+ft ck feature/1701s1/order-manager-add-goods
+git branch -vv
+exit
+help
+exit
+help 
 exit 

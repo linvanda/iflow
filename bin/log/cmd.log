@@ -7,5 +7,7 @@ fix p
 f1
 in f1
 git merge --abort
-ft p --abort 
+ft p --abort
+exit
+help 
 exit 

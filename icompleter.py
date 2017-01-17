@@ -149,18 +149,26 @@ class Completer:
             elif sub_cmd == 'product':
                 # 此时可能是项目或分支名
                 return self.match_project_branch(branch_prefix, text)
+            elif sub_cmd == 'checkout':
+                iglobal.SILENCE = True
+                match = self.match_branch(branch_prefix, text, True)
+                iglobal.SILENCE = False
+                return match
             else:
                 # 提示分支名
                 return self.match_branch(branch_prefix, text)
 
-    def match_branch(self, prefix, text=None):
+    def match_branch(self, prefix, text=None, include_remote=False):
         """
         匹配当前项目的本地分支
+        :param bool include_remote: 是否包括远程分支
         :type prefix: str|None
         :param text:
         :return:
         """
         branches = igit.local_branches()
+        if include_remote:
+            branches = list(set(branches + igit.remote_branches()))
 
         r_branches = []
         if not text:
