@@ -60,6 +60,9 @@ def init():
     """
     初始化
     """
+    # 检查必要目录
+    check_dir()
+
     # 进入项目目录
     proj = read_runtime('project')
     iglobal.PROJECT = proj or 'global'
@@ -74,6 +77,25 @@ def init():
     # 设置Git参数
     execute('git config --global push.default simple')
 
+
+def check_dir():
+    runtime_dir = iglobal.BASE_DIR + '/runtime/'
+    config_dir = iglobal.BASE_DIR + '/config/'
+    log_dir = iglobal.BASE_DIR + '/log/'
+    config_file = config_dir + 'system.json'
+    project_file = config_dir + 'project.json'
+
+    if not os.path.exists(config_dir):
+        raise Exception(u'目录缺失：%s' % config_dir)
+    if not os.path.exists(config_file):
+        raise Exception(u'文件缺失：%s' % config_file)
+    if not os.path.exists(project_file):
+        raise Exception(u'文件缺失：%s' % project_file)
+    if not os.path.isdir(runtime_dir):
+        os.mkdir(runtime_dir)
+    if not os.path.isdir(log_dir):
+        os.mkdir(log_dir)
+    return True
 
 def write_runtime(key, val=None):
     """

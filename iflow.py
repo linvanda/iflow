@@ -16,6 +16,13 @@ sys.setdefaultencoding('utf-8')
 if __name__ == '__main__':
     iglobal.BASE_DIR = os.getcwd().replace('\\', '/')
 
+    # 初始化
+    try:
+        ihelper.init()
+    except Exception, e:
+        print e.message.decode('utf-8').encode(iglobal.FROM_ENCODING)
+        raw_input()
+
     # tab键自动补全
     icompleter.tab()
 
@@ -27,9 +34,6 @@ if __name__ == '__main__':
     blue(u'作者:' + cfg['author'], True)
     blue(cfg['desc'], True)
     blue(u'=========================***=========================', True)
-
-    # 初始化
-    ihelper.init()
 
     checked_ok = False
 
