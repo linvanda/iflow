@@ -47,7 +47,7 @@ def remote_branches(refresh=True):
     """
     # 先拉一下最新的远程分支
     if refresh:
-        ihelper.execute('git fetch')
+        fetch()
 
     return map(lambda x:str(x).replace('origin/HEAD -> ', '').replace('origin/', '').strip(),
                ihelper.execute('git branch -r', print_out=False, return_result=True).splitlines())
@@ -249,6 +249,8 @@ def push(branch=None):
     if not branch:
         branch = current_branch()
 
+    fetch()
+
     status = workspace_status()
     if not branch or (not status & iglobal.GIT_AHEAD and not status & iglobal.GIT_DIVERGED):
         return
@@ -262,7 +264,7 @@ def sync_branch():
     if not workspace_is_clean():
         return
 
-    pull()
+    # push里面调用了pull
     push()
 
 
@@ -271,8 +273,10 @@ def pull():
     拉取当前分支
     :return:
     """
+    fetch()
+
     status = workspace_status()
-    if not status & iglobal.GIT_BEHIND or not status & iglobal.GIT_DIVERGED:
+    if not status & iglobal.GIT_BEHIND and not status & iglobal.GIT_DIVERGED:
         return
 
     info(u'拉取远程分支...')
@@ -435,6 +439,20 @@ def sub_cmd_list():
     __sub_cmd_list = lst
 
     return lst
+
+
+def fetch(output=False):
+    now = time.time()
+    if now - iglobal.LAST_FETCH_TIME < 1:
+        # 1秒内只fetch一次
+        return
+
+    iglobal.LAST_FETCH_TIME = now
+
+    if output:
+        ihelper.system('git fetch')
+    else:
+        ihelper.popen('git fetch')
 
 
 def check_tag_format(tag):

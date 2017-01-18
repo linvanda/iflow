@@ -84,7 +84,8 @@ class Completer:
             elif len(line_words) > 2:
                 return self.match_branch(None, text)
             else:
-                return [ele + ' ' for ele in igit.sub_cmd_list() if ele.startswith(text)]
+                return [ele + ' ' for ele in iconfig.read_config('system', 'git_common_cmds') if ele.startswith(text)] \
+                or [ele + ' ' for ele in igit.sub_cmd_list() if ele.startswith(text)]
 
         return None
 
@@ -126,8 +127,20 @@ class Completer:
             return self.top_cmd(text)
         elif len(line_words) == 2:
             # 二级指令
-            return self.sub_cmd(command.Develop.sub_cmd_list, text)
+            matches = None
+            if not line_words[1].startswith('-'):
+                matches = self.sub_cmd(command.Develop.sub_cmd_list, text)
+
+            if not matches:
+                # 没有匹配上二级指令
+                line_words.insert(1, 'checkout')
+                return self.match_develop(text, line_words)
+
+            return matches
         else:
+            if line_words[1].startswith('-'):
+                line_words.insert(1, 'checkout')
+
             # 分支或其他
             top_cmd = command.Command.real_cmd(line_words[0], raise_err=False)
             sub_cmd = command.Command.real_cmd(line_words[1], valid=False, raise_err=False)
@@ -135,7 +148,7 @@ class Completer:
             if not sub_cmd:
                 return None
 
-            if top_cmd == 'feature':
+            if top_cmd == iconfig.read_config('system', 'branch')['feature_prefix']:
                 branch_prefix = top_cmd + '/' + iglobal.SPRINT + '/'
             else:
                 branch_prefix = top_cmd
@@ -151,7 +164,8 @@ class Completer:
                 return self.match_project_branch(branch_prefix, text)
             elif sub_cmd == 'checkout':
                 iglobal.SILENCE = True
-                match = self.match_branch(branch_prefix, text, True)
+                include_remote = '-r' in line_words or '--remote' in line_words
+                match = self.match_branch(branch_prefix, text, include_remote)
                 iglobal.SILENCE = False
                 return match
             else:

@@ -13,6 +13,8 @@ SILENCE = False
 # 是否开启tab提示
 READLINE = True
 
+LAST_FETCH_TIME = 0
+
 """
 Git状态
 """

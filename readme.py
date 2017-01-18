@@ -20,7 +20,9 @@ ft p vmember:/weigao              将vmember的feature/weigao分支合并到生�
 ft d --no-push order-manager      删除feature/1612s2/order-manager分支，但不删除对应的远程分支
 ft d -y order-manager             删除feature/1612s2/order-manager分支且推送到远程，
                                   且不需要确认提示
+ft order-manager                  等同于ft ck order-manager
 ft ck order-manager               切换到feature/1612s2/order-manager分支(如果本地没有但远程有则基于远程创建本地分支)
+ft ck -r order-manager            同ft ck order-manager，但tab键会提示远程分支名
 ft ck                             检查远程分支是否有更新
 """
 }
@@ -37,7 +39,9 @@ fix p vmember:order-bug            将vmember的hotfix/order-bug分支合并到�
 fix d --no-push order-bug          删除hotfix/order-bug分支，但不删除对应的远程分支
 fix d -y order-bug                 删除hotfix/order-bug分支并推送到远程，
                                    且不需要确认提示
+fix order-bug                      等同于fix ck order-bug
 fix ck order-bug                   切换到hotfix/order-bug分支(如果本地没有但远程有则基于远程创建本地分支)
+fix ck -r order-bug                同fix ck order-bug，但tab键会提示远程分支名
 fix ck                             检查远程分支是否有更新
 """
 }

@@ -1,7 +1,7 @@
 //请不要修改该文件，如果需要定制，请参照该文件创建custom.json文件并写入需要覆盖的部分
 {
   "name":"iflow",
-  "version":"0.1",
+  "version":"0.2",
   "author":"zhangsl",
   "desc":"版本控制与发布工具，基于git制作。输入help或h查看帮助",
   "branch":{
@@ -62,5 +62,9 @@
     "diverged": "have diverged",
     "sub_cmd_start": "available git commands",
     "sub_cmd_end": "git commands available from elsewhere"
-  }
+  },
+  // 常用的git指令，供自动补全用
+  "git_common_cmds":["add", "blame", "branch", "config", "commit", "checkout", "clone", "clean", "cherry-pick", "cat-file", "diff",
+                        "fetch", "grep", "help", "init", "ls-files", "log", "merge", "mv", "pull", "push",
+                        "reflog", "reset", "rebase", "revert", "rm", "shortlog", "show", "stage", "stash", "status", "tag"]
 }

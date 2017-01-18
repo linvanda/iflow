@@ -19,5 +19,35 @@ git branch -vv
 exit
 help
 exit
-help 
+help
+exit
+git branch
+exit
+git branch -r
+exit
+ft feature/1701s1/order-manager-add-goods
+exit
+ft -r
+exit
+ft -r feature/1701s1/access-log
+ft feature/1701s1/order-manager-add-goods
+ft feature/1701s1/access-log
+ft ck feature/1701s1/order-manager-add-goods
+git help -a
+git gui
+git remote
+git archive
+git archive --list
+git ls-tree
+git ls-tree -d
+git shortlog
+git show-index
+exit
+git branch
+fix t
+fix ck hotfix/test10
+fix t
+exit
+fix t
+git merge --abort
 exit 

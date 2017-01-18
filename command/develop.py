@@ -16,19 +16,21 @@ class Develop(CVS):
     parameters = {
         'delete': ['--no-push', '-y'],
         'product': ['--continue', '--abort'],
-        'create': ['-y', '--no-push']
+        'create': ['-y', '--no-push'],
+        'checkout': ['-r']
     }
 
     def __init__(self, cmd, args):
         CVS.__init__(self, cmd, args)
 
     def execute(self):
-        if not len(self.args):
-            return extra.Extra('help', [self.cmd]).execute()
+        # 如果没有提供二级指令，默认为checkout
+        if not self.args:
+            self.args.insert(0, 'checkout')
 
         sub_cmd = self.real_cmd(self.args[0], valid=False)
-        if sub_cmd not in self.sub_cmd_list:
-            raise exception.FlowException(u'指令格式错误，请输入h %s查看使用说明' % self.cmd)
+        if not sub_cmd or sub_cmd not in self.sub_cmd_list:
+            self.args.insert(0, 'checkout')
 
         # 调用相应的二级指令处理方法
         eval('self.' + sub_cmd)(self.args[1:])
@@ -39,8 +41,13 @@ class Develop(CVS):
         :return:
         """
         branch = None
+        sync_remote = False
         while args:
-            branch = igit.real_branch(args.pop(0), self.cmd)
+            c = args.pop(0)
+            if c == '-r' or c == '--remote':
+                sync_remote = True
+            else:
+                branch = igit.real_branch(c, self.cmd)
 
         if not branch:
             branch = igit.current_branch()
@@ -56,8 +63,8 @@ class Develop(CVS):
             if 'Switched to branch' not in out:
                 __error = True
 
-        if not __error:
-            ihelper.execute('git fetch')
+        if not __error and sync_remote:
+            igit.fetch()
 
         status = igit.workspace_status()
         if status & iglobal.GIT_BEHIND or status & iglobal.GIT_DIVERGED:
@@ -152,8 +159,6 @@ class Develop(CVS):
 
         branch = igit.real_branch(branch, self.cmd)
 
-        ihelper.execute('git fetch')
-
         if branch != igit.current_branch():
             # 切换分支
             info(u'切换到分支%s' % branch)
@@ -181,6 +186,9 @@ class Develop(CVS):
         # 正常执行后，工作空间应该是干净的
         if not igit.workspace_is_clean():
             raise exception.FlowException(u'合并失败,请用git status查看工作空间详情')
+
+        # 将test推到远程
+        igit.push()
 
         # 切换到原来的分支
         info(u'切换回%s' % branch)
@@ -351,7 +359,7 @@ class Develop(CVS):
 
                 if the_proj != proj:
                     info('fetch...')
-                    ihelper.execute('git fetch')
+                    igit.fetch()
 
                 # 切换到将要合并的分支
                 ihelper.execute('git checkout %s' % branch)
