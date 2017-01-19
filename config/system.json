@@ -4,11 +4,16 @@
   "version":"0.2",
   "author":"zhangsl",
   "desc":"版本控制与发布工具，基于git制作。输入help或h查看帮助",
+  "more_info":"更多信息请参见：https://github.com/linvanda/iflow",//测试
   "branch":{
+    //生产分支（可在项目配置文件中覆盖）
     "product":"master",
+    //测试分支（可在项目配置文件中覆盖）
     "test":"sp-dev",
     "feature_prefix":"feature",
-    "hotfix_prefix":"hotfix"
+    "hotfix_prefix":"hotfix",
+    //从哪个分支获取sql文件（可在项目配置文件中覆盖）
+    "sql_branch":"sp-dev"
   },
   //sql文件路径，相对于项目根目录
   "sql_dir":"db/{sprint}/",
@@ -37,7 +42,6 @@
     "cd":"Extra",
     "sprint":"Extra",
     "pwd":"Extra",
-    "version":"Extra",
     "alias":"Extra",
     "sql":"Extra",
     "exit":"Extra",

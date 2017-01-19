@@ -10,6 +10,7 @@ import ihelper
 import isprint
 import re
 import atexit
+import icommand
 
 try:
     import readline
@@ -64,7 +65,7 @@ class Completer:
             return self.top_cmd(text)
         else:
             cls = iconfig.read_config('system', 'cmd_cls')
-            cmd = command.Command.real_cmd(line_words[0], raise_err=False)
+            cmd = icommand.real_cmd(line_words[0], raise_err=False)
 
             if not cmd:
                 return None
@@ -72,7 +73,7 @@ class Completer:
             return eval('self.match_%s' % str(cls[cmd]).lower())(text, line_words)
 
     def match_git(self, text, line_words):
-        top_cmd = command.Command.real_cmd(line_words[0], raise_err=False)
+        top_cmd = icommand.real_cmd(line_words[0], raise_err=False)
 
         if top_cmd == 'commit' and text.startswith('-'):
             return self.match_parameter(top_cmd, command.Git.parameters, text)
@@ -104,7 +105,7 @@ class Completer:
         if len(line_words) == 1:
             return self.top_cmd(text)
 
-        top_cmd = command.Command.real_cmd(line_words[0], raise_err=False)
+        top_cmd = icommand.real_cmd(line_words[0], raise_err=False)
 
         if not top_cmd:
             return None
@@ -142,8 +143,8 @@ class Completer:
                 line_words.insert(1, 'checkout')
 
             # 分支或其他
-            top_cmd = command.Command.real_cmd(line_words[0], raise_err=False)
-            sub_cmd = command.Command.real_cmd(line_words[1], valid=False, raise_err=False)
+            top_cmd = icommand.real_cmd(line_words[0], raise_err=False)
+            sub_cmd = icommand.real_cmd(line_words[1], raise_err=False, top_cmd=top_cmd)
 
             if not sub_cmd:
                 return None
@@ -234,7 +235,7 @@ class Completer:
         :param word:
         :return:
         """
-        top_list = command.Command.top_cmd_list()
+        top_list = icommand.top_cmd_list()
 
         if not word:
             return top_list.keys()

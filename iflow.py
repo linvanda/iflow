@@ -9,6 +9,8 @@ from iprint import *
 import iglobal
 import igit
 import icompleter
+import icommand
+
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -30,9 +32,9 @@ if __name__ == '__main__':
 
     blue(u'=========================***=========================', True)
     blue(cfg['name'], True)
-    blue(u'版本:' + cfg['version'], True)
     blue(u'作者:' + cfg['author'], True)
     blue(cfg['desc'], True)
+    blue(cfg['more_info'], True)
     blue(u'=========================***=========================', True)
 
     checked_ok = False
@@ -58,7 +60,7 @@ if __name__ == '__main__':
             if args:
                 # 执行具体的指令
                 try:
-                    main_cmd = command.Command.real_cmd(args.pop(0))
+                    main_cmd = icommand.real_cmd(args.pop(0))
                     eval('command.' + cfg['cmd_cls'][main_cmd])(main_cmd, args).execute()
                 except Exception, e:
                     error(unicode(str(e), 'utf-8'))

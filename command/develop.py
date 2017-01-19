@@ -6,6 +6,7 @@ import igit
 import ihelper
 import iconfig
 from iprint import *
+import icommand
 
 
 class Develop(CVS):
@@ -28,9 +29,11 @@ class Develop(CVS):
         if not self.args:
             self.args.insert(0, 'checkout')
 
-        sub_cmd = self.real_cmd(self.args[0], valid=False)
+        sub_cmd = icommand.real_cmd(self.args[0], raise_err=False, top_cmd=self.cmd)
+
         if not sub_cmd or sub_cmd not in self.sub_cmd_list:
             self.args.insert(0, 'checkout')
+            sub_cmd = 'checkout'
 
         # 调用相应的二级指令处理方法
         eval('self.' + sub_cmd)(self.args[1:])

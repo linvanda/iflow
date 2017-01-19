@@ -8,6 +8,9 @@ import exception
 import iglobal
 from command import Command
 import iprint
+import icommand
+import igit
+import exception
 
 
 class Extra(Command):
@@ -59,14 +62,9 @@ class Extra(Command):
         print os.getcwd()
 
     @staticmethod
-    def version(args=None):
-        cfg = iconfig.read_config('system')
-        print cfg['name'] + ' ' + cfg['version']
-
-    @staticmethod
     def help(args):
         cmd = args[0] if args else None
-        cmd = cmd and Command.real_cmd(cmd)
+        cmd = cmd and icommand.real_cmd(cmd)
 
         import readme
 
@@ -110,7 +108,28 @@ class Extra(Command):
         :return:
         """
         dirs = []
+        old_proj = iglobal.PROJECT
         for proj, info in iconfig.read_config('project').items():
+            if 'ignore_sql_file' in info and info['ignore_sql_file']:
+                continue
+
+            # 需要先将项目切换到相应的分支
+            sql_branch = info['branch']['sql_branch'] if 'sql_branch' in info['branch'] else iconfig.read_config('system', 'branch')['sql_branch']
+
+            # 进入项目
+            if iglobal.PROJECT != proj:
+                Extra.cd([proj])
+
+            curr_branch = igit.current_branch()
+            if curr_branch != sql_branch:
+                if not igit.workspace_is_clean():
+                    raise exception.FlowException(u'项目的工作空间有尚未保存的修改，请先执行git commit提交或git reset --hard丢弃。处理后请再次执行sql指令')
+                # 切换分支
+                ihelper.system('git checkout %s' % sql_branch)
+
+            # 拉取
+            igit.pull()
+
             base_dir = info['dir']
 
             if 'sql_dir' in info:
@@ -118,16 +137,19 @@ class Extra(Command):
             else:
                 rel_dir = iconfig.read_config('system', 'sql_dir')
 
-            dirs.append(ihelper.real_path(str(base_dir).rstrip('/') + '/' + rel_dir))
+            dirs.append((proj, ihelper.real_path(str(base_dir).rstrip('/') + '/' + rel_dir)))
+
+        if iglobal.PROJECT != old_proj:
+            Extra.cd([old_proj])
 
         sql_file_suffixes = [ele.lstrip('.') for ele in str(iconfig.read_config('system', 'sql_file_suffix')).split('|')]
 
-        files = []
-        for sql_path in dirs:
-            if not sql_path:
-                continue
+        if not dirs:
+            return
 
-            if not os.path.exists(sql_path):
+        files = []
+        for proj, sql_path in dirs:
+            if not sql_path or not os.path.exists(sql_path):
                 continue
 
             # 获取文件夹下所有的sql文件

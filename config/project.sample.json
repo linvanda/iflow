@@ -3,6 +3,8 @@
   "membercenter2":{
     //项目仓库根目录
     "dir":"C:\Users\linvanda\Desktop\gittest\membercenter2",
+    //扫码sql文件时忽略本项目
+    "ignore_sql_file":1,
     //分支配置
     "branch":{
       //生产分支名
@@ -10,7 +12,8 @@
       //测试分支名
       "test":"test-dev",
       //sql文件所在路径，相对于项目根目录
-      "sql_dir":"db/{sprint}/"
+      "sql_dir":"db/{sprint}/",
+      "sql_branch":"hy-dev"
     }
   },
   "vmember":{

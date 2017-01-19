@@ -75,12 +75,12 @@ def __load_json(path):
 
     if not str:
         str = '{}'
-    str = re.compile('//.*$', re.M).sub('', str)
+    str = re.compile('^\s*(("[^"]*?"[^"]*?)*)//.*$', re.M).sub(r'\1', str)
 
     try:
         return json.loads(str)
     except Exception:
-        raise Exception('json file load error,pls check your json file')
+        raise Exception('json file load error,pls check your json file:%s' % path)
 
 
 def __merge(dict1, dict2):

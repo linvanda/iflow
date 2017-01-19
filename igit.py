@@ -279,10 +279,9 @@ def pull():
     if not status & iglobal.GIT_BEHIND and not status & iglobal.GIT_DIVERGED:
         return
 
-    info(u'拉取远程分支...')
-    ihelper.execute('git pull --rebase')
-    status = workspace_status()
-    if status & iglobal.GIT_CONFLICT:
+    info(u'rebase...')
+    ihelper.execute('git rebase')
+    if workspace_status() & iglobal.GIT_CONFLICT:
         raise exception.FlowException(u'拉取远程分支出错：冲突。请手工解决冲突后执行git add . && git rebase --continue，然后再重新执行命令')
 
 
@@ -442,17 +441,20 @@ def sub_cmd_list():
 
 
 def fetch(output=False):
-    now = time.time()
-    if now - iglobal.LAST_FETCH_TIME < 1:
-        # 1秒内只fetch一次
-        return
+    if iglobal.PROJECT not in iglobal.LAST_FETCH_TIME:
+        iglobal.LAST_FETCH_TIME[iglobal.PROJECT] = 0
 
-    iglobal.LAST_FETCH_TIME = now
+    now = time.time()
+    if now - iglobal.LAST_FETCH_TIME[iglobal.PROJECT] < 4:
+        # 4秒内只fetch一次
+        return
 
     if output:
         ihelper.system('git fetch')
     else:
         ihelper.popen('git fetch')
+
+    iglobal.LAST_FETCH_TIME[iglobal.PROJECT] = now
 
 
 def check_tag_format(tag):
