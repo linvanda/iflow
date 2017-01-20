@@ -1,19 +1,100 @@
 exit
-feature
+git branch
 exit
-ft create
+git branch -r
 exit
-fix p
-f1
-in f1
+ft feature/1701s1/order-manager-add-goods
+exit
+ft -r
+exit
+ft -r feature/1701s1/access-log
+ft feature/1701s1/order-manager-add-goods
+ft feature/1701s1/access-log
+ft ck feature/1701s1/order-manager-add-goods
+git help -a
+git gui
+git remote
+git archive
+git archive --list
+git ls-tree
+git ls-tree -d
+git shortlog
+git show-index
+exit
+git branch
+fix t
+fix ck hotfix/test10
+fix t
+exit
+fix t
 git merge --abort
-ft p --abort
 exit
+version
+exit
+d
+ft
 help
+help ft
+pwd
 exit
+exi
+exit
+ft feature/1701s1/order-manager-add-goods
+exit
+ft feature/1701s1/order-manager-add-goods
+exit
+ft feature/1701s1/order-manager-add-goods
+ft ck feature/1701s1/order-manager-add-goods
+help
+he
+help
+rename
+ft
+ft ck
+exit
+ft feature/1701s1/order-manager-add-goods
+exit
+ft feature/1701s1/order-manager-add-goods
+exit
+ft feature/1701s1/order-manager-add-goods
+git checkout sp-dev
 ft feature/1701s1/order-manager-add-goods
 git status
+ft -r feature/1701s1/access-log
+git clean -f
 git reset --hard
+ft -r feature/1701s1/access-log
+exit
 ft feature/1701s1/order-manager-add-goods
+cd vmember
+ft feature/1612s2/owner-edit-name-limit
+cd membercenter2
+ft feature/1701s1/order-manager-add-goods
+exit
+sql
+exit
+ft
+help
+ft
+sql
+exit
+sql
+exit
+sql
+exit
+sql
+exit
+sql
+c
+sql
+c
+sql
+c
+exit
+sql
+exit
+sql
+c
+exi
 exit
 exit 

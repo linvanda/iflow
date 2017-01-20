@@ -2,7 +2,7 @@
  True,
  False,
  False,
- 'logo2.ico',
+ 'iflow.ico',
  None,
  False,
  False,
@@ -60,7 +60,7 @@
  [],
  False,
  False,
- 1484897535L,
+ 1484900159L,
  [('run.exe',
    'c:\\python27\\lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit\\run.exe',
    'EXECUTABLE')])
