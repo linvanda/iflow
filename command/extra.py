@@ -118,6 +118,7 @@ class Extra(Command):
 
             # 进入项目
             if iglobal.PROJECT != proj:
+                iprint.info(u'进入项目%s' % proj)
                 Extra.cd([proj])
 
             curr_branch = igit.current_branch()
