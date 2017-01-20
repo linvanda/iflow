@@ -15,4 +15,5 @@ ft feature/1701s1/order-manager-add-goods
 git status
 git reset --hard
 ft feature/1701s1/order-manager-add-goods
+exit
 exit 

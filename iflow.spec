@@ -4,9 +4,9 @@ block_cipher = None
 
 
 a = Analysis(['iflow.py'],
-             pathex=['C:\\Users\\linvanda\\Desktop\\iflow'],
-             binaries=None,
-             datas=None,
+             pathex=['C:\\Users\\zhangsl04\\Desktop\\iflow'],
+             binaries=[],
+             datas=[],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -25,4 +25,4 @@ exe = EXE(pyz,
           debug=False,
           strip=False,
           upx=True,
-          console=True , icon='iflow.ico')
+          console=True , icon='logo2.ico')
