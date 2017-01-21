@@ -1,10 +1,10 @@
 # coding:utf-8
 
 from CVS import CVS
+from iprint import *
 import exception
 import ihelper
 import igit
-from iprint import *
 import iglobal
 
 
@@ -66,10 +66,10 @@ class Git(CVS):
         提交
         :return:
         """
-        comment = None
+        comment = ''
         push = False
 
-        if not self.args or len(self.args) > 2:
+        if not self.args:
             raise exception.FlowException(u'指令格式错误，请输入h ft查看使用说明')
 
         while self.args:
@@ -77,7 +77,9 @@ class Git(CVS):
             if c == '-p':
                 push = True
             else:
-                comment = c
+                comment += ' %s' % c
+
+        comment = comment.strip()
 
         if not comment:
             raise exception.FlowException(u'请填写提交说明')

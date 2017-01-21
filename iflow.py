@@ -25,10 +25,11 @@ if __name__ == '__main__':
         print e.message.decode('utf-8').encode(iglobal.FROM_ENCODING)
         raw_input()
 
-    # tab键自动补全
-    icompleter.tab()
-
     cfg = iconfig.read_config('system')
+
+    # 操作系统命令行编码
+    if 'console_encoding' in cfg:
+        iglobal.FROM_ENCODING = cfg['console_encoding']
 
     blue(u'=========================***=========================', True)
     blue(cfg['name'], True)
@@ -36,6 +37,9 @@ if __name__ == '__main__':
     blue(cfg['desc'], True)
     blue(cfg['more_info'], True)
     blue(u'=========================***=========================', True)
+
+    # tab键自动补全
+    icompleter.tab()
 
     checked_ok = False
 

@@ -52,11 +52,16 @@ class Develop(CVS):
             else:
                 branch = igit.real_branch(c, self.cmd)
 
+        current_branch = igit.current_branch()
+
         if not branch:
-            branch = igit.current_branch()
+            branch = current_branch
+
+        if branch == current_branch:
+            sync_remote = True
 
         __error = False
-        if branch != igit.current_branch():
+        if branch != current_branch:
             # 检查当前分支下工作区状态
             if not igit.workspace_is_clean():
                 raise exception.FlowException(u'工作区中尚有未提交的内容，请先用commit提交或用git stash保存到Git栈中')
@@ -66,7 +71,12 @@ class Develop(CVS):
             if 'Switched to branch' not in out:
                 __error = True
 
-        if not __error and sync_remote:
+        if __error:
+            warn(u'checkout失败')
+            return
+
+        if sync_remote:
+            info('fetch from remote...')
             igit.fetch()
 
         status = igit.workspace_status()

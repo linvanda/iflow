@@ -18,12 +18,12 @@ ft p                              将所有项目的所有当前迭代的分支�
 ft p vmember member-center:*      将vmember和member-center项目的所有特性分支合并到生产分支
 ft p vmember:/weigao              将vmember的feature/weigao分支合并到生产分支
 ft d --no-push order-manager      删除feature/1612s2/order-manager分支，但不删除对应的远程分支
-ft d -y order-manager             删除feature/1612s2/order-manager分支且推送到远程，
-                                  且不需要确认提示
+ft d -y order-manager             删除feature/1612s2/order-manager分支且推送到远程，且不需要确认提示
+ft                                等同于ft ck <当前分支>（检查远程仓库有无更新）
 ft order-manager                  等同于ft ck order-manager
 ft ck order-manager               切换到feature/1612s2/order-manager分支(如果本地没有但远程有则基于远程创建本地分支)
 ft ck -r order-manager            同ft ck order-manager，但tab键会提示远程分支名
-ft ck                             检查远程分支是否有更新
+ft ck                             检查当前分支的远程分支是否有更新
 """
 }
 
@@ -37,12 +37,12 @@ fix p                              将所有项目的所有修复分支合并到
 fix p vmember member-center:*      将vmember和member-center项目的所有修复分支合并到生产分支
 fix p vmember:order-bug            将vmember的hotfix/order-bug分支合并到生产分支
 fix d --no-push order-bug          删除hotfix/order-bug分支，但不删除对应的远程分支
-fix d -y order-bug                 删除hotfix/order-bug分支并推送到远程，
-                                   且不需要确认提示
+fix d -y order-bug                 删除hotfix/order-bug分支并推送到远程，且不需要确认提示
+fix                                等同于fix ck <当前分支>（检查远程仓库有无更新）
 fix order-bug                      等同于fix ck order-bug
 fix ck order-bug                   切换到hotfix/order-bug分支(如果本地没有但远程有则基于远程创建本地分支)
 fix ck -r order-bug                同fix ck order-bug，但tab键会提示远程分支名
-fix ck                             检查远程分支是否有更新
+fix ck                             检查当前分支的远程分支是否有更新
 """
 }
 
@@ -81,11 +81,10 @@ help['extra'] = {
         'desc': u'别名：sp=sprint',
         'content': u"""cd vmember              进入vmember项目的git仓库根目录
 sp 01s1                 切换到1701s1迭代
-sql                     本迭代的sql文件整理和下载
+sql                     本迭代的sql文件整理和下载（由系统或项目配置项sql_branch指定从哪个分支获取）
 pwd                     当前所在目录
 exit                    退出程序
-alias                   查看所有可用的别名列表
-version                 软件版本信息
+alias                   查看所有可用的别名列表（一级、二级）
 """
 }
 
@@ -94,4 +93,3 @@ help['sql'] = 'extra'
 help['pwd'] = 'extra'
 help['exit'] = 'extra'
 help['alias'] = 'extra'
-help['version'] = 'extra'

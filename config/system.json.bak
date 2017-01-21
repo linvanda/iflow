@@ -4,8 +4,7 @@
   "version":"0.2",
   "author":"zhangsl",
   "desc":"版本控制与发布工具，基于git制作。输入help或h查看帮助",
-  "more_info":"更多信息请参见：https://github.com/linvanda/iflow",
-  //控制台编码
+  "more_info":"更多信息请参见：https://github.com/linvanda/iflow",//测试
   "console_encoding":"gb2312",
   "branch":{
     //生产分支（可在项目配置文件中覆盖）
