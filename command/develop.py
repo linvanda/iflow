@@ -526,7 +526,7 @@ class Develop(CVS):
 
             if branch == '*':
                 # 同步该项目下的本地和远程分支
-                igit.sync(proj, self.cmd)
+                igit.sync(proj, self.cmd, only_this_sprint=self.cmd == iconfig.read_config('system', 'branch')['feature_prefix'])
                 # 获取该项目下的所有相关分支
                 branch = igit.project_branches(self.cmd, proj, only_this_sprint)
             else:
