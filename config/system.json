@@ -50,6 +50,7 @@
     "alias":"Extra",
     "sql":"Extra",
     "exit":"Extra",
+    "clear":"Extra",
     "h2f":"Transform",
     "f2h":"Transform",
     "f2f":"Transform",

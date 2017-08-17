@@ -1,5 +1,9 @@
 # coding:utf-8
 
+#操作系统类型
+PLATFORM_WINDOWS = 'Windows'
+PLATFORM_LINUX   = 'Linux'
+
 # 操作系统编码
 FROM_ENCODING = 'gb2312'
 # 软件基目录

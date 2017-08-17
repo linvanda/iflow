@@ -11,6 +11,10 @@ import igit
 import icompleter
 import icommand
 
+#目前仅支持windows系统
+if ihelper.system_type() != iglobal.PLATFORM_WINDOWS:
+    error(u'仅支持windows操作系统')
+    sys.exit(0)
 
 reload(sys)
 sys.setdefaultencoding('utf-8')

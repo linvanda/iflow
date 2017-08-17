@@ -41,6 +41,7 @@ class Completer:
 
         atexit.register(readline.write_history_file, __histfile)
 
+
     def complete(self, text, state):
         if not iglobal.READLINE:
             return None
@@ -51,6 +52,7 @@ class Completer:
             return self.matches[state] if isinstance(self.matches, list) else None
         except IndexError:
             return None
+
 
     def match(self, text):
         """
@@ -72,6 +74,7 @@ class Completer:
 
             return eval('self.match_%s' % str(cls[cmd]).lower())(text, line_words)
 
+
     def match_git(self, text, line_words):
         top_cmd = icommand.real_cmd(line_words[0], raise_err=False)
 
@@ -90,6 +93,7 @@ class Completer:
 
         return None
 
+
     def match_transform(self, text, line_words):
         if text.startswith('-'):
             return self.match_parameter(None, command.Transform.parameters, text)
@@ -100,6 +104,7 @@ class Completer:
             if prefix == branch_cfg['feature_prefix']:
                 prefix += '/' + iglobal.SPRINT
             return self.match_branch(prefix, text)
+
 
     def match_extra(self,text=None, line_words=None):
         if len(line_words) == 1:
@@ -237,18 +242,20 @@ class Completer:
             if old_proj != t[0]:
                 command.Extra('cd', [t[0]]).execute()
 
-            branches = self.match_branch(prefix, t[1])
+            branches = self.match_branch(prefix, t[1], True)
 
             if old_proj != iglobal.PROJECT:
                 command.Extra('cd', [old_proj]).execute()
 
             return map(lambda x: t[0] + ':' + x, branches)
 
+
     def match_parameter(self, sub_cmd, param_dict, text):
         if not param_dict or (isinstance(param_dict, dict) and sub_cmd not in param_dict) or not text:
             return None
 
         return map(lambda y: y + ' ', filter(lambda x: x.startswith(text), param_dict[sub_cmd] if isinstance(param_dict, dict) else param_dict))
+
 
     def top_cmd(self, word=None):
         """
@@ -277,6 +284,7 @@ class Completer:
 
         return match
 
+
     def sub_cmd(self, sub_list, word=None):
         """
         二级指令
@@ -301,6 +309,7 @@ class Completer:
         matches.sort()
 
         return matches
+
 
 def tab():
     readline.set_completer(Completer().complete)

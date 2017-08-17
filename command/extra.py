@@ -88,6 +88,20 @@ class Extra(Command):
             iprint.info(info['content'])
             print
 
+
+    @staticmethod
+    def clear(args=None):
+        """
+        清屏
+        :param args:
+        :return:
+        """
+        if ihelper.system_type() == iglobal.PLATFORM_WINDOWS:
+            ihelper.execute('cls')
+        else:
+            ihelper.execute('clear')
+
+
     @staticmethod
     def alias(args=None):
         cfg = iconfig.read_config('system', 'alias')

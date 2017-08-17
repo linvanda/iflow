@@ -367,7 +367,7 @@ class Develop(CVS):
                     info('fetch...')
                     igit.fetch()
 
-                # 切换到将要合并的分支
+                # 切换到将要合并的分支(如果不存在本地分支则会自动创建)
                 ihelper.execute('git checkout %s' % branch)
 
                 if igit.workspace_status() & iglobal.GIT_BEHIND:
@@ -392,7 +392,10 @@ class Develop(CVS):
                 # 打标签
                 if is_last_branch:
                     info(u'项目 %s 发布完成，打标签：' % proj)
-                    tag_list.append((proj, self.__tag()))
+                    proj_tag = self.__tag()
+
+                    if proj_tag:
+                        tag_list.append((proj, proj_tag))
 
             ok(u'发布完成！tag：')
             #打印tag信息
@@ -413,13 +416,16 @@ class Develop(CVS):
         """
         default_tag = igit.tag_name()
         while 1:
-            input_tag = raw_input((u'标签 %s (回车确认，或输入自定义标签)' % (default_tag if default_tag else ''))
+            input_tag = raw_input((u'标签 %s (回车确认，或输入自定义标签。输入n不打标签)：' % (default_tag if default_tag else ''))
                                   .decode('utf-8').encode(iglobal.FROM_ENCODING)).lower().strip()
             if not input_tag:
                 if default_tag:
                     input_tag = default_tag
                 else:
                     continue
+
+            if input_tag == 'n':
+                return None
 
             info(u'打标签...')
             try:

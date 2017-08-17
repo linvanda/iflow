@@ -2,6 +2,7 @@
 # 该模块提供一些助手方法
 
 import subprocess
+import platform
 import os
 import iconfig
 import isprint
@@ -129,6 +130,22 @@ def read_runtime(key=None):
         return info[key] if info.has_key(key) else None
     else:
         return info
+
+
+def system_type():
+    """
+    操作系统类型
+    :return:
+    """
+    stype = platform.system()
+
+    if stype == 'Windows':
+        return iglobal.PLATFORM_WINDOWS
+
+    if stype == 'Linux':
+        return iglobal.PLATFORM_LINUX
+
+    return None
 
 
 def headline():
