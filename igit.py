@@ -133,6 +133,25 @@ def real_branch( branch, prefix):
         return config[prefix + '_prefix'] + ('/' + iglobal.SPRINT if prefix == 'feature' else '') + '/' + branch[0]
 
 
+def delete_branch(branchName, del_remote=False):
+    """
+    删除分支
+    :param branchName:
+    :param del_remote:
+    :return:
+    """
+    if branchName == current_branch():
+        raise exception.FlowException(u'不能删除当前分支')
+
+    info(u'删除本地分支 %s ...' % branchName)
+    ihelper.execute('git branch -D %s' % branchName, raise_err=True)
+    #删除远程分支
+    if del_remote:
+        info(u'删除远程分支 origin/%s ...' % branchName)
+        ihelper.execute('git push --delete origin %s' % branchName)
+        ok(u'删除成功!')
+
+
 def simple_branch(branch):
     """
     获取分支精简名称
@@ -390,23 +409,24 @@ def sync(project, prefix=None, only_this_sprint=True, deep=False):
         iglobal.SILENCE = False
 
 
-def tag_name(tag_type='main'):
-    if tag_type == 'main':
-        # 主版本标签
-        return 'v%s.00' % iglobal.SPRINT
-    else:
-        # 获取最近的tag
-        year = time.strftime('%y')
-        years = [year, int(year) - 1]
-        partten1 = 'v%s*.*' % years[0]
-        partten2 = 'v%s*.*' % years[1]
-        tag = ihelper.execute('git tag -l "%s" "%s" --sort "version:refname"' % (partten1, partten2), print_out=False, return_result=True).splitlines()
-        tag = tag.pop() if tag else None
-        if tag:
-            tag = tag.split('.')
-            tag = '%s.%02d' % (tag[0], int(tag[1]) + 1)
+def tag_name():
+    """
+    自动获取tag
+    :return:
+    """
+    year = time.strftime('%y')
+    years = [year, int(year) - 1]
+    partten1 = 'v%s*.*' % years[0]
+    partten2 = 'v%s*.*' % years[1]
+    tag = ihelper.execute('git tag -l "%s" "%s" --sort "version:refname"' % (partten1, partten2), print_out=False, return_result=True).splitlines()
+    tag = tag.pop() if tag else None
+    if tag:
+        tag = tag.split('.')
+        #最后分支是本迭代的
+        if tag[0] == iglobal.SPRINT:
+            return '%s.%02d' % (tag[0], int(tag[1]) + 1)
 
-        return tag
+    return iglobal.SPRINT + '.01'
 
 
 def sub_cmd_list():

@@ -67,6 +67,8 @@ help['org_git'] = {
         'content':u"""git ...                               git原生指令
 commit 取消订单的bug修复              提交（会自动add）
 commit -p 取消订单的bug修复           提交并推送到远程仓库
+tag -a mytagname -m comment          在生产分支打标签(可忽略-a参数，此时系统自动生成tag名称)
+del tag_pattern                      删除匹配tag_pattern正则的分支，同时删除远程相应分支
 rename hotfix/order-bug hotfix/order-refund
                                       分支重命名（同时更新远程仓库，注意此处需要写分支全名）
 """

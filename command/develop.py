@@ -233,17 +233,9 @@ class Develop(CVS):
         if not branch:
             raise exception.FlowException(u'请输入分支名称')
 
-        if branch == igit.current_branch():
-            raise exception.FlowException(u'不能删除当前分支')
-
         if auto_delete or ihelper.confirm(u'确定删除分支 %s 吗?' % branch, default='n') == 'y':
-            info(u'删除本地分支...')
-            ihelper.execute('git branch -D %s' % branch, raise_err=True)
-            # 删除远程分支
-            if delete_remote:
-                info(u'删除远程分支...')
-                ihelper.execute('git push --delete origin %s' % branch)
-                ok(u'删除成功!')
+            igit.delete_branch(branch, del_remote=delete_remote)
+
 
     def product(self, args):
         """
@@ -392,36 +384,32 @@ class Develop(CVS):
                 info(u'合并完成：%s' % branch)
 
                 # 完成
-                self.delete([branch, '-y'])
                 orig_branches.remove(curr_p_branch)
                 if proj != the_proj:
                     the_proj = proj
 
-                # 项目发布完成时提示是否打标签
-                if is_last_branch and ihelper.confirm(u'项目%s发布完成，是否打标签？' % proj) == 'y':
+                # 打标签
+                if is_last_branch:
+                    info(u'项目 %s 发布完成，打标签：' % proj)
                     self.__tag()
 
             ok(u'发布完成！')
         except Exception, e:
             error(e.message)
             warn(u'合并%s的分支%s时出现冲突' % (proj, curr_p_branch[1]))
-            # 如果是在本项目中的最后一个分支合并出现异常，则需要提示push master分支(因为继续执行合并指令时发生冲突的分支不会再处理)
             idx = branches.index(curr_p_branch)
-            # if idx == len(branches) - 1 or curr_p_branch[0] != branches[idx + 1][0]:
-            #     warn(u'解决冲突后记得执行 git push 推到远程仓库，然后执行 ft p --continue 继续或执行 ft p --abort 结束')
-            # else:
             warn(u'解决冲突后执行 ft p --continue 继续。或执行 ft p --abort 结束')
         finally:
-            # 即使发生冲突也要移除掉，此时需要手工处理合并
-            # if curr_p_branch in orig_branches:
-            #     orig_branches.remove(curr_p_branch)
-
             ihelper.write_runtime('publish_branches', orig_branches)
 
     def __tag(self):
-        default_tag = igit.tag_name('main' if self.cmd == iconfig.read_config('system', 'branch')['feature_prefix'] else 'fix')
+        """
+        发布到生产需要强制打标签
+        :return:
+        """
+        default_tag = igit.tag_name()
         while 1:
-            input_tag = raw_input((u'请输入标签名称%s：(输入cancel取消)' % (u'(默认%s)'%default_tag if default_tag else ''))
+            input_tag = raw_input((u'标签 %s (回车确认，或输入自定义标签)' % (default_tag if default_tag else ''))
                                   .decode('utf-8').encode(iglobal.FROM_ENCODING)).lower().strip()
             if not input_tag:
                 if default_tag:
@@ -429,16 +417,14 @@ class Develop(CVS):
                 else:
                     continue
 
-            if input_tag == 'cancel':
-                break
-
-            if not igit.check_tag_format(input_tag):
-                error(u'标签名称不合法')
+            info(u'打标签...')
+            try:
+                ihelper.execute('git tag -a %s -m "normal publish"' % input_tag)
+                ihelper.execute('git push origin %s' % input_tag)
+            except exception.FlowException, e:
+                error(u'该标签已存在')
                 continue
 
-            info(u'打标签...')
-            ihelper.execute('git tag -a %s -m %s' % (input_tag, input_tag))
-            ihelper.execute('git push origin %s' % input_tag)
             break
 
     @staticmethod

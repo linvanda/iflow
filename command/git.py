@@ -1,5 +1,6 @@
 # coding:utf-8
 
+import re
 from CVS import CVS
 from iprint import *
 import exception
@@ -13,7 +14,8 @@ class Git(CVS):
     git相关指令
     """
     parameters = {
-        'commit': ['-p']
+        'commit': ['-p'],
+        'tag': ['-a', '-m']
     }
 
     def execute(self):
@@ -60,6 +62,103 @@ class Git(CVS):
         git原生指令
         """
         ihelper.execute('git ' + (' '.join(self.args) if self.args else ''))
+
+    def tag(self):
+        """
+        在生产分支上打标签
+        :return:
+        """
+        if not self.args:
+            raise exception.FlowException(u'指令格式错误，请输入help查看使用说明')
+
+        # 当前工作空间是否干净
+        if igit.current_branch() != igit.product_branch() and not igit.workspace_is_clean():
+            raise exception.FlowException(u'工作区中尚有未保存的内容')
+
+        tagName = None
+        autoTag = False
+        comment = None
+
+        while self.args:
+            c = self.args.pop(0)
+            if c == '-a':
+                tagName = self.args.pop(0)
+            elif c == '-m':
+                while self.args:
+                    if self.args[0].startswith('-'):
+                        break
+
+                    comment += self.args.pop(0) + ' '
+
+        if not tagName:
+            autoTag = True
+            tagName = igit.tag_name()
+
+        if not tagName:
+            raise exception.FlowException(u'未设置tag name')
+
+        #自动生成的tag需要提示用户
+        if autoTag and ihelper.confirm(u'tag名称：%s, ok?' % tagName) != 'y':
+            warn(u'取消操作')
+            return
+
+        currentBranch = igit.current_branch()
+
+        try:
+            #切换到生产分支
+            if currentBranch != igit.product_branch():
+                info(u'切换到生产分支 %s:' % igit.product_branch())
+                ihelper.execute('git checkout %s' % igit.product_branch())
+
+            #打tag
+            ihelper.execute('git tag -a %s -m "%s"' % (tagName, comment))
+            ihelper.execute('git push origin %s' % input_tag)
+        except exception.FlowException, e:
+            error(u'操作失败，错误详情：')
+            raise e
+        finally:
+            if currentBranch != igit.current_branch():
+                info(u'切换回 %s' % currentBranch)
+                ihelper.execute('git checkout %s' % currentBranch)
+
+        ok(u'操作成功!')
+
+
+    def delete(self):
+        """
+        删除本地匹配模式的多个分支，并删除远程相应分支
+        :return:
+        """
+        if not self.args:
+            raise exception.FlowException(u'指令格式错误，请输入help查看使用说明')
+
+        tag_pattern = self.args.pop(0)
+        del_branches = []
+
+        for branch in igit.local_branches():
+            if branch in [igit.current_branch(), igit.product_branch(), igit.test_branch()]:
+                continue
+            if re.match(tag_pattern, branch):
+                del_branches.append(branch)
+
+        if not del_branches:
+            warn(u'没有符合条件的分支')
+            return
+
+        #打印出将要删除的分支列表
+        warn(u'将要删除以下分支(以及其对应的远程分支)：')
+        for del_branch in del_branches:
+            ok(del_branch)
+
+        print
+
+        if (ihelper.confirm(u'确定删除吗(同时删除远程分支，删除后不可恢复)？', 'n') != 'y'):
+            return
+
+        #删除分支
+        for del_branch in del_branches:
+            igit.delete_branch(del_branch, True)
+
 
     def commit(self):
         """

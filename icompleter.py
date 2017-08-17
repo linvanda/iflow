@@ -77,7 +77,7 @@ class Completer:
 
         if top_cmd == 'commit' and text.startswith('-'):
             return self.match_parameter(top_cmd, command.Git.parameters, text)
-        elif top_cmd == 'rename':
+        elif top_cmd == 'rename' or top_cmd == 'delete':
             return self.match_branch(None, text)
         elif top_cmd == 'git':
             if not text:
@@ -123,6 +123,7 @@ class Completer:
         else:
             return None
 
+
     def match_develop(self,text, line_words):
         if len(line_words) == 1:
             return self.top_cmd(text)
@@ -158,8 +159,8 @@ class Completer:
                 return self.match_parameter(sub_cmd, command.Develop.parameters, text)
 
             if sub_cmd == 'create':
-                # 创建分支时，不用提示分支名
-                return None
+                # 创建分支时，提示远程存在而本地不存在的分支
+                return self.match_remoteonly_branch(branch_prefix, text)
             elif sub_cmd == 'product':
                 # 此时可能是项目或分支名
                 return self.match_project_branch(branch_prefix, text)
@@ -173,6 +174,18 @@ class Completer:
                 # 提示分支名
                 return self.match_branch(branch_prefix, text)
 
+
+    def match_remoteonly_branch(self, prefix, text=None):
+        """
+        匹配远程存在而本地不存在的分支
+        :param prefix:
+        :param text:
+        :return:
+        """
+        remote_only_branches = list(set(igit.remote_branches()) - set(igit.local_branches()))
+        return self.__match_branch(prefix, text, remote_only_branches)
+
+
     def match_branch(self, prefix, text=None, include_remote=False):
         """
         匹配当前项目的本地分支
@@ -184,6 +197,13 @@ class Completer:
         branches = igit.local_branches()
         if include_remote:
             branches = list(set(branches + igit.remote_branches()))
+
+        return self.__match_branch(prefix, text, branches)
+
+
+    def __match_branch(self, prefix, text, branches):
+        if not branches:
+            return None
 
         r_branches = []
         if not text:
@@ -202,6 +222,7 @@ class Completer:
                 matches = filter(lambda x: x.startswith(pre[0]), r_branches)
 
         return matches
+
 
     def match_project_branch(self, prefix, text=None):
         projects = map(lambda x: x + ':', ihelper.projects())
