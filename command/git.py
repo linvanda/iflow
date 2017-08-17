@@ -138,7 +138,7 @@ class Git(CVS):
         del_branches = []
 
         for branch in igit.local_branches():
-            if branch in [igit.product_branch(), igit.test_branch()]:
+            if branch == igit.product_branch():
                 continue
             if re.match(tag_pattern, branch):
                 del_branches.append(branch)
