@@ -349,6 +349,7 @@ class Develop(CVS):
 
         orig_branches = list(branches)
         curr_p_branch = None
+        tag_list = []
         try:
             the_proj = None
             for index, item in enumerate(branches):
@@ -391,9 +392,12 @@ class Develop(CVS):
                 # 打标签
                 if is_last_branch:
                     info(u'项目 %s 发布完成，打标签：' % proj)
-                    self.__tag()
+                    tag_list.append((proj, self.__tag()))
 
-            ok(u'发布完成！')
+            ok(u'发布完成！tag：')
+            #打印tag信息
+            for (proj_name, tag_name) in tag_list:
+                info('%s  %s' % (proj_name, tag_name))
         except Exception, e:
             error(e.message)
             warn(u'合并%s的分支%s时出现冲突' % (proj, curr_p_branch[1]))
@@ -419,13 +423,12 @@ class Develop(CVS):
 
             info(u'打标签...')
             try:
-                ihelper.execute('git tag -a %s -m "normal publish"' % input_tag)
-                ihelper.execute('git push origin %s' % input_tag)
+                print igit.tag(input_tag, 'normal publish')
             except exception.FlowException, e:
                 error(u'该标签已存在')
                 continue
 
-            break
+            return input_tag
 
     @staticmethod
     def __choose_branch_dialog(branch_alias):

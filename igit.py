@@ -141,7 +141,7 @@ def delete_branch(branchName, del_remote=False):
     :return:
     """
     if branchName == current_branch():
-        raise exception.FlowException(u'不能删除当前分支')
+        raise exception.FlowException('can not delete current branch')
 
     info(u'删除本地分支 %s ...' % branchName)
     ihelper.execute('git branch -D %s' % branchName, raise_err=True)
@@ -409,6 +409,21 @@ def sync(project, prefix=None, only_this_sprint=True, deep=False):
         iglobal.SILENCE = False
 
 
+def tag(tag_name, comment):
+    """
+    打标签
+    :return:
+    """
+    out = ihelper.execute('git tag -a %s -m "%s"' % (tag_name, comment), print_out=False)
+    if (out.find('already exists') > -1):
+        raise exception.FlowException(u'标签已存在')
+
+    out = ihelper.execute('git push origin %s' % tag_name, print_out=False)
+    if (out.find('already exists') > -1):
+        raise exception.FlowException(u'标签已存在')
+
+    return out
+
 def tag_name():
     """
     自动获取tag
@@ -423,10 +438,10 @@ def tag_name():
     if tag:
         tag = tag.split('.')
         #最后分支是本迭代的
-        if tag[0] == iglobal.SPRINT:
+        if tag[0].lstrip('v') == iglobal.SPRINT:
             return '%s.%02d' % (tag[0], int(tag[1]) + 1)
 
-    return iglobal.SPRINT + '.01'
+    return 'v' + iglobal.SPRINT + '.01'
 
 
 def sub_cmd_list():
@@ -465,8 +480,8 @@ def fetch(output=False):
         iglobal.LAST_FETCH_TIME[iglobal.PROJECT] = 0
 
     now = time.time()
-    if now - iglobal.LAST_FETCH_TIME[iglobal.PROJECT] < 4:
-        # 4秒内只fetch一次
+    if now - iglobal.LAST_FETCH_TIME[iglobal.PROJECT] < 6:
+        # 6秒内只fetch一次
         return
 
     if output:

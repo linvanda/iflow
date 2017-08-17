@@ -169,6 +169,7 @@ def execute(cmd, print_out=True, raise_err=False, return_result=False):
             p.close()
             return out
         else:
+            sys.stdout.flush()
             return os.system(cmd)
     else:
         p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)

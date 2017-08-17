@@ -1,6 +1,4 @@
 exit
-git branch
-exit
 git branch -r
 exit
 ft feature/1701s1/order-manager-add-goods
@@ -97,4 +95,6 @@ sql
 c
 exi
 exit
-exit 
+delete hotfix/game-yezhu-rule
+y
+exit

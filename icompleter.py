@@ -182,7 +182,7 @@ class Completer:
         :param text:
         :return:
         """
-        remote_only_branches = list(set(igit.remote_branches()) - set(igit.local_branches()))
+        remote_only_branches = list(set(igit.remote_branches(True)) - set(igit.local_branches()))
         return self.__match_branch(prefix, text, remote_only_branches)
 
 

@@ -69,20 +69,20 @@ class Git(CVS):
         :return:
         """
         if not self.args:
-            raise exception.FlowException(u'指令格式错误，请输入help查看使用说明')
+            return ihelper.execute('git tag')
 
         # 当前工作空间是否干净
         if igit.current_branch() != igit.product_branch() and not igit.workspace_is_clean():
             raise exception.FlowException(u'工作区中尚有未保存的内容')
 
-        tagName = None
-        autoTag = False
-        comment = None
+        tag_name = None
+        auto_tag = False
+        comment = ''
 
         while self.args:
             c = self.args.pop(0)
             if c == '-a':
-                tagName = self.args.pop(0)
+                tag_name = self.args.pop(0)
             elif c == '-m':
                 while self.args:
                     if self.args[0].startswith('-'):
@@ -90,36 +90,38 @@ class Git(CVS):
 
                     comment += self.args.pop(0) + ' '
 
-        if not tagName:
-            autoTag = True
-            tagName = igit.tag_name()
+        if not comment:
+            raise exception.FlowException(u'请输入标签注释')
 
-        if not tagName:
+        if not tag_name:
+            auto_tag = True
+            tag_name = igit.tag_name()
+
+        if not tag_name:
             raise exception.FlowException(u'未设置tag name')
 
         #自动生成的tag需要提示用户
-        if autoTag and ihelper.confirm(u'tag名称：%s, ok?' % tagName) != 'y':
+        if auto_tag and ihelper.confirm(u'tag名称：%s, ok?' % tag_name) != 'y':
             warn(u'取消操作')
             return
 
-        currentBranch = igit.current_branch()
+        c_branch = igit.current_branch()
 
         try:
             #切换到生产分支
-            if currentBranch != igit.product_branch():
+            if c_branch != igit.product_branch():
                 info(u'切换到生产分支 %s:' % igit.product_branch())
                 ihelper.execute('git checkout %s' % igit.product_branch())
 
             #打tag
-            ihelper.execute('git tag -a %s -m "%s"' % (tagName, comment))
-            ihelper.execute('git push origin %s' % input_tag)
+            print igit.tag(tag_name, comment)
         except exception.FlowException, e:
-            error(u'操作失败，错误详情：')
+            error(u'操作失败：')
             raise e
         finally:
-            if currentBranch != igit.current_branch():
-                info(u'切换回 %s' % currentBranch)
-                ihelper.execute('git checkout %s' % currentBranch)
+            if c_branch != igit.current_branch():
+                info(u'切换回 %s' % c_branch)
+                ihelper.execute('git checkout %s' % c_branch)
 
         ok(u'操作成功!')
 
@@ -136,7 +138,7 @@ class Git(CVS):
         del_branches = []
 
         for branch in igit.local_branches():
-            if branch in [igit.current_branch(), igit.product_branch(), igit.test_branch()]:
+            if branch in [igit.product_branch(), igit.test_branch()]:
                 continue
             if re.match(tag_pattern, branch):
                 del_branches.append(branch)
@@ -157,8 +159,10 @@ class Git(CVS):
 
         #删除分支
         for del_branch in del_branches:
-            igit.delete_branch(del_branch, True)
-
+            try:
+                igit.delete_branch(del_branch, True)
+            except exception.FlowException, e:
+                warn(str(e))
 
     def commit(self):
         """

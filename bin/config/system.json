@@ -33,13 +33,16 @@
     "s":"show",
     "d":"delete",
     "cmt":"commit",
-    "ck":"checkout"
+    "ck":"checkout",
+    "del":"delete"
   },
   "cmd_cls":{
     "feature":"Develop",
     "hotfix":"Develop",
     "git":"Git",
     "rename":"Git",
+    "tag":"Git",
+    "delete":"Git",
     "help":"Extra",
     "cd":"Extra",
     "sprint":"Extra",
