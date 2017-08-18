@@ -78,9 +78,9 @@ class Completer:
     def match_git(self, text, line_words):
         top_cmd = icommand.real_cmd(line_words[0], raise_err=False)
 
-        if top_cmd == 'commit' and text.startswith('-'):
+        if top_cmd in ['delete', 'commit'] and text.startswith('-'):
             return self.match_parameter(top_cmd, command.Git.parameters, text)
-        elif top_cmd == 'rename' or top_cmd == 'delete':
+        elif top_cmd in ['delete', 'rename']:
             return self.match_branch(None, text)
         elif top_cmd == 'git':
             if not text:

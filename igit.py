@@ -149,7 +149,8 @@ def delete_branch(branchName, del_remote=False):
     if del_remote:
         info(u'删除远程分支 origin/%s ...' % branchName)
         ihelper.execute('git push --delete origin %s' % branchName)
-        ok(u'删除成功!')
+
+    ok(u'删除成功!')
 
 
 def simple_branch(branch):

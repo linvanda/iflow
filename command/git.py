@@ -15,7 +15,8 @@ class Git(CVS):
     """
     parameters = {
         'commit': ['-p'],
-        'tag': ['-a', '-m']
+        'tag': ['-a', '-m'],
+        'delete': ['--no-remote']
     }
 
     def execute(self):
@@ -133,8 +134,19 @@ class Git(CVS):
         if not self.args:
             raise exception.FlowException(u'指令格式错误，请输入help查看使用说明')
 
-        tag_pattern = self.args.pop(0)
+        tag_pattern = None
+        del_remote  = True
         del_branches = []
+
+        while self.args:
+            c = self.args.pop(0)
+            if c == '--no-remote':
+                del_remote = False
+            else:
+                tag_pattern = c
+
+        if not tag_pattern:
+            raise exception.FlowException(u'请指定需要删除的分支匹配模式')
 
         for branch in igit.local_branches():
             if branch == igit.product_branch():
@@ -147,19 +159,19 @@ class Git(CVS):
             return
 
         #打印出将要删除的分支列表
-        warn(u'将要删除以下分支(以及其对应的远程分支)：')
+        warn(u'将要删除以下分支%s：' % ('(以及其对应的远程分支)' if del_remote else ''))
         for del_branch in del_branches:
             ok(del_branch)
 
         print
 
-        if (ihelper.confirm(u'确定删除吗(同时删除远程分支，删除后不可恢复)？', 'n') != 'y'):
+        if (ihelper.confirm(u'确定删除吗%s？' % ('(同时删除远程分支，删除后不可恢复)' if del_remote else ''), 'n') != 'y'):
             return
 
         #删除分支
         for del_branch in del_branches:
             try:
-                igit.delete_branch(del_branch, True)
+                igit.delete_branch(del_branch, del_remote)
             except exception.FlowException, e:
                 warn(str(e))
 

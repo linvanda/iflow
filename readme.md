@@ -46,6 +46,7 @@
 * **打tag：** tag -m 修改bug
 * **显示tag列表：** tag
 * **根据正则模式删除branch：** del feature/17.*
+* **仅删除本地分支：** del --no-remote tag_pattern
 * **Git原生指令：** git ...
 * **清屏：** clear
 * **退出程序：** exit
