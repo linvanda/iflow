@@ -356,7 +356,7 @@ class Develop(CVS):
         orig_branches = list(branches)
 
         try:
-            the_proj = None
+            curr_proj = None
             for index, item in enumerate(branches):
                 curr_p_branch = item
                 proj, branch = tuple(item)
@@ -368,16 +368,16 @@ class Develop(CVS):
                 if not igit.workspace_is_clean():
                     raise exception.FlowException(u'项目%s工作空间有未提交的更改，请先提交(或丢弃)后执行 ft p --continue 继续' % proj)
 
-                if the_proj != proj:
+                #首次进入项目执行fetch获取本地和远程分支差异
+                if curr_proj != proj:
                     info('fetch...')
-                    igit.fetch()
+                    igit.fetch(useCache=False)
 
                 # 切换到将要合并的分支(如果不存在本地分支则会自动创建)
                 ihelper.execute('git checkout %s' % branch)
 
-                if igit.workspace_status() & iglobal.GIT_BEHIND:
-                    # 此处可能会抛异常中断执行
-                    igit.pull()
+                # 同步当前本地和远程分支(此处可能会出现冲突)
+                igit.sync_branch()
 
                 # 切换到master分支
                 ihelper.execute('git checkout %s' % igit.product_branch())
@@ -386,13 +386,14 @@ class Develop(CVS):
 
                 # 合并
                 info(u'合并%s...' % branch)
-                igit.merge(branch, need_pull=proj != the_proj, need_push=is_last_branch)
+                igit.merge(branch, need_pull=proj != curr_proj, need_push=is_last_branch)
                 info(u'合并完成：%s' % branch)
 
                 # 完成
                 orig_branches.remove(curr_p_branch)
-                if proj != the_proj:
-                    the_proj = proj
+
+                if proj != curr_proj:
+                    curr_proj = proj
 
                 # 打标签
                 if is_last_branch:

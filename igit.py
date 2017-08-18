@@ -259,10 +259,11 @@ def __status_code_to_text(code):
     return '|'.join(text)
 
 
-def push(branch=None):
+def push(branch=None, need_pull=True):
     """
     将当前分支推到远程仓库
     :param branch:
+    :param need_pull: push之前是否pull
     :return:
     """
     if not branch:
@@ -275,16 +276,19 @@ def push(branch=None):
         return
 
     # 先拉远程分支(如果报错则需要手工处理)
-    pull()
+    if need_pull:
+        pull()
+
     ihelper.execute('git push origin ' + branch + ':' + branch)
 
 
 def sync_branch():
     if not workspace_is_clean():
-        return
+        raise exception.FlowException(u'当前工作空间不是clean状态')
 
-    # push里面调用了pull
-    push()
+    # 先pull再push
+    pull()
+    push(need_pull=False)
 
 
 def pull():
@@ -298,7 +302,6 @@ def pull():
     if not status & iglobal.GIT_BEHIND and not status & iglobal.GIT_DIVERGED:
         return
 
-    info(u'rebase...')
     ihelper.execute('git rebase')
     if workspace_status() & iglobal.GIT_CONFLICT:
         raise exception.FlowException(u'拉取远程分支出错：冲突。请手工解决冲突后执行git add . && git rebase --continue，然后再重新执行命令')
@@ -501,13 +504,13 @@ def sub_cmd_list():
     return lst
 
 
-def fetch(output=False):
+def fetch(output=False, useCache=True):
     if iglobal.PROJECT not in iglobal.LAST_FETCH_TIME:
         iglobal.LAST_FETCH_TIME[iglobal.PROJECT] = 0
 
     now = time.time()
-    if now - iglobal.LAST_FETCH_TIME[iglobal.PROJECT] < 6:
-        # 6秒内只fetch一次
+    if useCache and now - iglobal.LAST_FETCH_TIME[iglobal.PROJECT] < 10:
+        # 10秒内只fetch一次
         return
 
     if output:
