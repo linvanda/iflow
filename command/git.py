@@ -71,12 +71,14 @@ class Git(CVS):
         if not self.args:
             return ihelper.execute('git tag')
 
+        #将要在该分支上打标签
+        tag_branch = igit.product_branch()
+
         # 当前工作空间是否干净
-        if igit.current_branch() != igit.product_branch() and not igit.workspace_is_clean():
+        if igit.current_branch() != tag_branch and not igit.workspace_is_clean():
             raise exception.FlowException(u'工作区中尚有未保存的内容')
 
         tag_name = None
-        auto_tag = False
         comment = ''
 
         while self.args:
@@ -94,24 +96,22 @@ class Git(CVS):
             raise exception.FlowException(u'请输入标签注释')
 
         if not tag_name:
-            auto_tag = True
             tag_name = igit.tag_name()
 
         if not tag_name:
             raise exception.FlowException(u'未设置tag name')
 
-        #自动生成的tag需要提示用户
-        if auto_tag and ihelper.confirm(u'tag名称：%s, ok?' % tag_name) != 'y':
+        if ihelper.confirm(u'将在分支 %s 上打tag：%s, ok?' % (tag_branch, tag_name)) != 'y':
             warn(u'取消操作')
             return
 
         c_branch = igit.current_branch()
 
         try:
-            #切换到生产分支
-            if c_branch != igit.product_branch():
-                info(u'切换到生产分支 %s:' % igit.product_branch())
-                ihelper.execute('git checkout %s' % igit.product_branch())
+            #切换分支
+            if c_branch != tag_branch:
+                info(u'切换到分支 %s:' % tag_branch)
+                ihelper.execute('git checkout %s' % tag_branch)
 
             #打tag
             print igit.tag(tag_name, comment)
@@ -124,7 +124,6 @@ class Git(CVS):
                 ihelper.execute('git checkout %s' % c_branch)
 
         ok(u'操作成功!')
-
 
     def delete(self):
         """

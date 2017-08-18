@@ -430,11 +430,14 @@ def tag_name():
     :return:
     """
     year = time.strftime('%y')
-    years = [year, int(year) - 1]
-    partten1 = 'v%s*.*' % years[0]
-    partten2 = 'v%s*.*' % years[1]
-    tag = ihelper.execute('git tag -l "%s" "%s" --sort "version:refname"' % (partten1, partten2), print_out=False, return_result=True).splitlines()
-    tag = tag.pop() if tag else None
+    pattern1 = 'v%s*.*' % year
+    #pattern2的算法理论上有问题，但实际上是可用的（到下一个00年还很远）
+    pattern2 = 'v%02d*.*' % (int(year) - 1)
+
+    tag = __last_tag(pattern1)
+    if not tag and int(time.strftime('%m')) < 3:
+        tag = __last_tag(pattern2)
+
     if tag:
         tag = tag.split('.')
         #最后分支是本迭代的
@@ -442,6 +445,29 @@ def tag_name():
             return '%s.%02d' % (tag[0], int(tag[1]) + 1)
 
     return 'v' + iglobal.SPRINT + '.01'
+
+
+def __last_tag(pattern):
+    """
+    最后一个符合模式的标签
+    :param pattern:
+    :return:
+    """
+    tags = __tag_list(pattern)
+
+    return tags.pop() if tags else None
+
+
+def __tag_list(pattern):
+    """
+    根据pattern获取git tag列表
+    :param pattern:
+    :return:
+    """
+    if pattern:
+        return ihelper.execute('git tag -l "%s" --sort "version:refname"' % pattern, print_out=False, return_result=True).splitlines()
+    else:
+        return ihelper.execute('git tag --sort "version:refname"', print_out=False, return_result=True).splitlines()
 
 
 def sub_cmd_list():

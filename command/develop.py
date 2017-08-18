@@ -265,6 +265,7 @@ class Develop(CVS):
             # 清除runtime后退出
             ok(u'取消发布')
             ihelper.write_runtime('publish_branches')
+            ihelper.write_runtime('publish_tags')
             return
 
         if continue_p:
@@ -340,16 +341,22 @@ class Develop(CVS):
         发布分支到生产环境
         :param branches: 待发布分支列表：[(proj_name, branch)]
         """
+        curr_p_branch = None
+
         if not branches:
+            #接着上次的继续发布
             branches = ihelper.read_runtime('publish_branches')
+            tag_list = ihelper.read_runtime('publish_tags')
 
         if not branches:
             info(u'没有需要发布的分支')
             return
 
+        if not tag_list:
+            tag_list = []
+
         orig_branches = list(branches)
-        curr_p_branch = None
-        tag_list = []
+
         try:
             the_proj = None
             for index, item in enumerate(branches):
@@ -398,16 +405,21 @@ class Develop(CVS):
                         tag_list.append((proj, proj_tag))
 
             ok(u'发布完成！tag：')
+
             #打印tag信息
             for (proj_name, tag_name) in tag_list:
-                info('%s  %s' % (proj_name, tag_name))
+                info(' %s  %s' % (proj_name, tag_name))
+
+            #清空tag list
+            tag_list = []
         except Exception, e:
             error(e.message)
             warn(u'合并%s的分支%s时出现冲突' % (proj, curr_p_branch[1]))
-            idx = branches.index(curr_p_branch)
             warn(u'解决冲突后执行 ft p --continue 继续。或执行 ft p --abort 结束')
         finally:
+            #持久化发布状态
             ihelper.write_runtime('publish_branches', orig_branches)
+            ihelper.write_runtime('publish_tags', tag_list)
 
     def __tag(self):
         """
