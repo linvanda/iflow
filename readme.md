@@ -9,7 +9,7 @@
 ##说明：
 * 基于git的用于管理和发布代码分支的windows命令行工具。linux和mac系统未经测试。
 * 分支规则：
-    1. 有四种分支：生产分支master，测试分支sp-dev，特性分支feature/...，修复分支hotfix/...，其中feature和hotfix分支属于开发过程中的临时分支，合并到master后即被删除。
+    1. 有四种分支：生产分支master，测试分支sp-dev，特性分支feature/...，修复分支hotfix/...，其中feature和hotfix分支属于开发过程中的临时分支。
     2. 迭代：一个月通常有两个迭代，分别为sp1,sp2，如1701s1。
     3. 特性分支和迭代密切相关，迭代内特性分支命名：feature/迭代号/特性名称。这种分支是在迭代结束后一起发布的。
     4. 修复分支一般是在一两天内完成并发布的，因为比较紧急而不能随迭代版本发布走。命名：hotfix/名称。
@@ -43,7 +43,11 @@
 * **切换到另一个修复分支** feature checkout activity-bug
 * **特性分支转修复分支：** f2h order-manager
 * **整理合并本迭代所有sql文件：** sql
+* **打tag：** tag -m 修改bug
+* **显示tag列表：** tag
+* **根据正则模式删除branch：** del feature/17.*
 * **Git原生指令：** git ...
+* **清屏：** clear
 * **退出程序：** exit
 * ...
 

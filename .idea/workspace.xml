@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6c40c159-8683-44c8-ad66-050ca73fc3fb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/log/cmd.log" afterPath="$PROJECT_DIR$/bin/log/cmd.log" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/command/develop.py" afterPath="$PROJECT_DIR$/command/develop.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/command/git.py" afterPath="$PROJECT_DIR$/command/git.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/igit.py" afterPath="$PROJECT_DIR$/igit.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/readme.md" afterPath="$PROJECT_DIR$/readme.md" />
     </list>
     <ignored path="iflow.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -113,11 +109,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="igit.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="igit.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/igit.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.49251246">
-              <caret line="439" column="0" selection-start-line="439" selection-start-column="0" selection-end-line="439" selection-end-column="0" />
+            <state vertical-scroll-proportion="-7.857143">
+              <caret line="447" column="0" selection-start-line="447" selection-start-column="0" selection-end-line="447" selection-end-column="0" />
               <folding>
                 <element signature="e#16#25#0" expanded="true" />
               </folding>
@@ -125,14 +121,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="iflow.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/iflow.py">
+      <file leaf-file-name="readme.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/readme.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-              <folding>
-                <element signature="e#21#30#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.7671233">
+              <caret line="46" column="18" selection-start-line="46" selection-start-column="18" selection-end-line="46" selection-end-column="18" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -180,7 +174,6 @@
         <option value="$PROJECT_DIR$/config/custom.json" />
         <option value="E:/python27/Lib/site-packages/pyreadline/__init__.py" />
         <option value="$PROJECT_DIR$/setup.py" />
-        <option value="$PROJECT_DIR$/readme.md" />
         <option value="$PROJECT_DIR$/isprint.py" />
         <option value="$PROJECT_DIR$/command/transform.py" />
         <option value="$PROJECT_DIR$/log/cmd.log" />
@@ -201,6 +194,7 @@
         <option value="$PROJECT_DIR$/command/git.py" />
         <option value="$PROJECT_DIR$/command/develop.py" />
         <option value="$PROJECT_DIR$/igit.py" />
+        <option value="$PROJECT_DIR$/readme.md" />
       </list>
     </option>
   </component>
@@ -775,13 +769,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/readme.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="55" column="0" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/command/command.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -904,11 +891,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/igit.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.49251246">
-          <caret line="439" column="0" selection-start-line="439" selection-start-column="0" selection-end-line="439" selection-end-column="0" />
+        <state vertical-scroll-proportion="-7.857143">
+          <caret line="447" column="0" selection-start-line="447" selection-start-column="0" selection-end-line="447" selection-end-column="0" />
           <folding>
             <element signature="e#16#25#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/readme.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7671233">
+          <caret line="46" column="18" selection-start-line="46" selection-start-column="18" selection-end-line="46" selection-end-column="18" />
+          <folding />
         </state>
       </provider>
     </entry>
