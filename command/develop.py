@@ -342,18 +342,16 @@ class Develop(CVS):
         :param branches: 待发布分支列表：[(proj_name, branch)]
         """
         curr_p_branch = None
+        tag_list = []
 
         if not branches:
             #接着上次的继续发布
             branches = ihelper.read_runtime('publish_branches')
-            tag_list = ihelper.read_runtime('publish_tags')
+            tag_list = ihelper.read_runtime('publish_tags') or []
 
         if not branches:
             info(u'没有需要发布的分支')
             return
-
-        if not tag_list:
-            tag_list = []
 
         orig_branches = list(branches)
 

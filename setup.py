@@ -1,9 +1,6 @@
 from distutils.core import setup
 import py2exe
 
-# setup(console=[{"script":"iflow.py"}])
-
-
 INCLUDES = ['pyreadline']
 options = {"py2exe":
                {
@@ -14,4 +11,4 @@ options = {"py2exe":
                                      "ole32.dll", "ADVAPI32.dll", "WS2_32.dll", "GDI32.dll", "VERSION.dll", "KERNEL32.dll"]
                }
 }
-setup(options = options, zipfile=None,console=[{"script": "iflow.py", "icon_resources": [(1, "logo.ico")] }])
+setup(name = 'iflow', options = options, zipfile=None,console=[{"script": "iflow.py", "icon_resources": [(1, "logo.ico")] }])
