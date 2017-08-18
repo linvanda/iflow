@@ -2,6 +2,7 @@
 # 入口
 
 import os
+import time
 import iconfig
 import ihelper
 import command
@@ -14,6 +15,7 @@ import icommand
 #目前仅支持windows系统
 if ihelper.system_type() != iglobal.PLATFORM_WINDOWS:
     error(u'仅支持windows操作系统')
+    time.sleep(5)
     sys.exit(0)
 
 reload(sys)

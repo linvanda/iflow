@@ -361,8 +361,6 @@
   ('heapq', 'c:\\python27\\lib\\heapq.py', 'PYMODULE'),
   ('keyword', 'c:\\python27\\lib\\keyword.py', 'PYMODULE'),
   ('glob', 'c:\\python27\\lib\\glob.py', 'PYMODULE'),
-  ('_strptime', 'c:\\python27\\lib\\_strptime.py', 'PYMODULE'),
-  ('calendar', 'c:\\python27\\lib\\calendar.py', 'PYMODULE'),
   ('pyreadline.release',
    'c:\\python27\\lib\\site-packages\\pyreadline\\release.py',
    'PYMODULE'),
@@ -436,6 +434,7 @@
   ('rfc822', 'c:\\python27\\lib\\rfc822.py', 'PYMODULE'),
   ('mimetypes', 'c:\\python27\\lib\\mimetypes.py', 'PYMODULE'),
   ('ssl', 'c:\\python27\\lib\\ssl.py', 'PYMODULE'),
+  ('calendar', 'c:\\python27\\lib\\calendar.py', 'PYMODULE'),
   ('contextlib', 'c:\\python27\\lib\\contextlib.py', 'PYMODULE'),
   ('nturl2path', 'c:\\python27\\lib\\nturl2path.py', 'PYMODULE'),
   ('urlparse', 'c:\\python27\\lib\\urlparse.py', 'PYMODULE'),
@@ -532,5 +531,6 @@
   ('json.encoder', 'c:\\python27\\lib\\json\\encoder.py', 'PYMODULE'),
   ('json.decoder', 'c:\\python27\\lib\\json\\decoder.py', 'PYMODULE'),
   ('json.scanner', 'c:\\python27\\lib\\json\\scanner.py', 'PYMODULE'),
+  ('_strptime', 'c:\\python27\\lib\\_strptime.py', 'PYMODULE'),
   ('os', 'c:\\python27\\lib\\os.py', 'PYMODULE'),
   ('os2emxpath', 'c:\\python27\\lib\\os2emxpath.py', 'PYMODULE')])
