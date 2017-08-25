@@ -40,7 +40,7 @@ def read_config(path, key=None, use_cache=True):
         __CONFIG[path] = config
 
     if key:
-        return config[key] if config.has_key(key) else None
+        return config[key] if config.has_key(key) else {}
     else:
         return config
 

@@ -11,6 +11,7 @@ import iglobal
 import igit
 import icompleter
 import icommand
+import exception
 
 #目前仅支持windows系统
 if ihelper.system_type() != iglobal.PLATFORM_WINDOWS:
@@ -27,7 +28,7 @@ if __name__ == '__main__':
     # 初始化
     try:
         ihelper.init()
-    except Exception, e:
+    except exception.FlowException, e:
         print e.message.decode('utf-8').encode(iglobal.FROM_ENCODING)
         raw_input()
 
@@ -76,5 +77,5 @@ if __name__ == '__main__':
                     error(unicode(str(e), 'utf-8'))
         except KeyboardInterrupt:
             print
-        except Exception, e:
+        except exception.FlowException, e:
             print e

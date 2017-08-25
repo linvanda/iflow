@@ -87,11 +87,11 @@ def check_dir():
     project_file = config_dir + 'project.json'
 
     if not os.path.exists(config_dir):
-        raise Exception(u'目录缺失：%s' % config_dir)
+        raise exception.FlowException(u'目录缺失：%s' % config_dir)
     if not os.path.exists(config_file):
-        raise Exception(u'文件缺失：%s' % config_file)
+        raise exception.FlowException(u'文件缺失：%s' % config_file)
     if not os.path.exists(project_file):
-        raise Exception(u'文件缺失：%s' % project_file)
+        raise exception.FlowException(u'文件缺失：%s' % project_file)
     if not os.path.isdir(runtime_dir):
         os.mkdir(runtime_dir)
     if not os.path.isdir(log_dir):
@@ -154,8 +154,13 @@ def headline():
     """
     print
     project = iglobal.PROJECT
-    real_path = os.getcwd() if project == 'global' or not project else iconfig.read_config('project', project)['dir']
+    curr_proj_info = iconfig.read_config('project', project)
     branch = igit.current_branch() if project != 'global' else None
+    real_path = os.getcwd() if (project == 'global'
+                                or not project
+                                or not curr_proj_info
+                                or not curr_proj_info.has_key('dir')) \
+        else curr_proj_info['dir']
 
     if real_path.count('/') > 2:
         path_arr = real_path.split('/')
