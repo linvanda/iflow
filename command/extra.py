@@ -138,7 +138,7 @@ class Extra(Command):
             curr_branch = igit.current_branch()
             if curr_branch != sql_branch:
                 if not igit.workspace_is_clean():
-                    raise exception.FlowException(u'项目的工作空间有尚未保存的修改，请先执行git commit提交或git reset --hard丢弃。处理后请再次执行sql指令')
+                    raise exception.FlowException(u'项目的工作空间有尚未保存的修改，请先执行git commit提交或git clean -fd丢弃。处理后请再次执行sql指令')
                 # 切换分支
                 ihelper.system('git checkout %s' % sql_branch)
 
