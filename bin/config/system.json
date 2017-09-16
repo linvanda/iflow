@@ -34,8 +34,7 @@
     "d":"delete",
     "cmt":"commit",
     "ck":"checkout",
-    "del":"delete",
-    "mgr":"merge"
+    "del":"delete"
   },
   "cmd_cls":{
     "feature":"Develop",
@@ -55,8 +54,7 @@
     "h2f":"Transform",
     "f2h":"Transform",
     "f2f":"Transform",
-    "commit":"Git",
-    "merge":"Git"
+    "commit":"Git"
   },
   "git_match_text":{
     "not_repository": "Not a git repository",
