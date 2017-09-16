@@ -420,33 +420,24 @@ def tag(tag_name, comment):
     """
     out = ihelper.execute('git tag -a %s -m "%s"' % (tag_name, comment), print_out=False)
     if (out.find('already exists') > -1):
-        raise exception.FlowException(u'标签已存在')
+        raise exception.FlowException(u'已存在该标签')
 
     out = ihelper.execute('git push origin %s' % tag_name, print_out=False)
     if (out.find('already exists') > -1):
-        raise exception.FlowException(u'标签已存在')
+        raise exception.FlowException(u'远程已存在该标签')
 
     return out
 
 def tag_name():
     """
-    自动获取tag
+    根据迭代号自动获取新tag
     :return:
     """
-    year = time.strftime('%y')
-    pattern1 = 'v%s*.*' % year
-    #pattern2的算法理论上有问题，但实际上是可用的（到下一个00年还很远）
-    pattern2 = 'v%02d*.*' % (int(year) - 1)
-
-    tag = __last_tag(pattern1)
-    if not tag and int(time.strftime('%m')) < 3:
-        tag = __last_tag(pattern2)
+    tag = __last_tag('v%s.*' % iglobal.SPRINT)
 
     if tag:
         tag = tag.split('.')
-        #最后分支是本迭代的
-        if tag[0].lstrip('v') == iglobal.SPRINT:
-            return '%s.%02d' % (tag[0], int(tag[1]) + 1)
+        return '%s.%02d' % (tag[0], int(tag[1]) + 1)
 
     return 'v' + iglobal.SPRINT + '.01'
 

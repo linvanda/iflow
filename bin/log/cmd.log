@@ -1,10 +1,3 @@
-fix ck hotfix/test10
-fix t
-exit
-fix t
-git merge --abort
-exit
-version
 exit
 d
 ft
@@ -75,14 +68,14 @@ exit
 delete hotfix/game-yezhu-rule
 y
 exit
-git branch 
+git branch
 git branch -D hotfix/member-car
 git branch
 sp 08s1
 ft
 ft p membercenter:feature/1708s1/add_member_room_api
 all
-git branch 
+git branch
 git branch -D hotfix/modify-mobile
 git branch -r
 fix p membercenter:hotfix/modify-mobile
@@ -96,5 +89,12 @@ ft p membercenter:feature/1708s1/test
 all
 n
 tag
-clear 
+clear
+exit
+tag
+tag -m 1
+n
+sp 08s2
+tag -m 1
+n
 exit
