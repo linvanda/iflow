@@ -56,3 +56,16 @@ GIT_STATUS_MAP = {
     512: 'diverged'
 }
 
+GIT_STATUS_PATTEN = {
+    1: ['clean'],
+    2: ['merge_conflict'],
+    4: ['unstaged', 'untracked'],
+    8: ['uncommited'],
+    16: ['ahead'],
+    32: ['behind'],
+    64: ['rebasing'],
+    128: ['cherring'],
+    256: ['merging', 'fixed_merging'],
+    512: ['diverged']
+}
+

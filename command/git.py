@@ -7,6 +7,8 @@ import exception
 import ihelper
 import igit
 import iglobal
+import extra
+import datetime
 
 
 class Git(CVS):
@@ -174,6 +176,44 @@ class Git(CVS):
                 igit.delete_branch(del_branch, del_remote)
             except exception.FlowException, e:
                 warn(str(e))
+
+    def merge(self):
+        """
+        将生产分支最新代码merge到当前分支
+        步骤：
+            1. 拉取生产分支： git fetch origin master && git checkout master && git rebase origin/master
+            2. 拉取当前分支： git fetch origin currbranch && git checkout currbranch && git rebase origin/currbranch
+            3. 将master合并到当前分支： git checkout currbranch && git merge master
+        :return:
+        """
+        prod_branch = igit.product_branch()
+        curr_branch = igit.current_branch()
+
+        if curr_branch == prod_branch:
+            return
+
+        #进入生产分支
+        ihelper.execute('git checkout %s' % prod_branch)
+
+        #拉取生产远程分支到本地
+        igit.pull()
+
+        #切回开发分支
+        ihelper.execute('git checkout %s' % curr_branch)
+
+        #拉取远程开发分支到本地
+        igit.pull()
+
+        #合并本地master到本地开发分支并推送到远程
+        igit.merge(prod_branch, need_pull=False)
+
+        last_merge_date = ihelper.read_runtime('last_merge_date')
+        if not last_merge_date:
+            last_merge_date = {}
+        last_merge_date[curr_branch] = datetime.datetime.now().strftime('%Y-%m-%d')
+        ihelper.write_runtime('last_merge_date', last_merge_date)
+
+        ok('done!')
 
     def commit(self):
         """

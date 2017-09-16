@@ -2,8 +2,19 @@
 
 import time
 import ihelper
+import iglobal
 
 
-input_tag = 'v1708s1.01'
-ihelper.execute('git tag -a %s -m "normal publish"' % input_tag, raise_err=True)
-# ihelper.execute('git push origin %s' % input_tag, raise_err=True)
+def __workspace_match_status(text, status):
+    for search_str in iglobal.GIT_STATUS_PATTEN[status]:
+        if search_str in text:
+            return status
+
+    return 0
+
+__status = 0
+out = 'this is'
+for s_code, patterns in iglobal.GIT_STATUS_PATTEN.items():
+	print patterns
+
+

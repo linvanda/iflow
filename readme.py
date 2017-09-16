@@ -71,7 +71,8 @@ tag -a mytagname -m comment          在生产分支打标签(可忽略-a参数�
 del tag_pattern                      删除匹配tag_pattern正则的分支，同时删除远程相应分支
 del --no-remote tag_pattern          仅删除本地分支，不删除远程的
 rename hotfix/order-bug hotfix/order-refund
-                                      分支重命名（同时更新远程仓库，注意此处需要写分支全名）
+                                     分支重命名（同时更新远程仓库，注意此处需要写分支全名）
+merge                                将生产分支最新代码merge到当前分支
 """
 }
 

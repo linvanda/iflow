@@ -77,10 +77,9 @@ class Develop(CVS):
 
         if sync_remote:
             info('fetch from remote...')
-            igit.fetch()
+            igit.fetch(branch=branch)
 
-        status = igit.workspace_status()
-        if status & iglobal.GIT_BEHIND or status & iglobal.GIT_DIVERGED:
+        if igit.workspace_at_status(iglobal.GIT_BEHIND) or igit.workspace_at_status(iglobal.GIT_BEHIND):
             warn(u'远程仓库已有更新，请执行 git rebase 获取最新代码')
 
     def create(self, args):

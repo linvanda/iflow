@@ -3,6 +3,7 @@
 import os
 import re
 import time
+import datetime
 import iconfig
 import isprint
 import ihelper
@@ -81,7 +82,7 @@ def workspace_is_clean():
     检查当前分支的工作区是否是清洁的
     工作区、暂存区都必须是清洁的才返回True，即用git status -s查看结果为空
     """
-    return workspace_status() & iglobal.GIT_CLEAN
+    return workspace_at_status(iglobal.GIT_CLEAN)
 
 
 def real_branch( branch, prefix):
@@ -210,43 +211,48 @@ def comment(msg, btype=None):
     return '<' + btype + '>' + msg if btype else msg
 
 
-def workspace_status(text=False):
+def workspace_at_status(match_status):
+    """
+    检查工作区是否处于某状态
+    :param match_status:
+    :return:
+    """
+    return workspace_status(text=False, match_status=match_status)
+
+
+def workspace_status(text=False, match_status=0):
     """
     工作空间状态
     :param text:
     :return:
     :return:
     """
-    __status = 0
 
     out = ihelper.popen('git status')
 
-    if match(out, 'clean'):
-        __status |= iglobal.GIT_CLEAN
-    if match(out, 'merge_conflict'):
-        __status |= iglobal.GIT_CONFLICT
-    if match(out, 'uncommited'):
-        __status |= iglobal.GIT_UNCOMMITED
-    if match(out, 'unstaged') or match(out, 'untracked'):
-        __status |= iglobal.GIT_UNSTAGED
-    if match(out, 'ahead'):
-        __status |= iglobal.GIT_AHEAD
-    if match(out, 'behind'):
-        __status |= iglobal.GIT_BEHIND
-    if match(out, 'rebasing'):
-        __status |= iglobal.GIT_REBASING
-    if match(out, 'cherring'):
-        __status |= iglobal.GIT_CHERRING
-    if match(out, 'merging') or match(out, 'fixed_merging'):
-        __status |= iglobal.GIT_MERGING
-    if match(out, 'diverged'):
-        __status |= iglobal.GIT_DIVERGED
+    #检查是否匹配某状态
+    if match_status:
+        return __workspace_match_status(out, match_status)
+
+    #获取工作空间状态。考虑到性能，此处不做全部匹配
+    __status = 0
+
+    for s_code, patterns in iglobal.GIT_STATUS_PATTEN.items():
+        if __workspace_match_status(out, s_code):
+            __status |= s_code
 
     if not text:
         return __status
     else:
         return __status_code_to_text(__status)
 
+
+def __workspace_match_status(text, status):
+    for search_str in iglobal.GIT_STATUS_PATTEN[status]:
+        if search_str in text:
+            return status
+
+    return 0
 
 def __status_code_to_text(code):
     if not code:
@@ -270,10 +276,7 @@ def push(branch=None, need_pull=True):
     if not branch:
         branch = current_branch()
 
-    fetch()
-
-    status = workspace_status()
-    if not branch or (not status & iglobal.GIT_AHEAD and not status & iglobal.GIT_DIVERGED):
+    if not branch or (not workspace_at_status(iglobal.GIT_AHEAD) and not workspace_at_status(iglobal.GIT_DIVERGED)):
         return
 
     # 先拉远程分支(如果报错则需要手工处理)
@@ -297,14 +300,13 @@ def pull():
     拉取当前分支
     :return:
     """
-    fetch()
+    fetch(branch=current_branch())
 
-    status = workspace_status()
-    if not status & iglobal.GIT_BEHIND and not status & iglobal.GIT_DIVERGED:
+    if not workspace_at_status(iglobal.GIT_BEHIND) and not workspace_at_status(iglobal.GIT_DIVERGED):
         return
 
     ihelper.execute('git rebase')
-    if workspace_status() & iglobal.GIT_CONFLICT:
+    if workspace_at_status(iglobal.GIT_CONFLICT):
         raise exception.FlowException(u'拉取远程分支出错：冲突。请手工解决冲突后执行git add . && git rebase --continue，然后再重新执行命令')
 
 
@@ -322,7 +324,7 @@ def merge(branch, need_push=True, need_pull=True):
 
     # 合并(git合并冲突信息在stdout中)
     ihelper.execute('git merge --no-ff ' + branch)
-    if workspace_status() & iglobal.GIT_CONFLICT:
+    if workspace_at_status(iglobal.GIT_CONFLICT):
         ihelper.execute('git status -s')
         raise exception.FlowException(u'合并失败：发生冲突。请手工解决冲突后执行git add . && git commit，然后重新执行命令')
 
@@ -496,21 +498,30 @@ def sub_cmd_list():
     return lst
 
 
-def fetch(output=False, useCache=True):
+def fetch(output=False, useCache=True, branch=None):
     if iglobal.PROJECT not in iglobal.LAST_FETCH_TIME:
         iglobal.LAST_FETCH_TIME[iglobal.PROJECT] = 0
+
+    if branch:
+        useCache = False
 
     now = time.time()
     if useCache and now - iglobal.LAST_FETCH_TIME[iglobal.PROJECT] < 10:
         # 10秒内只fetch一次
         return
 
-    if output:
-        ihelper.system('git fetch')
-    else:
-        ihelper.popen('git fetch')
+    cmd = 'git fetch'
 
-    iglobal.LAST_FETCH_TIME[iglobal.PROJECT] = now
+    if branch:
+        cmd = cmd + ' origin %s' % branch
+
+    if output:
+        ihelper.system(cmd)
+    else:
+        ihelper.popen(cmd)
+
+    if not branch:
+        iglobal.LAST_FETCH_TIME[iglobal.PROJECT] = now
 
 
 def check_tag_format(tag):
@@ -544,23 +555,66 @@ def check_workspace_health():
     检查工作区是否健康：是否处于conflict、rebasing状态
     :return:
     """
-    status = workspace_status()
-
-    if status & iglobal.GIT_CONFLICT:
-        if status & iglobal.GIT_REBASING:
+    if workspace_at_status(iglobal.GIT_CONFLICT):
+        if workspace_at_status(iglobal.GIT_REBASING):
             warn(u'rebase出现冲突。请手工解决冲突后执行 git add . && git rebase --continue 继续完成操作。或者执行 git rebase --abort取消操作')
-        elif status & iglobal.GIT_CHERRING:
+        elif workspace_at_status(iglobal.GIT_CHERRING):
             warn(u'cherry-pick出现冲突。请手工解决冲突后执行 git add . && git cherry-pick --continue 继续完成操作。或者执行git cherry-pick --abort取消操作')
-        elif status & iglobal.GIT_MERGING:
+        elif workspace_at_status(iglobal.GIT_MERGING):
             warn(u'merge出现冲突。请手工解决冲突后执行 git add . && git commit 完成合并操作。或者执行 git merge --abort取消操作')
         else:
             warn(u'当前工作区存在冲突，请手工处理冲突后执行 git add . && git commit 解决冲突')
-    elif status & iglobal.GIT_REBASING:
+    elif workspace_at_status(iglobal.GIT_REBASING):
         warn(u'工作区正处于rebasing中，请执行 git rebase --continue 完成操作')
-    elif status & iglobal.GIT_CHERRING:
+    elif workspace_at_status(iglobal.GIT_CHERRING):
         warn(u'工作区正处于cherry picking中，请执行 git cherry-pick --continue 完成操作')
-    elif status & iglobal.GIT_MERGING:
+    elif workspace_at_status(iglobal.GIT_MERGING):
         warn(u'工作区正处于merging中，请执行 git commit 完成操作')
     elif ihelper.read_runtime('publish_branches'):
         warn(u'上次发布尚未完成，请解决冲突后执行 ft p --continue 继续完成发布。或者执行 ft p --abort 结束该发布')
 
+
+def check_product_branch_has_new_update():
+    """
+    检查生产分支是否有更新内容
+    检查方法：获取远程生产分支的最近一次commitid，检验该commitid是否出现在当前分支中
+    :return:
+    """
+    prod_branch = product_branch()
+    curr_branch = current_branch()
+
+    if curr_branch in [prod_branch, test_branch()]:
+        return
+
+    #一天只检验一次
+    last_merge_date = ihelper.read_runtime('last_merge_date')
+    if last_merge_date \
+            and last_merge_date.has_key(curr_branch) \
+            and last_merge_date[curr_branch] == datetime.datetime.now().strftime('%Y-%m-%d'):
+        return
+
+    info(u'正在检查%s分支有无更新...' % prod_branch)
+
+    #拉取最新生产分支
+    fetch(branch = prod_branch)
+
+    #拉取最新当前分支
+    fetch(branch=curr_branch)
+
+    #获取生产分支最新一次提交的commit_id
+    last_cmt_id = __get_last_commit_id(prod_branch)
+
+    if not last_cmt_id:
+        return
+
+    #检查该commit_id是否在当前分支上
+    exist_branches = ihelper.popen("git branch --list -a --contains %s '*%s'" % (last_cmt_id, curr_branch)).splitlines()
+
+    if 'origin/' + curr_branch not in exist_branches:
+        warn(u'%s分支已有更新，请执行mgr/merge指令合并到当前分支' % prod_branch)
+
+def __get_last_commit_id(branch, remote=True):
+    if remote:
+        branch = 'origin/' + branch
+
+    return ihelper.popen("git log -1 --pretty=%H " + branch)

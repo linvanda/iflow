@@ -17,7 +17,7 @@ import exception
 if ihelper.system_type() != iglobal.PLATFORM_WINDOWS:
     error(u'仅支持windows操作系统')
     time.sleep(5)
-    sys.exit(0)
+    sys.exit(1)
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -61,11 +61,14 @@ if __name__ == '__main__':
                 except Exception, e:
                     ihelper.warn(unicode(str(e), 'utf-8'))
 
-            # 检查工作区状态是否健康
             if iglobal.PROJECT != 'global' and igit.dir_is_repository():
+                # 检查工作区状态是否健康
                 igit.check_workspace_health()
 
-            args = raw_input('$ ').strip().lower().decode(iglobal.FROM_ENCODING).encode('utf-8')
+                # 检查生产分支更新情况
+                igit.check_product_branch_has_new_update()
+
+            args = raw_input('$ ').strip().decode(iglobal.FROM_ENCODING).encode('utf-8')
             args = [ele for ele in args.split(' ') if ele.strip()]
 
             if args:
@@ -79,3 +82,7 @@ if __name__ == '__main__':
             print
         except exception.FlowException, e:
             print e
+        except Exception, e:
+            print e
+            time.sleep(3)
+            sys.exit(1)
