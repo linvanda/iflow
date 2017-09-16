@@ -8,7 +8,9 @@ import iconfig
 import isprint
 import igit
 import exception
-from iprint import *
+import iprint
+import sys
+import iglobal
 try:
     import readline
 except ImportError:
@@ -20,7 +22,7 @@ def goodbye(*args):
 
 
 def error_exit(msg):
-    error(msg)
+    iprint.error(msg)
     raw_input()
     sys.exit(1)
 
@@ -37,6 +39,8 @@ def required_check():
     """
     必须进行的检查
     """
+    iprint.info(u'正在进行工作环境检查...')
+
     # 检查project.json有没有配置以及路径是否正确
     proj_cfg = iconfig.read_config('project', use_cache=False)
     if not proj_cfg:
@@ -166,10 +170,10 @@ def headline():
         path_arr = real_path.split('/')
         real_path = '/'.join([path_arr[0], path_arr[1], '...', path_arr[len(path_arr) - 1]])
 
-    green(iglobal.SPRINT), sky_blue('/'), yellow(project + '(' +  real_path + ')')
+    iprint.green(iglobal.SPRINT), iprint.sky_blue('/'), iprint.yellow(project + '(' +  real_path + ')')
     if branch:
-        status = igit.workspace_status(True)
-        sky_blue('[ ' + branch + ('(' + status + ')' if status else '') + ' ]')
+        status = igit.workspace_status(text=True)
+        iprint.sky_blue('[ ' + branch + ('(' + status + ')' if status else '') + ' ]')
     print
     sys.stdout.flush()
 

@@ -69,3 +69,6 @@ GIT_STATUS_PATTEN = {
     512: ['diverged']
 }
 
+GIT_LAST_STATUS = 0
+GIT_LAST_STATUS_TIME = 0
+

@@ -34,8 +34,7 @@
     "d":"delete",
     "cmt":"commit",
     "ck":"checkout",
-    "del":"delete",
-    "mgr":"merge"
+    "del":"delete"
   },
   "cmd_cls":{
     "feature":"Develop",
@@ -60,17 +59,17 @@
   },
   "git_match_text":{
     "not_repository": "Not a git repository",
-    "clean": "working directory clean",
+    "clean": "directory clean",
     "merge_conflict": "Unmerged paths",
     "uncommited": "Changes to be committed",
-    "unstaged": "Changes not staged for commit",
+    "unstaged": "Changes not staged",
     "untracked": "untracked files present",
-    "ahead": "branch is ahead of",
-    "behind": "Your branch is behind",
+    "ahead": "branch is ahead",
+    "behind": "branch is behind",
     "rebasing": "rebase in progress",
-    "cherring": "You are currently cherry-picking commit",
-    "merging": "You have unmerged paths",
-    "fixed_merging": "All conflicts fixed but you are still merging",
+    "cherring": "cherry-picking commit",
+    "merging": "have unmerged paths",
+    "fixed_merging": "still merging",
     "diverged": "have diverged",
     "sub_cmd_start": "available git commands",
     "sub_cmd_end": "git commands available from elsewhere"

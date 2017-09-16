@@ -211,16 +211,16 @@ def comment(msg, btype=None):
     return '<' + btype + '>' + msg if btype else msg
 
 
-def workspace_at_status(match_status):
+def workspace_at_status(match_status, raw_text='', use_cache=False):
     """
     检查工作区是否处于某状态
     :param match_status:
     :return:
     """
-    return workspace_status(text=False, match_status=match_status)
+    return workspace_status(text=False, match_status=match_status, raw_text=raw_text, use_cache=use_cache)
 
 
-def workspace_status(text=False, match_status=0):
+def workspace_status(text=False, match_status=0, raw_text='', use_cache=False):
     """
     工作空间状态
     :param text:
@@ -228,18 +228,28 @@ def workspace_status(text=False, match_status=0):
     :return:
     """
 
-    out = ihelper.popen('git status')
+    out = raw_text if raw_text else ihelper.popen('git status')
+    __status = 0
+    now = time.time()
+
+    if use_cache and iglobal.GIT_LAST_STATUS and iglobal.GIT_LAST_STATUS_TIME + 5 > now:
+        __status = iglobal.GIT_LAST_STATUS
 
     #检查是否匹配某状态
     if match_status:
-        return __workspace_match_status(out, match_status)
+        if __status:
+            return __status & match_status
+        else:
+            return __workspace_match_status(out, match_status)
 
-    #获取工作空间状态。考虑到性能，此处不做全部匹配
-    __status = 0
+    #获取工作空间状态
+    if not __status:
+        for s_code, patterns in iglobal.GIT_STATUS_PATTEN.items():
+            if __workspace_match_status(out, s_code):
+                __status |= s_code
 
-    for s_code, patterns in iglobal.GIT_STATUS_PATTEN.items():
-        if __workspace_match_status(out, s_code):
-            __status |= s_code
+        iglobal.GIT_LAST_STATUS = __status
+        iglobal.GIT_LAST_STATUS_TIME = now
 
     if not text:
         return __status
@@ -248,8 +258,8 @@ def workspace_status(text=False, match_status=0):
 
 
 def __workspace_match_status(text, status):
-    for search_str in iglobal.GIT_STATUS_PATTEN[status]:
-        if search_str in text:
+    for pattern in iglobal.GIT_STATUS_PATTEN[status]:
+        if match(text, pattern):
             return status
 
     return 0
@@ -547,7 +557,7 @@ def match(text, match_text, startswitch=False):
 
     txt = match_dict[match_text]
 
-    return text.startswith(txt) if startswitch else text.find(txt) != -1
+    return text.startswith(txt) if startswitch else txt in text
 
 
 def check_workspace_health():
@@ -555,20 +565,22 @@ def check_workspace_health():
     检查工作区是否健康：是否处于conflict、rebasing状态
     :return:
     """
-    if workspace_at_status(iglobal.GIT_CONFLICT):
-        if workspace_at_status(iglobal.GIT_REBASING):
+    text = ihelper.popen('git status')
+
+    if workspace_at_status(iglobal.GIT_CONFLICT, raw_text=text, use_cache=True):
+        if workspace_at_status(iglobal.GIT_REBASING, raw_text=text, use_cache=True):
             warn(u'rebase出现冲突。请手工解决冲突后执行 git add . && git rebase --continue 继续完成操作。或者执行 git rebase --abort取消操作')
-        elif workspace_at_status(iglobal.GIT_CHERRING):
+        elif workspace_at_status(iglobal.GIT_CHERRING, raw_text=text, use_cache=True):
             warn(u'cherry-pick出现冲突。请手工解决冲突后执行 git add . && git cherry-pick --continue 继续完成操作。或者执行git cherry-pick --abort取消操作')
-        elif workspace_at_status(iglobal.GIT_MERGING):
+        elif workspace_at_status(iglobal.GIT_MERGING, raw_text=text, use_cache=True):
             warn(u'merge出现冲突。请手工解决冲突后执行 git add . && git commit 完成合并操作。或者执行 git merge --abort取消操作')
         else:
             warn(u'当前工作区存在冲突，请手工处理冲突后执行 git add . && git commit 解决冲突')
-    elif workspace_at_status(iglobal.GIT_REBASING):
+    elif workspace_at_status(iglobal.GIT_REBASING, raw_text=text, use_cache=True):
         warn(u'工作区正处于rebasing中，请执行 git rebase --continue 完成操作')
-    elif workspace_at_status(iglobal.GIT_CHERRING):
+    elif workspace_at_status(iglobal.GIT_CHERRING, raw_text=text, use_cache=True):
         warn(u'工作区正处于cherry picking中，请执行 git cherry-pick --continue 完成操作')
-    elif workspace_at_status(iglobal.GIT_MERGING):
+    elif workspace_at_status(iglobal.GIT_MERGING, raw_text=text, use_cache=True):
         warn(u'工作区正处于merging中，请执行 git commit 完成操作')
     elif ihelper.read_runtime('publish_branches'):
         warn(u'上次发布尚未完成，请解决冲突后执行 ft p --continue 继续完成发布。或者执行 ft p --abort 结束该发布')
@@ -611,7 +623,7 @@ def check_product_branch_has_new_update():
     exist_branches = ihelper.popen("git branch --list -a --contains %s '*%s'" % (last_cmt_id, curr_branch)).splitlines()
 
     if 'origin/' + curr_branch not in exist_branches:
-        warn(u'%s分支已有更新，请执行mgr/merge指令合并到当前分支' % prod_branch)
+        warn(u'%s分支已有更新，请执行merge指令合并到当前分支' % prod_branch)
 
 def __get_last_commit_id(branch, remote=True):
     if remote:
