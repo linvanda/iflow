@@ -207,11 +207,7 @@ class Git(CVS):
         #合并本地master到本地开发分支并推送到远程
         igit.merge(prod_branch, need_pull=False)
 
-        last_merge_date = ihelper.read_runtime('last_merge_date')
-        if not last_merge_date:
-            last_merge_date = {}
-        last_merge_date[curr_branch] = datetime.datetime.now().strftime('%Y-%m-%d')
-        ihelper.write_runtime('last_merge_date', last_merge_date)
+        igit.set_last_sync_master_date(curr_branch)
 
         ok('done!')
 

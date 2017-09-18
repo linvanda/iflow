@@ -10,6 +10,7 @@ import igit
 import exception
 import iprint
 import sys
+import time
 import iglobal
 try:
     import readline
@@ -17,7 +18,7 @@ except ImportError:
     import pyreadline as readline
 
 def goodbye(*args):
-    print args[0] if args and args[0] else "good bye!"
+    print args[0] if args and args[0] else "bye!"
     sys.exit(0)
 
 
@@ -41,6 +42,11 @@ def required_check():
     """
     iprint.info(u'正在进行工作环境检查...')
 
+    #git版本检测
+    git_version = igit.git_version()
+    if int(git_version[0]) < 2:
+        raise Exception(u'git版本过低，请安装2.0.0以上版本')
+
     # 检查project.json有没有配置以及路径是否正确
     proj_cfg = iconfig.read_config('project', use_cache=False)
     if not proj_cfg:
@@ -57,8 +63,17 @@ def required_check():
         if not igit.dir_is_repository(info['dir']):
             raise Exception(u'目录' + info['dir'] + u'不是有效的git仓库')
 
-    # 版本号检测
+    # sprint版本号检测
     return isprint.check_sprint()
+
+
+def has_git():
+    s = popen('git version')
+
+    if 'git version' not in s:
+        return False
+
+    return True
 
 
 def init():
@@ -193,7 +208,7 @@ def execute(cmd, print_out=True, raise_err=False, return_result=False):
             p = os.popen(cmd)
             out = p.read()
             p.close()
-            return out
+            return out.rstrip('\n')
         else:
             sys.stdout.flush()
             return os.system(cmd)
@@ -214,7 +229,7 @@ def execute(cmd, print_out=True, raise_err=False, return_result=False):
 
         del p
 
-        return out
+        return out.rstrip('\n')
 
 
 def confirm(ask_msg,default='y', tick=0):
@@ -264,4 +279,7 @@ def real_path(path):
     return path.replace('{sprint}', iglobal.SPRINT).replace('\\', '/').rstrip('/') + '/'
 
 
-
+def show_error_and_exit(error):
+    iprint.error(error)
+    time.sleep(3)
+    sys.exit(1)

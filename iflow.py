@@ -2,7 +2,6 @@
 # 入口
 
 import os
-import time
 import iconfig
 import ihelper
 import command
@@ -13,11 +12,6 @@ import icompleter
 import icommand
 import exception
 
-#目前仅支持windows系统
-if ihelper.system_type() != iglobal.PLATFORM_WINDOWS:
-    error(u'仅支持windows操作系统')
-    time.sleep(5)
-    sys.exit(1)
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -25,12 +19,15 @@ sys.setdefaultencoding('utf-8')
 if __name__ == '__main__':
     iglobal.BASE_DIR = os.getcwd().replace('\\', '/')
 
+    # git检测
+    if not ihelper.has_git():
+        ihelper.show_error_and_exit(u'未找到git。请将git路径设置到系统PATH中')
+
     # 初始化
     try:
         ihelper.init()
     except exception.FlowException, e:
-        print e.message.decode('utf-8').encode(iglobal.FROM_ENCODING)
-        raw_input()
+        ihelper.show_error_and_exit(e.message)
 
     cfg = iconfig.read_config('system')
 
@@ -53,22 +50,22 @@ if __name__ == '__main__':
     while True:
         try:
             ihelper.headline()
-            # 必须项是否正确（此处为条件检查，因此种检查比较耗时可能）
+            # 必须项是否正确（此处为条件检查，因此种检查比较耗时）
             if not checked_ok:
                 try:
                     ihelper.required_check()
                     checked_ok = True
                 except Exception, e:
-                    ihelper.warn(unicode(str(e), 'utf-8'))
+                    warn(unicode(str(e), 'utf-8'))
 
-            if iglobal.PROJECT != 'global' and igit.dir_is_repository():
+            if iglobal.PROJECT != 'global':
                 # 检查工作区状态是否健康
                 igit.check_workspace_health()
 
                 # 检查生产分支更新情况
                 igit.check_product_branch_has_new_update()
 
-            args = raw_input('$ ').strip().decode(iglobal.FROM_ENCODING).encode('utf-8')
+            args = raw_input('$ ').strip().replace('\n', '').decode(iglobal.FROM_ENCODING).encode('utf-8')
             args = [ele for ele in args.split(' ') if ele.strip()]
 
             if args:
@@ -83,6 +80,4 @@ if __name__ == '__main__':
         except exception.FlowException, e:
             print e
         except Exception, e:
-            print e
-            time.sleep(3)
-            sys.exit(1)
+            ihelper.show_error_and_exit(str(e))

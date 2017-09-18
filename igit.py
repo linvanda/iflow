@@ -61,18 +61,23 @@ def dir_is_repository(path=None):
     :return:
     """
     path = path or os.getcwd()
+
     if not os.path.isdir(path):
         return False
 
     curr_dir = os.getcwd()
-    os.chdir(path)
+
+    if curr_dir != path:
+        os.chdir(path)
+
     result = True
 
     out = ihelper.popen('git branch')
     if match(out, 'not_repository', True):
         result = False
 
-    os.chdir(curr_dir)
+    if curr_dir != path:
+        os.chdir(curr_dir)
 
     return result
 
@@ -620,10 +625,28 @@ def check_product_branch_has_new_update():
         return
 
     #检查该commit_id是否在当前分支上
-    exist_branches = ihelper.popen("git branch --list -a --contains %s '*%s'" % (last_cmt_id, curr_branch)).splitlines()
-
-    if 'origin/' + curr_branch not in exist_branches:
+    if not ihelper.popen("git branch --list -a --contains %s *%s" % (last_cmt_id, curr_branch)).splitlines():
         warn(u'%s分支已有更新，请执行merge指令合并到当前分支' % prod_branch)
+    else:
+        set_last_sync_master_date(curr_branch)
+
+def set_last_sync_master_date(branch):
+    last_merge_date = ihelper.read_runtime('last_merge_date')
+
+    if not last_merge_date:
+        last_merge_date = {}
+
+    last_merge_date[branch] = datetime.datetime.now().strftime('%Y-%m-%d')
+    ihelper.write_runtime('last_merge_date', last_merge_date)
+
+
+def git_version():
+    """
+    获取git版本
+    :return:
+    """
+    return re.search('[0-9]{,2}\.[0-9]{,2}\.[0-9]{,2}', ihelper.popen('git version')).group(0).split('.')
+
 
 def __get_last_commit_id(branch, remote=True):
     if remote:

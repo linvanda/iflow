@@ -1,26 +1,3 @@
-exit
-git branch
-exit
-git branch -r
-exit
-ft feature/1701s1/order-manager-add-goods
-exit
-ft -r
-exit
-ft -r feature/1701s1/access-log
-ft feature/1701s1/order-manager-add-goods
-ft feature/1701s1/access-log
-ft ck feature/1701s1/order-manager-add-goods
-git help -a
-git gui
-git remote
-git archive
-git archive --list
-git ls-tree
-git ls-tree -d
-git shortlog
-git show-index
-exit
 git branch
 fix t
 fix ck hotfix/test10
@@ -96,4 +73,28 @@ exit
 sql
 c
 exi
+exit
+cd vshop
+git branch
+ft feature/1709s1/stock-error
+git diff master
+exit
+git log
+git checkout master
+git log
+ft feature/1709s1/stock-error
+git branch --list -a --contains e57486d8650095d7234d19a5cb013c2d9f18a2b8  '*feature/1709s1/stock-error'
+git branch --list -a --contains e57486d8650095d7234d19a5cb013c2d9f18a2b8
+git branch --list -a --contains e57486d8650095d7234d19a5cb013c2d9f18a2b8  *feature/1709s1/stock-error
+exit
+git diff master
+exit
+git branch --list -a --contains e57486d8650095d7234d19a5cb013c2d9f18a2b8
+exit
+eixt
+exit
+git branch --list -a --contains e57486d8650095d7234d19a5cb013c2d9f18a2b8  feature/1709s1/stock-error
+git branch --list -a --contains e57486d8650095d7234d19a5cb013c2d9f18a2b8 *feature/1709s1/stock-error
+exit
+git version
 exit

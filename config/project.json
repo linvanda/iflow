@@ -1,12 +1,12 @@
 {
   "vmember":{
-	"dir":"C:\Users\zhangsl04\Desktop\vmember"
+  "dir":"D:\cloud-community\vmember"
   },
   "membercenter":{
 	"dir":"D:\cloud-community\membercenter"
   },
-  "vshop":{
-	"dir":"D:\cloud-community\vshop"
+ "vshop":{
+  "dir":"D:\cloud-community\vshop"
   },
   "apicenter":{
 	"dir":"D:\cloud-community\api-center"
