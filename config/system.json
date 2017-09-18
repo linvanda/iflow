@@ -17,7 +17,7 @@
     //从哪个分支获取sql文件（可在项目配置文件中覆盖）
     "sql_branch":"sp-dev"
   },
-  //sql文件路径，相对于项目根目录
+  //sql文件路径，相对于项目根目录。可在项目级配置中覆盖
   "sql_dir":"db/{sprint}/",
   "sql_file_suffix":".sql",
   "sprint_format":"[0-9]{4}s[12]",

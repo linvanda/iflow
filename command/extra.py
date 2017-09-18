@@ -128,7 +128,9 @@ class Extra(Command):
                 continue
 
             # 需要先将项目切换到相应的分支
-            sql_branch = info['branch']['sql_branch'] if info.has_key('branch') and 'sql_branch' in info['branch'] else iconfig.read_config('system', 'branch')['sql_branch']
+            sql_branch = info['branch']['sql_branch'] \
+                if info.has_key('branch') and 'sql_branch' in info['branch'] \
+                else iconfig.read_config('system', 'branch')['sql_branch']
 
             # 进入项目
             if iglobal.PROJECT != proj:
