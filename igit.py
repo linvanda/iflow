@@ -232,7 +232,6 @@ def workspace_status(text=False, match_status=0, raw_text='', use_cache=False):
     :return:
     :return:
     """
-
     out = raw_text if raw_text else ihelper.popen('git status')
     __status = 0
     now = time.time()

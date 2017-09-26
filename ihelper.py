@@ -214,8 +214,7 @@ def execute(cmd, print_out=True, raise_err=False, return_result=False):
             return os.system(cmd)
     else:
         p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
-        err = p.stderr.read()
-        out = p.stdout.read()
+        out, err =  p.communicate()
 
         if err:
             if raise_err:
