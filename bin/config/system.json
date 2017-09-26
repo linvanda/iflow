@@ -17,7 +17,7 @@
     //从哪个分支获取sql文件（可在项目配置文件中覆盖）
     "sql_branch":"sp-dev"
   },
-  //sql文件路径，相对于项目根目录
+  //sql文件路径，相对于项目根目录。可在项目级配置中覆盖
   "sql_dir":"db/{sprint}/",
   "sql_file_suffix":".sql",
   "sprint_format":"[0-9]{4}s[12]",
@@ -72,7 +72,8 @@
     "fixed_merging": "still merging",
     "diverged": "have diverged",
     "sub_cmd_start": "available git commands",
-    "sub_cmd_end": "git commands available from elsewhere"
+    "sub_cmd_end": "git commands available from elsewhere",
+    "fatal_git_error": ["fatal: Unable to create"]
   },
   // 常用的git指令，供自动补全用
   "git_common_cmds":["add", "blame", "branch", "config", "commit", "checkout", "clone", "clean", "cherry-pick", "cat-file", "diff",

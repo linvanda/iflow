@@ -22,12 +22,7 @@ class Git(CVS):
     }
 
     def execute(self):
-        try:
-            eval('self.' + self.cmd)()
-        except exception.FlowException, e:
-            raise Exception(unicode(str(e), 'utf-8'))
-        except Exception, e:
-            raise Exception(e.message)
+        eval('self.' + self.cmd)()
 
     def rename(self):
         """

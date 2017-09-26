@@ -287,7 +287,6 @@
   ('pyreadline.console.event',
    'c:\\python27\\lib\\site-packages\\pyreadline\\console\\event.py',
    'PYMODULE'),
-  ('traceback', 'c:\\python27\\lib\\traceback.py', 'PYMODULE'),
   ('pyreadline.error',
    'c:\\python27\\lib\\site-packages\\pyreadline\\error.py',
    'PYMODULE'),
@@ -532,5 +531,6 @@
   ('json.encoder', 'c:\\python27\\lib\\json\\encoder.py', 'PYMODULE'),
   ('json.decoder', 'c:\\python27\\lib\\json\\decoder.py', 'PYMODULE'),
   ('json.scanner', 'c:\\python27\\lib\\json\\scanner.py', 'PYMODULE'),
+  ('traceback', 'c:\\python27\\lib\\traceback.py', 'PYMODULE'),
   ('os', 'c:\\python27\\lib\\os.py', 'PYMODULE'),
   ('os2emxpath', 'c:\\python27\\lib\\os2emxpath.py', 'PYMODULE')])

@@ -29,7 +29,7 @@ def current_branch():
     获取当前分支
     :return:
     """
-    branch = filter(lambda x:x.find('*') != -1, ihelper.popen('git branch').splitlines())
+    branch = filter(lambda x:str(x).find('*') != -1, ihelper.popen('git branch').splitlines())
     return branch[0].replace('*', '').strip() if branch else None
 
 
@@ -73,7 +73,7 @@ def dir_is_repository(path=None):
     result = True
 
     out = ihelper.popen('git branch')
-    if match(out, 'not_repository', True):
+    if match(out, 'not_repository'):
         result = False
 
     if curr_dir != path:
@@ -556,12 +556,22 @@ def match(text, match_text, startswitch=False):
     :return:bool
     """
     match_dict = iconfig.read_config('system', 'git_match_text')
+
     if not match_dict or match_text not in match_dict:
         return False
 
-    txt = match_dict[match_text]
+    txts = match_dict[match_text]
 
-    return text.startswith(txt) if startswitch else txt in text
+    if type(txts) != list:
+        txts = [txts]
+
+    for txt in txts:
+        if startswitch and text.startswith(txt):
+            return True
+        elif txt in text:
+            return True
+
+    return False
 
 
 def check_workspace_health():
@@ -638,6 +648,11 @@ def set_last_sync_master_date(branch):
     last_merge_date[branch] = datetime.datetime.now().strftime('%Y-%m-%d')
     ihelper.write_runtime('last_merge_date', last_merge_date)
 
+def is_fatal_git_error(out):
+    """
+    是否存在致命git错误
+    """
+    return match(out, 'fatal_git_error')
 
 def git_version():
     """

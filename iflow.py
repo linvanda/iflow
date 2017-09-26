@@ -2,6 +2,7 @@
 # 入口
 
 import os
+import traceback
 import iconfig
 import ihelper
 import command
@@ -56,12 +57,11 @@ if __name__ == '__main__':
                     ihelper.required_check()
                     checked_ok = True
                 except Exception, e:
-                    warn(unicode(str(e), 'utf-8'))
+                    warn(unicode(traceback.format_exc(), 'utf-8'))
 
             if iglobal.PROJECT != 'global':
                 # 检查工作区状态是否健康
                 igit.check_workspace_health()
-
                 # 检查生产分支更新情况
                 igit.check_product_branch_has_new_update()
 
@@ -74,10 +74,10 @@ if __name__ == '__main__':
                     main_cmd = icommand.real_cmd(args.pop(0))
                     eval('command.' + cfg['cmd_cls'][main_cmd])(main_cmd, args).execute()
                 except Exception, e:
-                    error(unicode(str(e), 'utf-8'))
+                    error(unicode(traceback.format_exc(), 'utf-8'))
         except KeyboardInterrupt:
             print
         except exception.FlowException, e:
-            print e
+            print traceback.format_exc()
         except Exception, e:
-            ihelper.show_error_and_exit(str(e))
+            ihelper.show_error_and_exit(traceback.format_exc())

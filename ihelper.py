@@ -201,33 +201,33 @@ def system(cmd):
     execute(cmd)
 
 
-def execute(cmd, print_out=True, raise_err=False, return_result=False):
-    # 不关心异常且需要输出且不需要返回时，直接调用os.system
-    if print_out and not raise_err and not return_result:
-        if iglobal.SILENCE:
-            p = os.popen(cmd)
-            out = p.read()
-            p.close()
-            return out.rstrip('\n')
+def execute(cmd, print_out=True, raise_err=False, return_result=True):
+    if not print_out:
+        return_result = True
+
+    # git指令需要特殊处理
+    is_git_cmd = True if cmd.startswith('git ') else False
+
+    p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
+    out, err =  p.communicate()
+
+    del p
+
+    # 致命git错误必须抛出
+    if is_git_cmd and igit.is_fatal_git_error(out + err):
+        raise exception.FlowException(u'发生致命git错误：\n%s' % (out + err))
+
+    if err:
+        if raise_err:
+            # 将错误抛出由外界处理
+            raise exception.FlowException(err)
         else:
-            sys.stdout.flush()
-            return os.system(cmd)
-    else:
-        p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
-        out, err =  p.communicate()
+            out = err + out
 
-        if err:
-            if raise_err:
-                # 将错误抛出由外界处理
-                raise exception.FlowException(err)
-            else:
-                out = err + out
+    if print_out and not iglobal.SILENCE:
+        print out
 
-        if print_out and not iglobal.SILENCE:
-            print out
-
-        del p
-
+    if return_result:
         return out.rstrip('\n')
 
 

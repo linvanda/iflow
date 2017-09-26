@@ -6,12 +6,16 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/iflow/out00-PKG.pkg" afterPath="$PROJECT_DIR$/build/iflow/out00-PKG.pkg" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/iflow/out00-PYZ.pyz" afterPath="$PROJECT_DIR$/build/iflow/out00-PYZ.pyz" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/config/project.json" afterPath="$PROJECT_DIR$/bin/config/project.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/config/system.json" afterPath="$PROJECT_DIR$/bin/config/system.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/runtime.json" afterPath="$PROJECT_DIR$/bin/runtime.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/iflow/out00-Analysis.toc" afterPath="$PROJECT_DIR$/build/iflow/out00-Analysis.toc" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/iflow/out00-EXE.toc" afterPath="$PROJECT_DIR$/build/iflow/out00-EXE.toc" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/project.json" afterPath="$PROJECT_DIR$/config/project.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/iflow/out00-PYZ.toc" afterPath="$PROJECT_DIR$/build/iflow/out00-PYZ.toc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/command/git.py" afterPath="$PROJECT_DIR$/command/git.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/system.json" afterPath="$PROJECT_DIR$/config/system.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iflow.py" afterPath="$PROJECT_DIR$/iflow.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/igit.py" afterPath="$PROJECT_DIR$/igit.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ihelper.py" afterPath="$PROJECT_DIR$/ihelper.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/runtime.json" afterPath="$PROJECT_DIR$/runtime.json" />
     </list>
     <ignored path="iflow.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -35,8 +39,8 @@
       <file leaf-file-name="system.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/system.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-16.461538">
-              <caret line="43" column="16" selection-start-line="43" selection-start-column="16" selection-end-line="43" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="72" column="32" selection-start-line="72" selection-start-column="32" selection-end-line="72" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -55,11 +59,21 @@
       <file leaf-file-name="igit.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/igit.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.857142">
-              <caret line="234" column="46" selection-start-line="234" selection-start-column="46" selection-end-line="234" selection-end-column="46" />
+            <state vertical-scroll-proportion="-12.071428">
+              <caret line="436" column="20" selection-start-line="436" selection-start-column="20" selection-end-line="436" selection-end-column="20" />
               <folding>
                 <element signature="e#16#25#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="system.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bin/config/system.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="75" column="50" selection-start-line="75" selection-start-column="50" selection-end-line="75" selection-end-column="50" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -77,8 +91,8 @@
       <file leaf-file-name="iflow.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/iflow.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="51" column="24" selection-start-line="51" selection-start-column="24" selection-end-line="51" selection-end-column="24" />
+            <state vertical-scroll-proportion="-0.2857143">
+              <caret line="39" column="27" selection-start-line="39" selection-start-column="27" selection-end-line="39" selection-end-column="27" />
               <folding>
                 <element signature="e#21#30#0" expanded="true" />
               </folding>
@@ -99,11 +113,21 @@
       <file leaf-file-name="ihelper.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ihelper.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4229075">
-              <caret line="228" column="13" selection-start-line="228" selection-start-column="13" selection-end-line="228" selection-end-column="13" />
+            <state vertical-scroll-proportion="0.5418502">
+              <caret line="225" column="0" selection-start-line="225" selection-start-column="0" selection-end-line="225" selection-end-column="0" />
               <folding>
                 <element signature="e#30#47#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="git.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/command/git.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="19" column="28" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -113,26 +137,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="447" column="8" selection-start-line="447" selection-start-column="8" selection-end-line="447" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="extra.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/command/extra.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="141" column="36" selection-start-line="141" selection-start-column="36" selection-end-line="141" selection-end-column="36" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="project.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config/project.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -195,12 +199,12 @@
         <option value="$PROJECT_DIR$/readme.md" />
         <option value="$PROJECT_DIR$/icompleter.py" />
         <option value="$PROJECT_DIR$/iconfig.py" />
-        <option value="$PROJECT_DIR$/command/git.py" />
-        <option value="$PROJECT_DIR$/iflow.py" />
         <option value="$PROJECT_DIR$/command/extra.py" />
-        <option value="$PROJECT_DIR$/config/system.json" />
         <option value="$PROJECT_DIR$/iglobal.py" />
+        <option value="$PROJECT_DIR$/config/system.json" />
         <option value="$PROJECT_DIR$/igit.py" />
+        <option value="$PROJECT_DIR$/iflow.py" />
+        <option value="$PROJECT_DIR$/command/git.py" />
         <option value="$PROJECT_DIR$/ihelper.py" />
       </list>
     </option>
@@ -236,6 +240,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -282,10 +287,41 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iflow" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iflow" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iflow" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iflow" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="config" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -294,12 +330,13 @@
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\linvanda\Desktop\iflow\config" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\linvanda\Desktop\iflow" />
       <recent name="C:\Users\linvanda\Desktop\iflow\command" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\zhangsl04\Desktop\iflow\bin\config" />
+      <recent name="C:\Users\linvanda\Desktop\iflow\config" />
     </key>
   </component>
   <component name="RunManager">
@@ -440,13 +477,13 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1864" height="1096" extended-state="0" />
+    <frame x="-8" y="-8" width="1864" height="1096" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1894852" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32953367" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2873444" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -503,14 +540,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/iglobal.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="3" selection-start-line="17" selection-start-column="3" selection-end-line="17" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/iflow.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -775,13 +804,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/command/git.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="101" column="33" selection-start-line="101" selection-start-column="33" selection-end-line="101" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/isprint.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -793,7 +815,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -808,7 +829,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -846,29 +866,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/config/system.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-16.461538">
-          <caret line="43" column="16" selection-start-line="43" selection-start-column="16" selection-end-line="43" selection-end-column="16" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="72" column="32" selection-start-line="72" selection-start-column="32" selection-end-line="72" selection-end-column="32" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/iflow.py">
+    <entry file="file://$PROJECT_DIR$/bin/config/system.json">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="51" column="24" selection-start-line="51" selection-start-column="24" selection-end-line="51" selection-end-column="24" />
-          <folding>
-            <element signature="e#21#30#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/igit.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.857142">
-          <caret line="234" column="46" selection-start-line="234" selection-start-column="46" selection-end-line="234" selection-end-column="46" />
-          <folding>
-            <element signature="e#16#25#0" expanded="true" />
-          </folding>
+          <caret line="75" column="50" selection-start-line="75" selection-start-column="50" selection-end-line="75" selection-end-column="50" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -880,10 +888,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/iflow.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.2857143">
+          <caret line="39" column="27" selection-start-line="39" selection-start-column="27" selection-end-line="39" selection-end-column="27" />
+          <folding>
+            <element signature="e#21#30#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/command/git.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="19" column="28" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/igit.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.071428">
+          <caret line="436" column="20" selection-start-line="436" selection-start-column="20" selection-end-line="436" selection-end-column="20" />
+          <folding>
+            <element signature="e#16#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ihelper.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4229075">
-          <caret line="228" column="13" selection-start-line="228" selection-start-column="13" selection-end-line="228" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.5418502">
+          <caret line="225" column="0" selection-start-line="225" selection-start-column="0" selection-end-line="225" selection-end-column="0" />
           <folding>
             <element signature="e#30#47#0" expanded="true" />
           </folding>

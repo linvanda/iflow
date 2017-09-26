@@ -72,7 +72,8 @@
     "fixed_merging": "still merging",
     "diverged": "have diverged",
     "sub_cmd_start": "available git commands",
-    "sub_cmd_end": "git commands available from elsewhere"
+    "sub_cmd_end": "git commands available from elsewhere",
+    "fatal_git_error": ["fatal: Unable to create"]
   },
   // 常用的git指令，供自动补全用
   "git_common_cmds":["add", "blame", "branch", "config", "commit", "checkout", "clone", "clean", "cherry-pick", "cat-file", "diff",
