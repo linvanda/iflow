@@ -646,6 +646,12 @@ def set_last_sync_master_date(branch):
         last_merge_date = {}
 
     last_merge_date[branch] = datetime.datetime.now().strftime('%Y-%m-%d')
+
+    #垃圾回收：删除7天之前的记录
+    for key, mdate in last_merge_date.items():
+        if mdate and time.mktime(time.strptime(str(mdate), '%Y-%m-%d')) < time.time() - 604800:
+            last_merge_date.pop(key)
+
     ihelper.write_runtime('last_merge_date', last_merge_date)
 
 def is_fatal_git_error(out):
