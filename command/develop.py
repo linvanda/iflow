@@ -150,6 +150,9 @@ class Develop(CVS):
                 ihelper.execute('git push -u origin ' + branch + ':' + branch)
 
         if igit.workspace_is_clean():
+            #处理master更新检验，防止创建分支后执行master更新检查操作
+            igit.set_last_sync_master_date(branch)
+
             ok(u'创建成功!已进入分支：' + branch)
         else:
             raise exception.FlowException(u'创建分支失败')
