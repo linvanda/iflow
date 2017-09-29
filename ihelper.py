@@ -4,7 +4,6 @@
 import subprocess
 import platform
 import os
-import chardet
 import iconfig
 import isprint
 import igit
