@@ -1,6 +1,4 @@
 exit
-exi
-exit
 ft feature/1701s1/order-manager-add-goods
 exit
 ft feature/1701s1/order-manager-add-goods
@@ -97,4 +95,6 @@ exit
 git branch
 ft ck feature/1706s1/sync-handle
 mgr
+exit
+git diff master
 exit

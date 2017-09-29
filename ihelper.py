@@ -4,6 +4,7 @@
 import subprocess
 import platform
 import os
+import chardet
 import iconfig
 import isprint
 import igit
@@ -225,7 +226,7 @@ def execute(cmd, print_out=True, raise_err=False, return_result=True):
             out = err + out
 
     if print_out and not iglobal.SILENCE:
-        print out
+        iprint.info(out)
 
     if return_result:
         return out.rstrip('\n')

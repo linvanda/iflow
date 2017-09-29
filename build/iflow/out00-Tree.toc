@@ -1,0 +1,5 @@
+('C:\\Users\\zhangsl04\\Desktop\\iflow\\build\\iflow\\chardet-3.0.4-py2.7.egg',
+ None,
+ set(['*.py', '*.pyc', '*.pyd', '*.pyo', '*.so', 'EGG-INFO']),
+ 'DATA',
+ [])
