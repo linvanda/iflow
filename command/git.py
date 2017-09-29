@@ -7,8 +7,6 @@ import exception
 import ihelper
 import igit
 import iglobal
-import extra
-import datetime
 
 
 class Git(CVS):
@@ -54,6 +52,9 @@ class Git(CVS):
             ihelper.execute('git push --delete origin ' + old)
         # 上传新分支到远程
         ihelper.execute('git push -u origin ' + new + ':' + new)
+
+        #防止重命名后检查master更新情况
+        igit.set_last_sync_master_date(new)
 
     def git(self):
         """

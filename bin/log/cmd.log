@@ -1,10 +1,3 @@
-exit
-ft feature/1701s1/order-manager-add-goods
-exit
-ft feature/1701s1/order-manager-add-goods
-exit
-ft feature/1701s1/order-manager-add-goods
-ft ck feature/1701s1/order-manager-add-goods
 help
 he
 help
@@ -97,4 +90,11 @@ ft ck feature/1706s1/sync-handle
 mgr
 exit
 git diff master
+exit
+f2f -s 08s1 feature/1707s1/agent-room-limit
+git branch
+ft https
+ft feature/1708s1/https
+ft feature/1706s1/sync-handle
+git log
 exit
