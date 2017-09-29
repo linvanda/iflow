@@ -14,8 +14,8 @@ ft c /1701s2/order-manager        在当前项目创建feature/1701s2/order-mana
 ft c /order-manager               在当前项目创建夸迭代feature/order-manager分支
 ft t                              将当前项目的当前分支合并到测试分支
 ft t order-manager                将当前项目的feature/1612s2/order-manager分支合并到测试分支
-ft p                              将所有项目的所有当前迭代的分支合并到生产分支
-ft p vmember member-center        将vmember和member-center项目的所有特性分支合并到生产分支
+ft p                              将所有项目的所有当前迭代的特性分支合并到生产分支
+ft p vmember member-center        将vmember和member-center项目的当前迭代的所有特性分支合并到生产分支
 ft p vmember:/weigao              将vmember的feature/weigao分支合并到生产分支
 ft d --no-push order-manager      删除feature/1612s2/order-manager分支，但不删除对应的远程分支
 ft d -y order-manager             删除feature/1612s2/order-manager分支且推送到远程，且不需要确认提示
