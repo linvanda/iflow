@@ -4,9 +4,9 @@ block_cipher = None
 
 
 a = Analysis(['iflow.py'],
-             pathex=['C:\\Users\\zhangsl04\\Desktop\\iflow'],
-             binaries=[],
-             datas=[],
+             pathex=['C:\\Users\\linvanda\\Desktop\\iflow'],
+             binaries=None,
+             datas=None,
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],

@@ -2,6 +2,8 @@
 
 import abc
 import iconfig
+import ihelper
+import iprint
 
 
 class Command(object):
@@ -54,6 +56,48 @@ class Command(object):
 
         return cmd
 
+    @staticmethod
+    def exec_hook(flag, position, proj=None, branch=None):
+        """
+        执行钩子指令
+        :param flag:  标识，如product
+        :param position: 位置，如post（主指令后）,pre(主指令前)
+        :param proj:  所在的项目
+        :param branch: 所在的分支
+        :return: None
+        """
+        hook_cfg = iconfig.read_config('system', "hook")
+
+        if not hook_cfg or not hook_cfg.has_key(flag) or not isinstance(hook_cfg[flag], dict):
+            return None
+
+        hook_cfg = hook_cfg[flag]
+
+        if not hook_cfg.has_key(position) or not isinstance(hook_cfg[position], list) or not hook_cfg[position]:
+            return None
+
+        for cfg in hook_cfg[position]:
+            if not cfg or not isinstance(cfg, dict) or not cfg.has_key('cmd'):
+                continue
+
+            # 项目限制
+            if proj and cfg.has_key("proj") \
+                    and isinstance(cfg["proj"], list) \
+                    and cfg["proj"] \
+                    and proj not in cfg["proj"]:
+                continue
+
+            # 分支限制
+            if branch and cfg.has_key("branch") \
+                    and isinstance(cfg["branch"], list) \
+                    and cfg["branch"] \
+                    and branch not in cfg["branch"]:
+                continue
+
+            # 执行钩子
+            if cfg.has_key("desc") and cfg["desc"]:
+                iprint.ok(u"执行 %s..." % cfg["desc"])
+            ihelper.execute(cfg["cmd"])
 
     def __str__(self):
         return self.cmd + ' ' + ' '.join(self.args)

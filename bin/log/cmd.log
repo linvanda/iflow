@@ -1,17 +1,3 @@
-help
-he
-help
-rename
-ft
-ft ck
-exit
-ft feature/1701s1/order-manager-add-goods
-exit
-ft feature/1701s1/order-manager-add-goods
-exit
-ft feature/1701s1/order-manager-add-goods
-git checkout sp-dev
-ft feature/1701s1/order-manager-add-goods
 git status
 ft -r feature/1701s1/access-log
 git clean -f
@@ -97,4 +83,18 @@ ft https
 ft feature/1708s1/https
 ft feature/1706s1/sync-handle
 git log
+exit
+git status
+git reset .
+git status
+git reset --hard HEAD
+git status
+git clean
+git clean -f
+git status
+git reset --hard ^HEAD
+git clean -f
+git clean -fd
+git pull --rebase
+ext
 exit

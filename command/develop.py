@@ -397,8 +397,12 @@ class Develop(CVS):
                 if proj != curr_proj:
                     curr_proj = proj
 
-                # 打标签
+                # 本项目发布完成后的一些操作
                 if is_last_branch:
+                    # 执行后续钩子
+                    self.exec_hook("product", "post", proj)
+
+                    # 标签
                     info(u'项目 %s 发布完成，打标签：' % proj)
                     proj_tag = self.__tag()
 
