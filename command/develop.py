@@ -411,8 +411,7 @@ class Develop(CVS):
             tag_list = []
         except Exception, e:
             error(e.message)
-            warn(u'合并%s的分支%s时出现冲突' % (proj, curr_p_branch[1]))
-            warn(u'解决冲突后执行 %s p --continue 继续。或执行 %s p --abort 结束' % (self.cmd, self.cmd))
+            warn(u'处理完成后执行 %s p --continue 继续。或执行 %s p --abort 结束' % (self.cmd, self.cmd))
         finally:
             # 持久化发布状态
             ihelper.write_runtime('publish_branches', orig_branches)
