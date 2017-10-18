@@ -3,6 +3,7 @@ from CVS import CVS
 import extra
 import exception
 import igit
+import git
 import ihelper
 import iconfig
 from iprint import *
@@ -238,7 +239,6 @@ class Develop(CVS):
         if auto_delete or ihelper.confirm(u'确定删除分支 %s 吗?' % branch, default='n') == 'y':
             igit.delete_branch(branch, del_remote=delete_remote)
 
-
     def product(self, args):
         """
         发布到生产分支
@@ -276,7 +276,7 @@ class Develop(CVS):
             return
 
         if ihelper.read_runtime('publish_branches'):
-            error(u'上次发布尚未完成，请执行 ft p --continue 继续，或执行 ft p --abort 结束')
+            error(u'上次发布尚未完成，请执行 %s p --continue 继续，或执行 %s p --abort 结束' % (self.cmd, self.cmd))
             return
 
         branches = self.__resolve_branches(line_branches)
@@ -368,9 +368,9 @@ class Develop(CVS):
                     extra.Extra('cd', [proj]).execute()
 
                 if not igit.workspace_is_clean():
-                    raise exception.FlowException(u'项目%s工作空间有未提交的更改，请先提交(或丢弃)后执行 ft p --continue 继续' % proj)
+                    raise exception.FlowException(u'项目%s工作空间有未提交的更改，请先提交(或丢弃)后执行 %s p --continue 继续' % (proj, self.cmd))
 
-                #首次进入项目执行fetch获取本地和远程分支差异
+                # 首次进入项目执行fetch获取本地和远程分支差异
                 if curr_proj != proj:
                     info('fetch...')
                     igit.fetch(useCache=False)
@@ -399,32 +399,46 @@ class Develop(CVS):
 
                 # 本项目发布完成后的一些操作
                 if is_last_branch:
-                    # 执行后续钩子
-                    self.exec_hook("product", "post", proj)
-
-                    # 标签
-                    info(u'项目 %s 发布完成，打标签：' % proj)
-                    proj_tag = self.__tag()
-
-                    if proj_tag:
-                        tag_list.append((proj, proj_tag))
+                    self.__post_publish(proj, tag_list)
 
             ok(u'发布完成！tag：')
 
-            #打印tag信息
+            # 打印tag信息
             for (proj_name, tag_name) in tag_list:
                 info(' %s  %s' % (proj_name, tag_name))
 
-            #清空tag list
+            # 清空tag list
             tag_list = []
         except Exception, e:
             error(e.message)
             warn(u'合并%s的分支%s时出现冲突' % (proj, curr_p_branch[1]))
-            warn(u'解决冲突后执行 ft p --continue 继续。或执行 ft p --abort 结束')
+            warn(u'解决冲突后执行 %s p --continue 继续。或执行 %s p --abort 结束' % (self.cmd, self.cmd))
         finally:
-            #持久化发布状态
+            # 持久化发布状态
             ihelper.write_runtime('publish_branches', orig_branches)
             ihelper.write_runtime('publish_tags', tag_list)
+
+    def __post_publish(self, proj, tag_list):
+        """
+        项目发布完成的后续工作
+        :return:
+        """
+        # 执行后续钩子
+        self.exec_hook("product", "post", proj)
+
+        # 钩子执行后需检查工作空间是否干净
+        if igit.workspace_at_status(iglobal.GIT_CONFLICT):
+            raise exception.FlowException(u'出现冲突，请手工解决冲突后执行 %s p --continue 继续。或执行 %s p --abort 结束' % (self.cmd, self.cmd))
+
+        if igit.workspace_at_status(iglobal.GIT_UNCOMMITED) or igit.workspace_at_status(iglobal.GIT_UNSTAGED):
+            git.Git('commit', ['-p', '发布生产：执行自定义钩子后提交']).execute()
+
+        # 标签
+        info(u'项目 %s 发布完成，打标签：' % proj)
+        proj_tag = self.__tag()
+
+        if proj_tag:
+            tag_list.append((proj, proj_tag))
 
     def __tag(self):
         """

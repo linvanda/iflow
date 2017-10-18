@@ -1,9 +1,11 @@
 # coding:utf-8
 
 import abc
+import os
 import iconfig
 import ihelper
 import iprint
+import igit
 
 
 class Command(object):
@@ -76,6 +78,9 @@ class Command(object):
         if not hook_cfg.has_key(position) or not isinstance(hook_cfg[position], list) or not hook_cfg[position]:
             return None
 
+        orig_dir = os.getcwd()
+        orig_branch = igit.current_branch()
+
         for cfg in hook_cfg[position]:
             if not cfg or not isinstance(cfg, dict) or not cfg.has_key('cmd'):
                 continue
@@ -94,10 +99,19 @@ class Command(object):
                     and branch not in cfg["branch"]:
                 continue
 
+            if not cfg.has_key("title") or not cfg["title"]:
+                cfg["title"] = u"自定义脚本：%s" % cfg["cmd"]
+
             # 执行钩子
-            if cfg.has_key("desc") and cfg["desc"]:
-                iprint.ok(u"执行 %s..." % cfg["desc"])
+            iprint.say(('blue', u'执行'), ('yellow', cfg["title"]), ('blue', '...'))
             ihelper.execute(cfg["cmd"])
+            iprint.say(('yellow', cfg["title"]), ('blue', u'执行完成！'))
+
+        if os.getcwd() != orig_dir:
+            os.chdir(orig_dir)
+
+        if igit.current_branch() != orig_branch:
+            os.system('git checkout %s' % orig_branch)
 
     def __str__(self):
         return self.cmd + ' ' + ' '.join(self.args)

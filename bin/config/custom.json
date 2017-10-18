@@ -9,9 +9,10 @@
         {
           //指令
           "cmd": "python test.py",
-          "desc": "测试项目",
+          "title": "测试项目",
           //需要执行的项目列表
-          "proj":["vmember"]
+          "proj":["vmember"],
+          "show_error": false
         }
       ]
     }
