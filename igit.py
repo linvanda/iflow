@@ -98,7 +98,7 @@ def real_branch( branch, prefix):
     :return: str
     """
     if not branch:
-        raise Exception(u'参数错误')
+        raise exception.FlowException(u'参数错误')
 
     if branch.find(':') != -1:
         branch = branch.split(':')[1]
@@ -108,12 +108,12 @@ def real_branch( branch, prefix):
     config = iconfig.read_config('system', 'branch')
 
     if len(branch) > 2 and branch[0] != config['feature_prefix']:
-        raise Exception(u'分支格式不合法')
+        raise exception.FlowException(u'分支格式不合法')
 
     if len(branch) == 3:
         branch[1] = isprint.get_sprint(branch[1])
         if not branch[1]:
-            raise Exception(u'分支格式不合法')
+            raise exception.FlowException(u'分支格式不合法')
         return '/'.join(branch)
 
     if len(branch) == 2:
@@ -122,14 +122,14 @@ def real_branch( branch, prefix):
         elif isprint.check_sprint_format(branch[0], True):
             # 迭代号开始的,此时prefix只能是feature
             if prefix != config['feature_prefix']:
-                raise Exception(u'分支格式不合法')
+                raise exception.FlowException(u'分支格式不合法')
 
             branch[0] = isprint.get_sprint(branch[0])
             branch.insert(0, config[prefix + '_prefix'])
         else:
             # 看是否以feature或hotfix开头
             if branch[0] != config['feature_prefix'] and branch[0] != config['hotfix_prefix']:
-                raise Exception(u'分支格式不合法')
+                raise exception.FlowException(u'分支格式不合法')
 
         return '/'.join(branch)
 
@@ -421,7 +421,7 @@ def sync(project, prefix=None, only_this_sprint=True, deep=False):
 
         # 两边都存在的，同步
         if the_same and deep:
-            raise Exception(u'暂未实现')
+            raise exception.FlowException(u'暂未实现')
 
         if old_project != iglobal.PROJECT:
             command.Extra('cd', [old_project]).execute()

@@ -7,6 +7,7 @@ import datetime
 import iconfig
 import ihelper
 import iglobal
+import exception
 
 
 def check_sprint_format(sprint, loose=False):
@@ -71,7 +72,7 @@ def check_sprint():
     sprint = ihelper.read_runtime('sprint')
 
     if not sprint:
-        raise Exception(u'尚未设置迭代版本号，请使用sp指令设置正确的迭代版本号')
+        raise exception.FlowException(u'尚未设置迭代版本号，请使用sp指令设置正确的迭代版本号')
     else:
         sp_date = get_date_from_sprint(sprint).split('-')
         now = time.strftime('%Y-%m-' + '01').split('-')
@@ -80,6 +81,6 @@ def check_sprint():
         diff = abs((d1 - d2).days)
 
         if diff >= 90:
-            raise Exception(u'迭代版本号(' + sprint + u')和当前日期不符，请使用sp指令重新设置正确的迭代版本号')
+            raise exception.FlowException(u'迭代版本号(' + sprint + u')和当前日期不符，请使用sp指令重新设置正确的迭代版本号')
 
     return True

@@ -20,7 +20,7 @@ class CVS(Command):
 
     @abc.abstractmethod
     def execute(self):
-        raise Exception(u"指令尚未实现")
+        raise exception.FlowException(u"指令尚未实现")
 
 
 

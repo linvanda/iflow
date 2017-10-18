@@ -15,12 +15,7 @@ import exception
 
 class Extra(Command):
     def execute(self):
-        try:
-            eval('self.' + self.cmd)(list(self.args))
-        except exception.FlowException, e:
-            raise Exception(unicode(str(e), 'utf-8'))
-        except Exception, e:
-            raise Exception(e.message)
+        eval('self.' + self.cmd)(list(self.args))
 
     @staticmethod
     def sprint(args):

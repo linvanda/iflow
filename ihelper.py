@@ -45,23 +45,23 @@ def required_check():
     #git版本检测
     git_version = igit.git_version()
     if int(git_version[0]) < 2:
-        raise Exception(u'git版本过低，请安装2.0.0以上版本')
+        raise exception.FlowException(u'git版本过低，请安装2.0.0以上版本')
 
     # 检查project.json有没有配置以及路径是否正确
     proj_cfg = iconfig.read_config('project', use_cache=False)
     if not proj_cfg:
-        raise Exception(u'请配置项目信息(config/project.json文件，具体格式参见readme.md文件)')
+        raise exception.FlowException(u'请配置项目信息(config/project.json文件，具体格式参见readme.md文件)')
 
     for proj_name, info in proj_cfg.items():
         if proj_name == 'global':
-            raise Exception(u'项目名称不能叫global，请使用别的名称')
+            raise exception.FlowException(u'项目名称不能叫global，请使用别的名称')
 
         if not info['dir'] or not os.path.exists(info['dir']) or not os.path.isdir(info['dir']):
-            raise Exception(u'项目' + proj_name + u'的目录配置不正确')
+            raise exception.FlowException(u'项目' + proj_name + u'的目录配置不正确')
 
         # 检测目录是否有效的git仓库
         if not igit.dir_is_repository(info['dir']):
-            raise Exception(u'目录' + info['dir'] + u'不是有效的git仓库')
+            raise exception.FlowException(u'目录' + info['dir'] + u'不是有效的git仓库')
 
     # sprint版本号检测
     return isprint.check_sprint()

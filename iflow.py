@@ -73,11 +73,13 @@ if __name__ == '__main__':
                 try:
                     main_cmd = icommand.real_cmd(args.pop(0))
                     eval('command.' + cfg['cmd_cls'][main_cmd])(main_cmd, args).execute()
+                except exception.FlowException, e:
+                    print error(e.message)
                 except Exception, e:
                     error(unicode(traceback.format_exc(), 'utf-8'))
         except KeyboardInterrupt:
             print
         except exception.FlowException, e:
-            print traceback.format_exc()
+            print error(e.message)
         except Exception, e:
             ihelper.show_error_and_exit(traceback.format_exc())

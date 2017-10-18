@@ -6,6 +6,7 @@ import iconfig
 import ihelper
 import iprint
 import igit
+import exception
 
 
 class Command(object):
@@ -20,7 +21,7 @@ class Command(object):
 
     @abc.abstractmethod
     def execute(self):
-        raise Exception(u"指令尚未实现")
+        raise exception.FlowException(u"指令尚未实现")
 
     @staticmethod
     def real_cmd(cmd, raise_err=True, valid=True, top_cmd=None):
@@ -52,7 +53,7 @@ class Command(object):
 
             if error:
                 if raise_err:
-                    raise Exception(u'无效指令')
+                    raise exception.FlowException(u'无效指令')
                 else:
                     return None
 
@@ -103,9 +104,9 @@ class Command(object):
                 cfg["title"] = u"自定义脚本：%s" % cfg["cmd"]
 
             # 执行钩子
-            iprint.say(('blue', u'执行'), ('yellow', cfg["title"]), ('blue', '...'))
+            iprint.say(('green', u'执行'), ('yellow', cfg["title"]), ('green', '...'))
             ihelper.execute(cfg["cmd"])
-            iprint.say(('yellow', cfg["title"]), ('blue', u'执行完成！'))
+            iprint.say(('yellow', cfg["title"]), ('green', u'执行完成！'))
 
         if os.getcwd() != orig_dir:
             os.chdir(orig_dir)

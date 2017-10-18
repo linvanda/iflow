@@ -2,6 +2,7 @@
 
 import command
 import iconfig
+import exception
 
 
 def real_cmd(cmd, raise_err=True, valid=True, top_cmd=None):
@@ -33,7 +34,7 @@ def real_cmd(cmd, raise_err=True, valid=True, top_cmd=None):
 
         if error:
             if raise_err:
-                raise Exception(u'无效指令')
+                raise exception.FlowException(u'无效指令')
             else:
                 return None
 
