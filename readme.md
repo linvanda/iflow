@@ -51,7 +51,7 @@
 * **发布修复分支到生产环境：** fix product vmember:order-bug
 * **提交当前分支：** commit 修复订单bug
 * **切换到另一个特性分支** feature checkout activity
-* **切换到另一个修复分支** feature checkout activity-bug
+* **切换到另一个修复分支** fix checkout activity-bug
 * **特性分支转修复分支：** f2h order-manager
 * **整理合并本迭代所有sql文件：** sql
 * **打tag：** tag -m 修改bug
